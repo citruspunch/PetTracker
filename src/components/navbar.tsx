@@ -34,7 +34,7 @@ interface MenuItem {
     items?: MenuItem[];
 }
 
-interface Navbar1Props {
+interface NavbarProps {
     logo?: {
         url: string;
         src: string;
@@ -99,7 +99,7 @@ const Navbar = ({
         login: { title: "Login", url: "#" },
         signup: { title: "Sign up", url: "#" },
     },
-}: Navbar1Props) => {
+}: NavbarProps) => {
     return (
         <section className="py-4">
             <div className="container mx-auto">

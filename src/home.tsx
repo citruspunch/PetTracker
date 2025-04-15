@@ -1,6 +1,8 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { routes } from "@/routes";
 
 interface Testimonial {
     quote: string;
@@ -33,7 +35,7 @@ const HomePage = ({
     description = "Con PetTracker, vincula tu mascota a una placa inteligente y recibe alertas si alguien la encuentra. Tu compañero siempre estará un escaneo más cerca.",
     button = {
         text: "Vincula tu mascota",
-        url: "#",
+        url: routes.dashboard,
     },
     testimonial = {
         quote: "Hasta que no hayas amado a un animal, una parte de tu alma permanece dormida.",
@@ -45,10 +47,10 @@ const HomePage = ({
         ],
     },
     images = {
-        first: "https://shadcnblocks.com/images/block/placeholder-1.svg",
-        second: "https://shadcnblocks.com/images/block/placeholder-dark-2.svg",
-        third: "https://shadcnblocks.com/images/block/placeholder-dark-3.svg",
-        fourth: "https://shadcnblocks.com/images/block/placeholder-dark-7-tall.svg",
+        first: "src/assets/asset1.png",
+        second: "src/assets/asset2.png",
+        third: "src/assets/asset3.png",
+        fourth: "src/assets/asset4.png",
     },
 }: HomePageProps) => {
     return (
@@ -65,8 +67,8 @@ const HomePage = ({
                             </p>
                         </div>
                         <div className="my-6 lg:my-10">
-                            <Button asChild size="lg">
-                                <a href={button.url}>{button.text}</a>
+                            <Button className="bg-blue-500 hover:bg-blue-600 text-white" asChild size="lg">
+                                <Link to={button.url}>{button.text}</Link>
                             </Button>
                         </div>
                         <div className="flex flex-wrap items-center gap-3">
@@ -96,48 +98,36 @@ const HomePage = ({
                             <AspectRatio ratio={1 / 1} className="h-full w-full">
                                 <div className="grid h-full w-full grid-cols-2 grid-rows-2 gap-[3.5%]">
                                     <div className="overflow-hidden rounded-[5.2%] border border-muted bg-muted">
-                                        <img
-                                            src={images.first}
-                                            alt=""
-                                            className="object-fit h-full w-full object-center"
-                                        />
+                                            <img
+                                                src={images.first}
+                                                alt=""
+                                                className="object-fit h-full w-full object-center"
+                                            />
                                     </div>
                                     <div className="relative overflow-hidden rounded-[5.2%] border border-muted bg-muted">
-                                        <div className="absolute top-1/2 left-[5%] w-[110%] max-w-[25rem] -translate-y-1/2 overflow-hidden rounded-md">
-                                            <AspectRatio ratio={1.739130435 / 1}>
-                                                <img
-                                                    src={images.second}
-                                                    alt=""
-                                                    className="size-full object-cover object-center"
-                                                />
-                                            </AspectRatio>
+                                        <div className="relative top-[5%] left-[50%] w-[75%] max-w-[37.5rem] -translate-x-[50%]">
+                                            <img
+                                                src={images.second}
+                                                alt=""
+                                                className="absolute z-10 w-full rounded-[16%]"
+                                            />
                                         </div>
                                     </div>
                                     <div className="relative overflow-hidden rounded-[5.2%] border border-muted bg-muted">
-                                        <div className="absolute top-[9%] left-[9%] w-[200%] max-w-[37.5rem] overflow-hidden rounded-md">
-                                            <AspectRatio ratio={1.6 / 1}>
-                                                <img
-                                                    src={images.third}
-                                                    alt=""
-                                                    className="size-full object-cover object-center"
-                                                />
-                                            </AspectRatio>
-                                        </div>
+                                            <img
+                                                src={images.third}
+                                                alt=""
+                                                className="size-full object-cover object-center"
+                                            />
                                     </div>
+                                    
                                     <div className="relative overflow-hidden rounded-[5.2%] border border-muted bg-muted">
-                                        <div className="relative top-[12%] left-[50%] w-[70%] max-w-[17.5rem] -translate-x-[50%]">
-                                            <AspectRatio ratio={0.52 / 1}>
-                                                <img
-                                                    src="https://shadcnblocks.com/images/block/mockups/phone-1.png"
-                                                    alt=""
-                                                    className="absolute z-20 w-full"
-                                                />
-                                                <img
-                                                    src={images.fourth}
-                                                    alt=""
-                                                    className="absolute z-10 w-full rounded-[16%]"
-                                                />
-                                            </AspectRatio>
+                                        <div className="relative top-[3%] left-[50%] w-[95%] max-w-[37.5rem] -translate-x-[50%]">
+                                            <img
+                                                src={images.fourth}
+                                                alt=""
+                                                className="size-full object-cover object-center"
+                                            />
                                         </div>
                                     </div>
                                 </div>
