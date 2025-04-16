@@ -1,9 +1,6 @@
 import { TbPasswordUser } from "react-icons/tb";
 
-
-
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { routes } from "../routes";
 import { Link } from "react-router-dom";
@@ -14,6 +11,7 @@ interface ResetPasswordProps {
     resetText?: string;
     loginText?: string;
     loginUrl?: string;
+    logoUrl?: string;
 }
 
 const ResetPassword = ({
@@ -22,6 +20,7 @@ const ResetPassword = ({
     resetText = "Enviar correo de restablecimiento",
     loginText = "¿Recuerdas tu contraseña?",
     loginUrl = routes.signIn,
+    logoUrl = routes.home
 }: ResetPasswordProps) => {
     return (
         <section className="h-screen flex items-center justify-center bg-muted">
@@ -29,7 +28,9 @@ const ResetPassword = ({
                 <div className="flex flex-col gap-4">
                     <div className="mx-auto w-full max-w-sm rounded-md p-6 shadow bg-white">
                         <div className="mb-6 flex flex-col items-center">
-                            <TbPasswordUser className="size-10" />
+                            <Link to={logoUrl}>
+                                <TbPasswordUser className="size-10" />
+                            </Link>
                             <h1 className="mb-5 mt-3 text-4xl font-bold text-center leading-9">{heading}</h1>
                             <p className="text-muted-foreground text-center">{subheading}</p>
                         </div>
