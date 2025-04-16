@@ -1,135 +1,89 @@
-import {
-    ArrowRight
-} from "lucide-react";
-import { MdPets } from "react-icons/md";
-import { MapPinned } from 'lucide-react';
-import React from "react";
-
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import Navbar from "./components/navbar";
-import { Link } from "react-router-dom";
 
-interface LostPet {
-    image?: string;
-    name: string;
-    species: string;
-    date: string;
-    location: string;
-    link: string;
+interface Feature {
+    title: string;
+    description: string;
+    image: string;
 }
 
 interface DashboardProps {
-    heading?: string;
-    items?: LostPet[];
+    heading: string;
+    description?: string;
+    feature1: Feature;
+    feature2: Feature;
+    feature3: Feature;
+    feature4: Feature;
 }
 
 const Dashboard = ({
-    heading = "Mascotas Perdidas",
-    items = exampleData,
+    heading,
+    description = "Consulta la actividad reciente, accede rápidamente a tus mascotas y mantente al tanto de cualquier novedad.",
+    feature1,
+    feature2,
+    feature3,
+    feature4,
 }: DashboardProps) => {
     return (
         <>
             <Navbar />
-            <section className="py-8">
-                <div className="container mx-auto">
-                    <h1 className="mb-10 px-4 text-3xl font-semibold md:text-4xl">
-                        {heading}
-                    </h1>
-                    <div className="flex flex-col">
-                        <Separator />
-                        {items.map((item, index) => (
-                            <React.Fragment key={index}>
-                                <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-4">
-                                    <div className="order-2 flex items-center gap-2 md:order-none">
-                                        <span className="flex h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
-                                            {item.image ? (
-                                                <img
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    className="h-full w-full rounded-md object-cover"
-                                                />
-                                            ) : (
-                                                <MdPets className="h-9 w-9 text-muted-foreground" />
-                                            )}
-                                        </span>
-                                        <div className="flex flex-col">
-                                            <h3 className="text-[18px] font-semibold">{item.name}</h3>
-                                            <p className="text-[15px] text-muted-foreground">
-                                                Especie: {item.species}
-                                            </p>
-                                            <p className="text-[15px] text-muted-foreground">
-                                                Fecha de desaparición: {item.date}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-row items-center gap-4 md:order-none md:col-span-2">
-                                        <MapPinned />
-                                        <p className="order-1 text-2xl font-semibold md:order-none md:col-span-2">
-                                            {item.location}
-                                        </p>
-                                    </div>
-                                    <Button variant="outline" asChild>
-                                        <Link
-                                            className="order-3 ml-auto w-fit gap-2 md:order-none"
-                                            to={item.link}
-                                        >
-                                            <span>Ver más</span>
-                                            <ArrowRight className="h-4 w-4" />
-                                        </Link>
-                                    </Button>
+            <section className="py-20">
+                <div className="container mx-auto flex flex-col items-center justify-center">
+                    <div className="mb-15 flex flex-col items-center gap-6">
+                        <h1 className="text-center text-3xl font-semibold lg:max-w-3xl lg:text-5xl">
+                            {heading}
+                        </h1>
+                        <p className="text-center text-lg font-medium text-muted-foreground md:max-w-4xl lg:text-xl">
+                            {description}
+                        </p>
+                    </div>
+                    <div className="relative flex justify-center">
+                        <div className="border-muted2 relative flex w-full flex-col border md:w-1/2 lg:w-full">
+                            <div className="relative flex flex-col lg:flex-row">
+                                <div className="border-muted2 flex flex-col justify-between border-b border-solid p-10 lg:w-3/5 lg:border-r lg:border-b-0">
+                                    <h2 className="text-xl font-semibold">{feature1.title}</h2>
+                                    <p className="text-muted-foreground">{feature1.description}</p>
+                                    <img
+                                        src={feature1.image}
+                                        alt={feature1.title}
+                                        className="mt-8 aspect-[1.5] h-full w-full object-contain lg:aspect-[2.4] bg-muted"
+                                    />
                                 </div>
-                                <Separator />
-                            </React.Fragment>
-                        ))}
+                                <div className="flex flex-col justify-between p-10 lg:w-2/5">
+                                    <h2 className="text-xl font-semibold">{feature2.title}</h2>
+                                    <p className="text-muted-foreground">{feature2.description}</p>
+                                    <img
+                                        src={feature2.image}
+                                        alt={feature2.title}
+                                        className="mt-8 aspect-[1.45] h-full w-full object-contain bg-muted"
+                                    />
+                                </div>
+                            </div>
+                            <div className="border-muted2 relative flex flex-col border-t border-solid lg:flex-row">
+                                <div className="border-muted2 flex flex-col justify-between border-b border-solid p-10 lg:w-2/5 lg:border-r lg:border-b-0">
+                                    <h2 className="text-xl font-semibold">{feature3.title}</h2>
+                                    <p className="text-muted-foreground">{feature3.description}</p>
+                                    <img
+                                        src={feature3.image}
+                                        alt={feature3.title}
+                                        className="mt-8 aspect-[1.45] h-full w-full object-contain bg-muted"
+                                    />
+                                </div>
+                                <div className="flex flex-col justify-between p-10 lg:w-3/5">
+                                    <h2 className="text-xl font-semibold">{feature4.title}</h2>
+                                    <p className="text-muted-foreground">{feature4.description}</p>
+                                    <img
+                                        src={feature4.image}
+                                        alt={feature4.title}
+                                        className="mt-8 aspect-[1.5] h-full w-full object-contain bg-muted lg:aspect-[2.4]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </>
     );
 };
-
-export const exampleData: LostPet[] = [
-    {
-        image: "https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80",
-        name: "Luna",
-        species: "Perro",
-        date: "2024-10-05",
-        location: "Zona 16, Ciudad de Guatemala",
-        link: "/mascotas-perdidas/luna"
-    },
-    {
-        image: "https://th.bing.com/th/id/OIP.FKIgrS0iXezi-H_jKdemIwHaHa?w=172&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        name: "Michi",
-        species: "Gato",
-        date: "2024-10-01",
-        location: "Mixco, El Milagro",
-        link: "/mascotas-perdidas/michi"
-    },
-    {
-        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqFqSGu35kbVqLXJXC-dC4TGmEvtZpFTfl2g&s",
-        name: "Kira",
-        species: "Perro",
-        date: "2024-09-28",
-        location: "Antigua Guatemala",
-        link: "/mascotas-perdidas/kira"
-    },
-    {
-        image: "https://media.istockphoto.com/id/959866606/es/foto/conejo-4-meses-de-edad-sentada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=Yvx7yxd2K873-lukwWfO5GSXBx9qYLxt89XDQeRUSpQ=",
-        name: "Rambo",
-        species: "Conejo",
-        date: "2024-10-03",
-        location: "Zona 5, Ciudad de Guatemala",
-        link: "/mascotas-perdidas/rambo"
-    },
-    {
-        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/220px-Cat_November_2010-1a.jpg",
-        name: "Coco",
-        species: "Gato",
-        date: "2024-10-06",
-        location: "Villa Nueva, Bárcenas",
-        link: "/mascotas-perdidas/coco"
-    }
-];
 
 export default Dashboard;
