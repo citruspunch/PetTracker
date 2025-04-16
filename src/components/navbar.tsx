@@ -52,11 +52,12 @@ interface NavbarProps {
             url: string;
         };
     };
+    hideMenu?: boolean;
 }
 
 const Navbar = ({
     logo = {
-        url: routes.myPets,
+        url: routes.home,
         src: "./src/assets/PetTrackerLogo.png",
         alt: "logo",
         title: "Pet Tracker",
@@ -71,7 +72,7 @@ const Navbar = ({
                     title: "Reportar Como Pérdido",
                     description: "Reportar una mascota como perdida",
                     icon: <Book className="size-5 shrink-0" />,
-                    url: "#",
+                    url: routes.reportLostPet,
                 },
                 {
                     title: "Company",
@@ -96,9 +97,10 @@ const Navbar = ({
         }
     ],
     auth = {
-        login: { title: "Login", url: "#" },
-        signup: { title: "Sign up", url: "#" },
+        login: { title: "Login", url: routes.signIn },
+        signup: { title: "Sign up", url: routes.signUp },
     },
+    hideMenu = false,
 }: NavbarProps) => {
     return (
         <section className="py-4">
@@ -107,26 +109,28 @@ const Navbar = ({
                 <nav className="hidden justify-between lg:flex">
                     <div className="flex items-center gap-6">
                         {/* Logo */}
-                        <a href={logo.url} className="flex items-center gap-2">
-                            <img src={logo.src} className="max-h-8" alt={logo.alt} />
-                            <span className="text-lg font-semibold tracking-tighter">
+                        <Link to={logo.url} className="flex items-center gap-2">
+                            <img src={logo.src} className="max-h-9" alt={logo.alt} />
+                            <span className="text-2xl font-semibold tracking-tighter">
                                 {logo.title}
                             </span>
-                        </a>
-                        <div className="flex items-center">
-                            <NavigationMenu>
-                                <NavigationMenuList>
-                                    {menu.map((item) => renderMenuItem(item))}
-                                </NavigationMenuList>
-                            </NavigationMenu>
-                        </div>
+                        </Link>
+                        {!hideMenu && (
+                            <div className="flex items-center">
+                                <NavigationMenu>
+                                    <NavigationMenuList>
+                                        {menu.map((item) => renderMenuItem(item))}
+                                    </NavigationMenuList>
+                                </NavigationMenu>
+                            </div>
+                        )}
                     </div>
                     <div className="flex gap-2">
                         <Button asChild variant="outline" size="sm">
-                            <a href={auth.login.url}>{auth.login.title}</a>
+                            <Link to={auth.login.url}>{auth.login.title}</Link>
                         </Button>
                         <Button asChild size="sm">
-                            <a href={auth.signup.url}>{auth.signup.title}</a>
+                            <Link to={auth.signup.url}>{auth.signup.title}</Link>
                         </Button>
                     </div>
                 </nav>
@@ -135,43 +139,45 @@ const Navbar = ({
                 <div className="block lg:hidden">
                     <div className="flex items-center justify-between">
                         {/* Logo */}
-                        <a href={logo.url} className="flex items-center gap-2">
+                        <Link to={logo.url} className="flex items-center gap-2">
                             <img src={logo.src} className="max-h-8" alt={logo.alt} />
-                        </a>
-                        <Sheet>
-                            <SheetTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                    <Menu className="size-4" />
-                                </Button>
-                            </SheetTrigger>
-                            <SheetContent className="overflow-y-auto">
-                                <SheetHeader>
-                                    <SheetTitle>
-                                        <a href={logo.url} className="flex items-center gap-2">
-                                            <img src={logo.src} className="max-h-8" alt={logo.alt} />
-                                        </a>
-                                    </SheetTitle>
-                                </SheetHeader>
-                                <div className="flex flex-col gap-6 p-4">
-                                    <Accordion
-                                        type="single"
-                                        collapsible
-                                        className="flex w-full flex-col gap-4"
-                                    >
-                                        {menu.map((item) => renderMobileMenuItem(item))}
-                                    </Accordion>
+                        </Link>
+                        {!hideMenu && (
+                            <Sheet>
+                                <SheetTrigger asChild>
+                                    <Button variant="outline" size="icon">
+                                        <Menu className="size-4" />
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent className="overflow-y-auto">
+                                    <SheetHeader>
+                                        <SheetTitle>
+                                            <Link to={logo.url} className="flex items-center gap-2">
+                                                <img src={logo.src} className="max-h-8" alt={logo.alt} />
+                                            </Link>
+                                        </SheetTitle>
+                                    </SheetHeader>
+                                    <div className="flex flex-col gap-6 p-4">
+                                        <Accordion
+                                            type="single"
+                                            collapsible
+                                            className="flex w-full flex-col gap-4"
+                                        >
+                                            {menu.map((item) => renderMobileMenuItem(item))}
+                                        </Accordion>
 
-                                    <div className="flex flex-col gap-3">
-                                        <Button asChild variant="outline">
-                                            <a href={auth.login.url}>{auth.login.title}</a>
-                                        </Button>
-                                        <Button asChild>
-                                            <a href={auth.signup.url}>{auth.signup.title}</a>
-                                        </Button>
+                                        <div className="flex flex-col gap-3">
+                                            <Button asChild variant="outline">
+                                                <Link to={auth.login.url}>{auth.login.title}</Link>
+                                            </Button>
+                                            <Button asChild>
+                                                <Link to={auth.signup.url}>{auth.signup.title}</Link>
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </SheetContent>
-                        </Sheet>
+                                </SheetContent>
+                            </Sheet>
+                        )}
                     </div>
                 </div>
             </div>
