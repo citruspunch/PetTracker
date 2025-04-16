@@ -101,7 +101,6 @@ const HomePage = ({
                                             <img
                                                 src={images.first}
                                                 alt=""
-                                                className="object-fit h-full w-full object-center"
                                             />
                                     </div>
                                     <div className="relative overflow-hidden rounded-[5.2%] border border-muted bg-muted">
@@ -109,7 +108,6 @@ const HomePage = ({
                                             <img
                                                 src={images.second}
                                                 alt=""
-                                                className="absolute z-10 w-full rounded-[16%]"
                                             />
                                         </div>
                                     </div>
@@ -117,7 +115,6 @@ const HomePage = ({
                                             <img
                                                 src={images.third}
                                                 alt=""
-                                                className="size-full object-cover object-center"
                                             />
                                     </div>
                                     
@@ -126,7 +123,6 @@ const HomePage = ({
                                             <img
                                                 src={images.fourth}
                                                 alt=""
-                                                className="size-full object-cover object-center"
                                             />
                                         </div>
                                     </div>
