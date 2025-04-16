@@ -77,6 +77,8 @@ const Login = ({
                                     Olvidé mi contraseña
                                 </Link>
                             </div>
+                        </div>
+                        <div className="mt-4 flex flex-col gap-3">
                             <Button type="submit" className="mt-2 w-full">
                                 {loginText}
                             </Button>
