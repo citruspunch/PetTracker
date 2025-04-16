@@ -4,9 +4,11 @@ import ExploreLostPets from "@/features/exploreLostPets/pages/ExploreLostPetsPag
 import HomePage from "./home";
 import Dashboard from "./Dashboard";
 import { useState } from "react";
-import Login from "./Login";
+import Login from "./auth/Login";
+import Signup from "./auth/Signup";
 
 function App() {
+  // TODO - Implement authentication logic
   const [user, setUser] = useState<String | null>(null);
 
   return (
@@ -14,6 +16,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/Dashboard" element={user ? <Dashboard /> : <Login />} />
+        <Route path="/sign-in" element={<Login />} />
+        <Route path="/sign-up" element={<Signup />} />
         <Route path="/my-pets" element={<MyPetsPage />} />
         <Route path="/explore-lost-pets" element={<ExploreLostPets />} />
       </Routes>
