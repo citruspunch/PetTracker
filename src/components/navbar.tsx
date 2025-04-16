@@ -57,7 +57,7 @@ interface NavbarProps {
 
 const Navbar = ({
     logo = {
-        url: routes.home,
+        url: routes.dashboard,
         src: "./src/assets/PetTrackerLogo.png",
         alt: "logo",
         title: "Pet Tracker",
