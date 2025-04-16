@@ -57,7 +57,7 @@ const HomePage = ({
     return (
         <>
             <Navbar hideMenu />
-            <section className="py-12 md:py-20">
+            <section className="py-8">
                 <div className="container mx-auto px-6 lg:px-0">
                     <div className="flex flex-col items-center gap-8 md:flex-row">
                         <div className="flex-1">
