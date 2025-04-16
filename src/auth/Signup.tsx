@@ -76,7 +76,7 @@ const Signup = ({
                                     className="bg-white"
                                 />
                             </div>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-3">
                                 <Button type="submit" className="mt-2 w-full">
                                     {signupText}
                                 </Button>
