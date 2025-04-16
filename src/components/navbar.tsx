@@ -103,7 +103,7 @@ const Navbar = ({
     hideMenu = false,
 }: NavbarProps) => {
     return (
-        <section className="py-4">
+        <section className="py-4 bg-white shadow-sm">
             <div className="container mx-auto">
                 {/* Desktop Menu */}
                 <nav className="hidden justify-between lg:flex">
@@ -126,10 +126,10 @@ const Navbar = ({
                         )}
                     </div>
                     <div className="flex gap-2">
-                        <Button asChild variant="outline" size="sm">
+                        <Button asChild variant="outline" size="default">
                             <Link to={auth.login.url}>{auth.login.title}</Link>
                         </Button>
-                        <Button asChild size="sm">
+                        <Button asChild size="default">
                             <Link to={auth.signup.url}>{auth.signup.title}</Link>
                         </Button>
                     </div>
@@ -137,10 +137,13 @@ const Navbar = ({
 
                 {/* Mobile Menu */}
                 <div className="block lg:hidden">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between px-6">
                         {/* Logo */}
-                        <Link to={logo.url} className="flex items-center gap-2">
-                            <img src={logo.src} className="max-h-8" alt={logo.alt} />
+                        <Link to={logo.url} className="flex items-center gap-2 ">
+                            <img src={logo.src} className="max-h-9" alt={logo.alt} />
+                            <span className="text-2xl font-semibold tracking-tighter">
+                                {logo.title}
+                            </span>
                         </Link>
                         {!hideMenu && (
                             <Sheet>
