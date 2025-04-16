@@ -38,7 +38,7 @@ const Login = ({
     signupUrl = routes.signUp,
 }: LoginProps) => {
     return (
-        <section className="h-screen py-35 bg-muted">
+        <section className="h-screen flex items-center justify-center bg-muted">
             <div className="container mx-auto">
                 <div className="flex flex-col gap-4">
                     <div className="mx-auto w-full max-w-sm rounded-md p-6 shadow bg-white">
@@ -46,7 +46,7 @@ const Login = ({
                             <Link to={logo.url} className="mb-3 flex items-center gap-2">
                                 <img src={logo.src} className="max-h-11" alt={logo.alt} />
                             </Link>
-                            <h1 className="mb-2 text-3xl font-bold">{heading}</h1>
+                            <h1 className="mb-2 text-4xl font-bold">{heading}</h1>
                             <p className="text-muted-foreground">{subheading}</p>
                         </div>
                         <div className="grid gap-4">
@@ -73,9 +73,9 @@ const Login = ({
                                         Recordar contraseña
                                     </label>
                                 </div>
-                                <a href="#" className="text-sm text-primary hover:underline">
+                                <Link to={routes.resetPassword} className="text-sm text-primary hover:underline">
                                     Olvidé mi contraseña
-                                </a>
+                                </Link>
                             </div>
                             <Button type="submit" className="mt-2 w-full">
                                 {loginText}
@@ -89,7 +89,7 @@ const Login = ({
                                 {githubText}
                             </Button>
                         </div>
-                        <div className="mx-auto mt-8 mb-2 flex justify-center gap-1 text-sm text-muted-foreground">
+                        <div className="mx-auto mt-7 mb-2 flex justify-center gap-1 text-sm text-muted-foreground">
                             <p>{signupText}</p>
                             <Link to={signupUrl} className="font-medium text-primary hover:underline">
                                 Registrate
