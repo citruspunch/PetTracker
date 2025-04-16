@@ -41,7 +41,7 @@ const Signup = ({
         <section className="h-screen bg-muted">
             <div className="flex h-full items-center justify-center mx-auto">
                 <div className="flex w-full max-w-sm flex-col items-center gap-y-6 rounded-md border border-muted bg-white px-6 py-8 shadow-md">
-                    <div className="flex flex-col items-center gap-y-2">
+                    <div className="flex flex-col items-center gap-y-3">
                         {/* Logo */}
                         <div className="flex items-center gap-2 lg:justify-start">
                             <Link to={logo.url}>
@@ -53,9 +53,9 @@ const Signup = ({
                                 />
                             </Link>
                         </div>
-                        <h1 className="text-3xl font-semibold">{heading}</h1>
+                        <h1 className="mb-1 text-4xl font-semibold">{heading}</h1>
                         {subheading && (
-                            <p className="text-sm text-muted-foreground">{subheading}</p>
+                            <p className="text-muted-foreground">{subheading}</p>
                         )}
                     </div>
                     <div className="flex w-full flex-col gap-8">
