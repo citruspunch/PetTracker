@@ -102,13 +102,13 @@ const Navbar = ({
     },
     hideMenu = false,
 }: NavbarProps) => {
+    const isAuthenticated = true;
     return (
         <section className="py-4 bg-white shadow-sm">
             <div className="container mx-auto">
-                {/* Desktop Menu */}
+                {/* Menu Escritorio */}
                 <nav className="hidden justify-between lg:flex">
                     <div className="flex items-center gap-6">
-                        {/* Logo */}
                         <Link to={logo.url} className="flex items-center gap-2">
                             <img src={logo.src} className="max-h-9" alt={logo.alt} />
                             <span className="text-2xl font-semibold tracking-tighter">
@@ -126,19 +126,27 @@ const Navbar = ({
                         )}
                     </div>
                     <div className="flex gap-2">
-                        <Button asChild variant="outline" size="default">
-                            <Link to={auth.login.url}>{auth.login.title}</Link>
-                        </Button>
-                        <Button asChild size="default">
-                            <Link to={auth.signup.url}>{auth.signup.title}</Link>
-                        </Button>
+                        {!isAuthenticated ? (
+                            <>
+                                <Button asChild variant="outline" size="default">
+                                    <Link to={auth.login.url}>{auth.login.title}</Link>
+                                </Button>
+                                <Button asChild size="default">
+                                    <Link to={auth.signup.url}>{auth.signup.title}</Link>
+                                </Button>
+                            </>
+                        ) : (
+                            <Button asChild variant="outline" size="default">
+                                <Link to={routes.logout}>Cerrar Sesión</Link>
+                            </Button>
+                        )}
+
                     </div>
                 </nav>
 
-                {/* Mobile Menu */}
+                {/* Menu Para Telefonos */}
                 <div className="block lg:hidden">
                     <div className="flex items-center justify-between px-6">
-                        {/* Logo */}
                         <Link to={logo.url} className="flex items-center gap-2 ">
                             <img src={logo.src} className="max-h-9" alt={logo.alt} />
                             <span className="text-2xl font-semibold tracking-tighter">
@@ -170,12 +178,20 @@ const Navbar = ({
                                         </Accordion>
 
                                         <div className="flex flex-col gap-3">
-                                            <Button asChild variant="outline">
-                                                <Link to={auth.login.url}>{auth.login.title}</Link>
-                                            </Button>
-                                            <Button asChild>
-                                                <Link to={auth.signup.url}>{auth.signup.title}</Link>
-                                            </Button>
+                                            {!isAuthenticated ? (
+                                                <>
+                                                    <Button asChild variant="outline">
+                                                        <Link to={auth.login.url}>{auth.login.title}</Link>
+                                                    </Button>
+                                                    <Button asChild>
+                                                        <Link to={auth.signup.url}>{auth.signup.title}</Link>
+                                                    </Button>
+                                                </>
+                                            ) : (
+                                                <Button asChild>
+                                                    <Link to={routes.logout}>Cerrar Sesión</Link>
+                                                </Button>
+                                            )}
                                         </div>
                                     </div>
                                 </SheetContent>
@@ -242,7 +258,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
     return (
         <a
-            className="flex flex-row gap-4 rounded-md p-3 w-50 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground"
+            className="flex flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground lg:w-50"
             href={item.url}
         >
             <div className="text-foreground">{item.icon}</div>
