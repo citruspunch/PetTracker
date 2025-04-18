@@ -33,16 +33,16 @@ const ExploreLostPets = ({
             <Navbar />
             <section className="py-8">
                 <div className="container mx-auto">
-                    <h1 className="mb-10 px-4 text-3xl font-semibold md:text-4xl">
+                    <h1 className="text-center md:text-start mb-8 px-4 text-3xl font-semibold md:text-4xl">
                         {heading}
                     </h1>
                     <div className="flex flex-col">
                         <Separator />
                         {items.map((item, index) => (
                             <React.Fragment key={index}>
-                                <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-4">
-                                    <div className="order-2 flex items-center gap-2 md:order-none">
-                                        <span className="flex h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
+                                <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-6">
+                                    <div className="order-2 flex items-center gap-2 md:order-none md:col-span-2">
+                                        <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
                                             {item.image ? (
                                                 <img
                                                     src={item.image}
@@ -53,19 +53,15 @@ const ExploreLostPets = ({
                                                 <MdPets className="h-9 w-9 text-muted-foreground" />
                                             )}
                                         </span>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col w-full ">
                                             <h3 className="text-[18px] font-semibold">{item.name}</h3>
-                                            <p className="text-[15px] text-muted-foreground">
-                                                Especie: {item.species}
-                                            </p>
-                                            <p className="text-[15px] text-muted-foreground">
-                                                Fecha de desaparición: {item.date}
-                                            </p>
+                                            <span className="text-[15px] text-muted-foreground">{item.species}</span>
+                                            <span className="text-[15px] font-semibold text-muted-foreground text-red-400">{item.date}</span>
                                         </div>
                                     </div>
-                                    <div className="flex flex-row items-center gap-4 md:order-none md:col-span-2">
+                                    <div className="flex flex-row items-center gap-4 md:order-none md:col-span-3">
                                         <MapPinned />
-                                        <p className="order-1 text-2xl font-semibold md:order-none md:col-span-2">
+                                        <p className="order-1 text-2xl font-semibold md:order-none md:col-span-2 line-clamp-2">
                                             {item.location}
                                         </p>
                                     </div>
