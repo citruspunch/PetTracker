@@ -7,7 +7,6 @@ import { PawPrint, ClipboardPlus, CircleUserRound } from 'lucide-react';
 import Navbar from "@/components/navbar";
 
 
-
 interface attibutesContent {
   label: string;
   value: string;
@@ -44,17 +43,17 @@ const PetDetails = ({
   return (
     <>
       <Navbar />
-      <section className="py-15">
+      <section className="py-12">
         <div className="container mx-auto">
           <div className="flex flex-col items-center gap-4 text-center">
             <Badge variant="outline">{badge}</Badge>
-            <h1 className="max-w-2xl text-3xl font-semibold md:text-4xl">
+            <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
               {heading}
             </h1>
             <p className="text-muted-foreground">{description}</p>
           </div>
-          <Tabs defaultValue={tabs[0].value} className="mt-8">
-            <TabsList className="container flex flex-col items-center justify-center gap-4 sm:flex-row md:gap-10">
+          <Tabs defaultValue={tabs[0].value} className="mt-6">
+            <TabsList className="container flex flex-col items-center justify-center gap-2 sm:flex-row md:gap-10">
               {tabs.map((tab) => (
                 <TabsTrigger
                   key={tab.value}
@@ -65,13 +64,13 @@ const PetDetails = ({
                 </TabsTrigger>
               ))}
             </TabsList>
-            <div className="mx-auto mt-8 max-w-screen-xl rounded-2xl bg-muted/70 p-6 lg:p-16">
+            <div className="mx-auto mt-5 md:mt-8 max-w-5/6 md:max-w-screen-xl rounded-2xl bg-muted/70 p-6 lg:p-16">
               <div className="relative">
                 {tabs.map((tab) => (
                   <TabsContent
                     key={tab.value}
                     value={tab.value}
-                    className="grid place-items-start gap-20 lg:grid-cols-2 lg:gap-10"
+                    className="grid place-items-start gap-7 lg:grid-cols-2 lg:gap-10"
                   >
                     <div className="flex flex-col gap-5 w-full lg:w-4/5 h-full justify-center">
                       <h3 className="text-3xl font-semibold lg:text-5xl">
@@ -90,7 +89,7 @@ const PetDetails = ({
 
                         )) || <li>No attributes available</li>}
                       </ul>
-                      <Button className="mt-2.5 w-fit gap-2" size="lg">
+                      <Button className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0" size="lg">
                         {tab.content.buttonText}
                       </Button>
                     </div>
