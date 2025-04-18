@@ -1,6 +1,6 @@
 import { routes } from '@/routes'
-import { Link, useNavigate } from 'react-router-dom'
 import { Menu } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 
 import {
   Accordion,
@@ -59,7 +59,7 @@ interface NavbarProps {
 const Navbar = ({
   logo = {
     url: routes.dashboard,
-    src: './src/assets/PetTrackerLogo.png',
+    src: '/PetTrackerLogo.png',
     alt: 'logo',
     title: 'Pet Tracker',
   },

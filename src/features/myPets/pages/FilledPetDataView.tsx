@@ -1,45 +1,47 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { PawPrint, ClipboardPlus, CircleUserRound } from 'lucide-react';
-import Navbar from "@/components/navbar";
-
+import Navbar from '@/components/navbar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Tables } from '@/lib/supabase-types'
+import { CircleUserRound, ClipboardPlus, PawPrint } from 'lucide-react'
 
 interface attibutesContent {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 interface TabContent {
-  title: string;
-  attributes: attibutesContent[];
-  buttonText: string;
-  imageSrc: string;
-  imageAlt: string;
+  title: string
+  attributes: attibutesContent[]
+  buttonText: string
+  imageSrc: string
+  imageAlt: string
 }
 
 interface Tab {
-  value: string;
-  icon: React.ReactNode;
-  label: string;
-  content: TabContent;
+  value: string
+  icon: React.ReactNode
+  label: string
+  content: TabContent
 }
 
-interface MyPetsPageProps {
-  badge?: string;
-  heading?: string;
-  description?: string;
-  tabs?: Tab[];
+interface Props {
+  badge?: string
+  heading?: string
+  description?: string
+  tabs?: Tab[]
+  pet: Tables<'pet'>
 }
 
-const PetDetails = ({
-  badge = "ID de la Mascota",
-  heading = "Nombre de la Mascota",
-  description = "Detalles de la mascota",
-  tabs = exampleData
-}: MyPetsPageProps) => {
+const FilledPetDataView = ({
+  badge = 'ID de la Mascota',
+  heading = 'Nombre de la Mascota',
+  description = 'Detalles de la mascota',
+  tabs = exampleData,
+  pet,
+}: Props) => {
   return (
     <>
       <Navbar />
@@ -81,15 +83,21 @@ const PetDetails = ({
                         {tab.content.attributes?.map((attribute, index) => (
                           <>
                             <li key={index} className="flex">
-                              <span className="font-medium w-2/5">{attribute.label}:</span>
-                              <span className="w-3/5 text-right">{attribute.value}</span>
+                              <span className="font-medium w-2/5">
+                                {attribute.label}:
+                              </span>
+                              <span className="w-3/5 text-right">
+                                {attribute.value}
+                              </span>
                             </li>
                             <Separator className="my-2" />
                           </>
-
                         )) || <li>No attributes available</li>}
                       </ul>
-                      <Button className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0" size="lg">
+                      <Button
+                        className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0"
+                        size="lg"
+                      >
                         {tab.content.buttonText}
                       </Button>
                     </div>
@@ -110,60 +118,62 @@ const PetDetails = ({
         </div>
       </section>
     </>
-
-  );
-};
+  )
+}
 
 const exampleData: Tab[] = [
   {
-    value: "tab-1",
+    value: 'tab-1',
     icon: <PawPrint className="h-auto w-4 shrink-0" />,
-    label: "Perfil de Mascota",
+    label: 'Perfil de Mascota',
     content: {
-      title: "Perfil de Mascota",
+      title: 'Perfil de Mascota',
       attributes: [
-        { label: "Sexo", value: "Macho" },
-        { label: "Especie", value: "Perro" },
-        { label: "Raza", value: "Golden Retriever" },
-        { label: "Edad", value: "3 años" },
+        { label: 'Sexo', value: 'Macho' },
+        { label: 'Especie', value: 'Perro' },
+        { label: 'Raza', value: 'Golden Retriever' },
+        { label: 'Edad', value: '3 años' },
       ],
-      buttonText: "Editar Perfil",
-      imageSrc: "https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80",
-      imageAlt: "Imagen de la mascota",
+      buttonText: 'Editar Perfil',
+      imageSrc:
+        'https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80',
+      imageAlt: 'Imagen de la mascota',
     },
   },
   {
-    value: "tab-2",
+    value: 'tab-2',
     icon: <ClipboardPlus className="h-auto w-4 shrink-0" />,
-    label: "Información Médica",
+    label: 'Información Médica',
     content: {
-      title: "Ficha Médica",
+      title: 'Ficha Médica',
       attributes: [
-        { label: "Castrado", value: "Sí" },
-        { label: "Alergias", value: "Polen, Polvo" },
-        { label: "Vacunas", value: "Rabia, Parvovirus" },
+        { label: 'Castrado', value: 'Sí' },
+        { label: 'Alergias', value: 'Polen, Polvo' },
+        { label: 'Vacunas', value: 'Rabia, Parvovirus' },
       ],
-      buttonText: "Actualizar Ficha Médica",
-      imageSrc: "https://www.amapolamunuera.com/wp-content/uploads/2020/06/medicamentos_veterinarios_1-2048x1365.jpg",
-      imageAlt: "Imagen médica",
+      buttonText: 'Actualizar Ficha Médica',
+      imageSrc:
+        'https://www.amapolamunuera.com/wp-content/uploads/2020/06/medicamentos_veterinarios_1-2048x1365.jpg',
+      imageAlt: 'Imagen médica',
     },
   },
   {
-    value: "tab-3",
+    value: 'tab-3',
     icon: <CircleUserRound className="h-auto w-4 shrink-0" />,
-    label: "Información de Contacto",
+    label: 'Información de Contacto',
     content: {
-      title: "Información de Contacto",
+      title: 'Información de Contacto',
       attributes: [
-        { label: "Dueño", value: "Juan Pérez" },
-        { label: "Teléfono", value: "+502 1234-5678" },
-        { label: "Correo", value: "juan.perez@example.com" },
+        { label: 'Dueño', value: 'Juan Pérez' },
+        { label: 'Teléfono', value: '+502 1234-5678' },
+        { label: 'Correo', value: 'juan.perez@example.com' },
       ],
-      buttonText: "Editar Contacto",
-      imageSrc: "https://nosotrasmismas.org/wp-content/uploads/2020/02/contacto.jpg",
-      imageAlt: "Imagen de contacto",
+      buttonText: 'Editar Contacto',
+      imageSrc:
+        'https://nosotrasmismas.org/wp-content/uploads/2020/02/contacto.jpg',
+      imageAlt: 'Imagen de contacto',
     },
   },
-];
+]
 
-export default PetDetails;
+export default FilledPetDataView

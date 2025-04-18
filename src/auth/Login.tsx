@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import supabase from '@/lib/supabase'
+import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { routes } from '../routes'
-import { Loader2 } from 'lucide-react'
 
 interface LoginProps {
   heading?: string
@@ -31,7 +31,7 @@ const Login = ({
   subheading = 'Bienvenido de nuevo',
   logo = {
     url: routes.home,
-    src: './src/assets/PetTrackerLogo.png',
+    src: '/PetTrackerLogo.png',
     alt: 'PetTrackerLogo',
   },
   loginText = 'Iniciar Sesión',

@@ -4,12 +4,11 @@ import Login from './auth/Login'
 import ResetPassword from './auth/ResetPassword'
 import Signup from './auth/Signup'
 import Dashboard from './Dashboard'
+import PetDetailsView from './features/myPets/pages/PetDetailsView'
+import MyPetsPage from './features/myPets/pages/PetPage'
 import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
-import PetDetails from './features/myPets/pages/PetDetails'
-import MyPetsPage from './features/myPets/pages/PetPage'
-
 
 function App() {
   // TODO - Implement authentication logic
@@ -40,7 +39,10 @@ function App() {
         <Route path={routes.resetPassword} element={<ResetPassword />} />
         <Route path={routes.myPets} element={<MyPetsPage />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
-        <Route path={routes.petDetails} element={<PetDetails />} />
+        <Route
+          path={`${routes.petDetails}/:petId`}
+          element={<PetDetailsView />}
+        />
       </Routes>
     </Router>
   )
