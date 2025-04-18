@@ -28,7 +28,7 @@ const MyPetsPage = ({
             <Navbar />
             <section className="py-15">
                 <div className="container mx-auto">
-                    <div className="mx-auto max-w-screen-lg">
+                    <div className="mx-auto max-w-5/6 md:max-w-screen-lg">
                         <div className="text-center lg:text-left">
                             <h1 className="text-left text-3xl font-medium md:text-4xl">
                                 {heading}
