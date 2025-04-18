@@ -11,7 +11,7 @@ import useUser from './hooks/useUser'
 import { routes } from './routes'
 
 function App() {
-  // TODO - Implement authentication logic
+
   const user = useUser()
 
   return (

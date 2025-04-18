@@ -3,9 +3,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import Navbar from '@/components/navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Tables } from '@/lib/supabase-types'
 import { CircleUserRound, ClipboardPlus, PawPrint } from 'lucide-react'
+import React from 'react'
 
 interface attibutesContent {
   label: string
@@ -81,8 +92,8 @@ const FilledPetDataView = ({
                       <ul className="text-muted-foreground lg:text-lg">
                         <Separator className="my-2" />
                         {tab.content.attributes?.map((attribute, index) => (
-                          <>
-                            <li key={index} className="flex">
+                          <React.Fragment key={index}>
+                            <li className="flex">
                               <span className="font-medium w-2/5">
                                 {attribute.label}:
                               </span>
@@ -91,15 +102,46 @@ const FilledPetDataView = ({
                               </span>
                             </li>
                             <Separator className="my-2" />
-                          </>
+                          </React.Fragment>
                         )) || <li>No attributes available</li>}
                       </ul>
-                      <Button
-                        className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0"
-                        size="lg"
-                      >
-                        {tab.content.buttonText}
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0"
+                            size="lg"
+                          >
+                            {tab.content.buttonText}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>{tab.content.buttonText}</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            {tab.content.attributes?.map((attribute) => (
+                              <React.Fragment key={attribute.label}>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label
+                                    htmlFor={attribute.label}
+                                    className="text-right"
+                                  >
+                                    {attribute.label}
+                                  </Label>
+                                  <Input
+                                    id={attribute.label}
+                                    defaultValue={attribute.value}
+                                    className="col-span-3"
+                                  />
+                                </div>
+                              </React.Fragment>
+                            ))}
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit">Guardar cambios</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                     <div className="relative h-[300px] w-full lg:h-[400px]">
                       <img
