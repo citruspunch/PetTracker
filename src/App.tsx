@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MyPetsPage from "@/features/myPets/pages/MyPetsPage";
+import MyPetsPage from "@/features/myPets/pages/PetPage";
 import ExploreLostPets from "@/features/exploreLostPets/pages/ExploreLostPetsPage";
 import HomePage from "./home";
 import Dashboard from "./Dashboard";
@@ -8,6 +8,7 @@ import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import { routes } from "./routes";
 import ResetPassword from "./auth/ResetPassword";
+import PetDetails from "@/features/myPets/pages/PetDetails";
 
 function App() {
   // TODO - Implement authentication logic
@@ -23,6 +24,7 @@ function App() {
         <Route path={routes.resetPassword} element={<ResetPassword />} />
         <Route path={routes.myPets} element={<MyPetsPage />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
+        <Route path={routes.petDetails} element={<PetDetails />} />
       </Routes>
     </Router>
   );
