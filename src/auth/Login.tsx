@@ -1,4 +1,4 @@
-import { FaGithub } from 'react-icons/fa'
+import { FaApple, FaFacebook } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import supabase from '@/lib/supabase'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { routes } from '../routes'
+import { Loader2 } from 'lucide-react'
 
 interface LoginProps {
   heading?: string
@@ -19,7 +20,8 @@ interface LoginProps {
   }
   loginText?: string
   googleText?: string
-  githubText?: string
+  facebookText?: string
+  appleText?: string
   signupText?: string
   signupUrl?: string
 }
@@ -34,22 +36,26 @@ const Login = ({
   },
   loginText = 'Iniciar Sesión',
   googleText = 'Acceder con Google',
-  githubText = 'Acceder con GitHub',
+  facebookText = 'Acceder con Facebook',
+  appleText = 'Acceder con apple',
   signupText = '¿Aún no tienes cuenta?',
   signupUrl = routes.signUp,
 }: LoginProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const login = async () => {
+    setLoading(true)
     // TODO: add validations for empty fields
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     })
     if (error === null) navigate(routes.dashboard)
+    setLoading(false)
   }
 
   return (
@@ -105,16 +111,27 @@ const Login = ({
               </div>
             </div>
             <div className="mt-4 flex flex-col gap-3">
-              <Button type="submit" className="mt-2 w-full" onClick={login}>
-                {loginText}
-              </Button>
+              {loading ? (
+                <Button disabled>
+                  <Loader2 className="animate-spin mr-2" />
+                  Iniciando sesión...
+                </Button>
+              ) : (
+                <Button type="submit" className="mt-2 w-full" onClick={login}>
+                  {loginText}
+                </Button>
+              )}
               <Button variant="outline" className="w-full">
                 <FcGoogle className="mr-2 size-5" />
                 {googleText}
               </Button>
               <Button variant="outline" className="w-full">
-                <FaGithub className="mr-2 size-5" />
-                {githubText}
+                <FaFacebook className="mr-2 size-5" />
+                {facebookText}
+              </Button>
+              <Button variant="outline" className="w-full">
+                <FaApple className="mr-2 size-5" />
+                {appleText}
               </Button>
             </div>
             <div className="mx-auto mt-7 mb-2 flex justify-center gap-1 text-sm text-muted-foreground">

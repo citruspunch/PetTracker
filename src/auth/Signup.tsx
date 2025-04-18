@@ -3,7 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { routes } from '@/routes'
-import { FaGithub } from 'react-icons/fa'
+import { FaApple, FaFacebook, FaGithub } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 interface SignupProps {
@@ -17,7 +17,8 @@ interface SignupProps {
   }
   signupText?: string
   googleText?: string
-  githubText?: string
+  facebookText?: string
+  appleText?: string
   loginText?: string
   loginUrl?: string
 }
@@ -32,7 +33,8 @@ const Signup = ({
     title: 'Pet Tracker',
   },
   googleText = 'Registrarse con Google',
-  githubText = 'Registrarse con GitHub',
+  facebookText = 'Registrarse con Facebook',
+  appleText = 'Registrarse con GitHub',
   signupText = 'Crear cuenta',
   loginText = '¿Ya tienes una cuenta?',
   loginUrl = routes.logIn,
@@ -85,8 +87,12 @@ const Signup = ({
                   {googleText}
                 </Button>
                 <Button variant="outline" className="w-full">
-                  <FaGithub className="mr-2 size-5" />
-                  {githubText}
+                  <FaFacebook className="mr-2 size-5" />
+                  {facebookText}
+                </Button>
+                <Button variant="outline" className="w-full">
+                  <FaApple className="mr-2 size-5" />
+                  {appleText}
                 </Button>
               </div>
             </div>
