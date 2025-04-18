@@ -1,44 +1,55 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { PawPrint, ClipboardPlus, CircleUserRound } from 'lucide-react';
-import Navbar from "@/components/navbar";
-
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { PawPrint, ClipboardPlus, CircleUserRound } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import Navbar from '@/components/navbar'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import React from 'react'
 
 interface attibutesContent {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 interface TabContent {
-  title: string;
-  attributes: attibutesContent[];
-  buttonText: string;
-  imageSrc: string;
-  imageAlt: string;
+  title: string
+  attributes: attibutesContent[]
+  buttonText: string
+  imageSrc: string
+  imageAlt: string
 }
 
 interface Tab {
-  value: string;
-  icon: React.ReactNode;
-  label: string;
-  content: TabContent;
+  value: string
+  icon: React.ReactNode
+  label: string
+  content: TabContent
 }
 
 interface MyPetsPageProps {
-  badge?: string;
-  heading?: string;
-  description?: string;
-  tabs?: Tab[];
+  badge?: string
+  heading?: string
+  description?: string
+  tabs?: Tab[]
 }
 
 const PetDetails = ({
-  badge = "ID de la Mascota",
-  heading = "Nombre de la Mascota",
-  description = "Detalles de la mascota",
-  tabs = exampleData
+  badge = 'ID de la Mascota',
+  heading = 'Nombre de la Mascota',
+  description = 'Detalles de la mascota',
+  tabs = exampleData,
 }: MyPetsPageProps) => {
   return (
     <>
@@ -79,19 +90,53 @@ const PetDetails = ({
                       <ul className="text-muted-foreground lg:text-lg">
                         <Separator className="my-2" />
                         {tab.content.attributes?.map((attribute, index) => (
-                          <>
-                            <li key={index} className="flex">
-                              <span className="font-medium w-2/5">{attribute.label}:</span>
-                              <span className="w-3/5 text-right">{attribute.value}</span>
+                          <React.Fragment key={index}>
+                            <li className="flex">
+                              <span className="font-medium w-2/5">
+                                {attribute.label}:
+                              </span>
+                              <span className="w-3/5 text-right">
+                                {attribute.value}
+                              </span>
                             </li>
                             <Separator className="my-2" />
-                          </>
-
+                          </React.Fragment>
                         )) || <li>No attributes available</li>}
                       </ul>
-                      <Button className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0" size="lg">
-                        {tab.content.buttonText}
-                      </Button>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0" size="lg">
+                            {tab.content.buttonText}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>{tab.content.buttonText}</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            {tab.content.attributes?.map((attribute) => (
+                              <React.Fragment key={attribute.label}>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label
+                                    htmlFor={attribute.label}
+                                    className="text-right"
+                                  >
+                                    {attribute.label}
+                                  </Label>
+                                  <Input
+                                    id={attribute.label}
+                                    defaultValue={attribute.value}
+                                    className="col-span-3"
+                                  />
+                                </div>
+                              </React.Fragment>
+                            ))}
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit">Guardar cambios</Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                     <div className="relative h-[300px] w-full lg:h-[400px]">
                       <img
@@ -110,60 +155,62 @@ const PetDetails = ({
         </div>
       </section>
     </>
-
-  );
-};
+  )
+}
 
 const exampleData: Tab[] = [
   {
-    value: "tab-1",
+    value: 'tab-1',
     icon: <PawPrint className="h-auto w-4 shrink-0" />,
-    label: "Perfil de Mascota",
+    label: 'Perfil de Mascota',
     content: {
-      title: "Perfil de Mascota",
+      title: 'Perfil de Mascota',
       attributes: [
-        { label: "Sexo", value: "Macho" },
-        { label: "Especie", value: "Perro" },
-        { label: "Raza", value: "Golden Retriever" },
-        { label: "Edad", value: "3 años" },
+        { label: 'Sexo', value: 'Macho' },
+        { label: 'Especie', value: 'Perro' },
+        { label: 'Raza', value: 'Golden Retriever' },
+        { label: 'Edad', value: '3 años' },
       ],
-      buttonText: "Editar Perfil",
-      imageSrc: "https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80",
-      imageAlt: "Imagen de la mascota",
+      buttonText: 'Editar Perfil',
+      imageSrc:
+        'https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80',
+      imageAlt: 'Imagen de la mascota',
     },
   },
   {
-    value: "tab-2",
+    value: 'tab-2',
     icon: <ClipboardPlus className="h-auto w-4 shrink-0" />,
-    label: "Información Médica",
+    label: 'Información Médica',
     content: {
-      title: "Ficha Médica",
+      title: 'Ficha Médica',
       attributes: [
-        { label: "Castrado", value: "Sí" },
-        { label: "Alergias", value: "Polen, Polvo" },
-        { label: "Vacunas", value: "Rabia, Parvovirus" },
+        { label: 'Castrado', value: 'Sí' },
+        { label: 'Alergias', value: 'Polen, Polvo' },
+        { label: 'Vacunas', value: 'Rabia, Parvovirus' },
       ],
-      buttonText: "Actualizar Ficha Médica",
-      imageSrc: "https://www.amapolamunuera.com/wp-content/uploads/2020/06/medicamentos_veterinarios_1-2048x1365.jpg",
-      imageAlt: "Imagen médica",
+      buttonText: 'Actualizar Ficha Médica',
+      imageSrc:
+        'https://www.amapolamunuera.com/wp-content/uploads/2020/06/medicamentos_veterinarios_1-2048x1365.jpg',
+      imageAlt: 'Imagen médica',
     },
   },
   {
-    value: "tab-3",
+    value: 'tab-3',
     icon: <CircleUserRound className="h-auto w-4 shrink-0" />,
-    label: "Información de Contacto",
+    label: 'Información de Contacto',
     content: {
-      title: "Información de Contacto",
+      title: 'Información de Contacto',
       attributes: [
-        { label: "Dueño", value: "Juan Pérez" },
-        { label: "Teléfono", value: "+502 1234-5678" },
-        { label: "Correo", value: "juan.perez@example.com" },
+        { label: 'Dueño', value: 'Juan Pérez' },
+        { label: 'Teléfono', value: '+502 1234-5678' },
+        { label: 'Correo', value: 'juan.perez@example.com' },
       ],
-      buttonText: "Editar Contacto",
-      imageSrc: "https://nosotrasmismas.org/wp-content/uploads/2020/02/contacto.jpg",
-      imageAlt: "Imagen de contacto",
+      buttonText: 'Editar Contacto',
+      imageSrc:
+        'https://nosotrasmismas.org/wp-content/uploads/2020/02/contacto.jpg',
+      imageAlt: 'Imagen de contacto',
     },
   },
-];
+]
 
-export default PetDetails;
+export default PetDetails

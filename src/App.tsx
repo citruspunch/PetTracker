@@ -12,7 +12,7 @@ import MyPetsPage from './features/myPets/pages/PetPage'
 
 
 function App() {
-  // TODO - Implement authentication logic
+
   const user = useUser()
 
   return (
