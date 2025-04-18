@@ -1,4 +1,4 @@
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { routes } from "@/routes";
 
@@ -63,37 +63,13 @@ const Navbar = ({
         title: "Pet Tracker",
     },
     menu = [
-        { title: "Explorar Mascotas Pérdidas", url: routes.exploreLostPets },
+        {
+            title: "Explorar Mascotas Pérdidas",
+            url: routes.exploreLostPets
+        },
         {
             title: "Mis Mascotas",
             url: routes.myPets,
-            items: [
-                {
-                    title: "Reportar Como Pérdido",
-                    description: "Reportar una mascota como perdida",
-                    icon: <Book className="size-5 shrink-0" />,
-                    url: routes.reportLostPet,
-                },
-                {
-                    title: "Company",
-                    description: "Our mission is to innovate and empower the world",
-                    icon: <Trees className="size-5 shrink-0" />,
-                    url: "#",
-                },
-                {
-                    title: "Careers",
-                    description: "Browse job listing and discover our workspace",
-                    icon: <Sunset className="size-5 shrink-0" />,
-                    url: "#",
-                },
-                {
-                    title: "Support",
-                    description:
-                        "Get in touch with our support team or visit our community forums",
-                    icon: <Zap className="size-5 shrink-0" />,
-                    url: "#",
-                },
-            ],
         }
     ],
     auth = {
