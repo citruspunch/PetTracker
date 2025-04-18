@@ -1,21 +1,21 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
+import Navbar from '@/components/navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { PawPrint, ClipboardPlus, CircleUserRound } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import Navbar from '@/components/navbar'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
+import { Tables } from '@/lib/supabase-types'
+import { CircleUserRound, ClipboardPlus, PawPrint } from 'lucide-react'
 import React from 'react'
 
 interface attibutesContent {
@@ -38,19 +38,21 @@ interface Tab {
   content: TabContent
 }
 
-interface MyPetsPageProps {
+interface Props {
   badge?: string
   heading?: string
   description?: string
   tabs?: Tab[]
+  pet: Tables<'pet'>
 }
 
-const PetDetails = ({
+const FilledPetDataView = ({
   badge = 'ID de la Mascota',
   heading = 'Nombre de la Mascota',
   description = 'Detalles de la mascota',
   tabs = exampleData,
-}: MyPetsPageProps) => {
+  pet,
+}: Props) => {
   return (
     <>
       <Navbar />
@@ -105,7 +107,10 @@ const PetDetails = ({
                       </ul>
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0" size="lg">
+                          <Button
+                            className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0"
+                            size="lg"
+                          >
                             {tab.content.buttonText}
                           </Button>
                         </DialogTrigger>
@@ -213,4 +218,4 @@ const exampleData: Tab[] = [
   },
 ]
 
-export default PetDetails
+export default FilledPetDataView
