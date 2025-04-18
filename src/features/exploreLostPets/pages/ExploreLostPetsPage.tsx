@@ -115,9 +115,9 @@ export const exampleData: LostPet[] = [
         link: "/mascotas-perdidas/kira"
     },
     {
-        image: "https://media.istockphoto.com/id/959866606/es/foto/conejo-4-meses-de-edad-sentada-sobre-fondo-blanco.jpg?s=612x612&w=0&k=20&c=Yvx7yxd2K873-lukwWfO5GSXBx9qYLxt89XDQeRUSpQ=",
+        image: "https://img.freepik.com/foto-gratis/perro-pug-aislado-fondo-blanco_2829-11416.jpg",
         name: "Rambo",
-        species: "Conejo",
+        species: "Perro",
         date: "2024-10-03",
         location: "Zona 5, Ciudad de Guatemala",
         link: "/mascotas-perdidas/rambo"
