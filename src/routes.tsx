@@ -9,7 +9,7 @@ export const routes = {
   editPet: '/edit-pet',
   editUser: '/edit-user',
   resetPassword: '/reset-password',
-  signIn: '/sign-in',
+  logIn: '/log-in',
   signUp: '/sign-up',
   logout: '/logout',
 }
