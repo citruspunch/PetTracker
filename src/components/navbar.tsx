@@ -1,8 +1,6 @@
 import { routes } from '@/routes'
 import { Link, useNavigate } from 'react-router-dom'
-import { Menu } from "lucide-react";
-
-
+import { Menu } from 'lucide-react'
 
 import {
   Accordion,
@@ -59,25 +57,20 @@ interface NavbarProps {
 }
 
 const Navbar = ({
-    logo = {
-        url: routes.dashboard,
-        src: "./src/assets/PetTrackerLogo.png",
-        alt: "logo",
-        title: "Pet Tracker",
+  logo = {
+    url: routes.dashboard,
+    src: './src/assets/PetTrackerLogo.png',
+    alt: 'logo',
+    title: 'Pet Tracker',
+  },
+  menu = [
+    {
+      title: 'Explorar Mascotas Pérdidas',
+      url: routes.exploreLostPets,
     },
-    menu = [
-        {
-            title: "Explorar Mascotas Pérdidas",
-            url: routes.exploreLostPets
-        },
-        {
-            title: "Mis Mascotas",
-            url: routes.myPets,
-        }
-    ],
-    auth = {
-        login: { title: "Login", url: routes.signIn },
-        signup: { title: "Sign up", url: routes.signUp },
+    {
+      title: 'Mis Mascotas',
+      url: routes.myPets,
     },
   ],
   auth = {
