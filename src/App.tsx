@@ -9,6 +9,7 @@ import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
 
+
 function App() {
   // TODO - Implement authentication logic
   const user = useUser()
@@ -38,6 +39,7 @@ function App() {
         <Route path={routes.resetPassword} element={<ResetPassword />} />
         <Route path={routes.myPets} element={<MyPetsPage />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
+        <Route path={routes.petDetails} element={<PetDetails />} />
       </Routes>
     </Router>
   )

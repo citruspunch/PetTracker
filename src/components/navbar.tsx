@@ -1,6 +1,8 @@
 import { routes } from '@/routes'
-import { Book, Menu, Sunset, Trees, Zap } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Menu } from "lucide-react";
+
+
 
 import {
   Accordion,
@@ -57,44 +59,25 @@ interface NavbarProps {
 }
 
 const Navbar = ({
-  logo = {
-    url: routes.dashboard,
-    src: './src/assets/PetTrackerLogo.png',
-    alt: 'logo',
-    title: 'Pet Tracker',
-  },
-  menu = [
-    { title: 'Explorar Mascotas Pérdidas', url: routes.exploreLostPets },
-    {
-      title: 'Mis Mascotas',
-      url: routes.myPets,
-      items: [
+    logo = {
+        url: routes.dashboard,
+        src: "./src/assets/PetTrackerLogo.png",
+        alt: "logo",
+        title: "Pet Tracker",
+    },
+    menu = [
         {
-          title: 'Reportar Como Pérdido',
-          description: 'Reportar una mascota como perdida',
-          icon: <Book className="size-5 shrink-0" />,
-          url: routes.reportLostPet,
+            title: "Explorar Mascotas Pérdidas",
+            url: routes.exploreLostPets
         },
         {
-          title: 'Company',
-          description: 'Our mission is to innovate and empower the world',
-          icon: <Trees className="size-5 shrink-0" />,
-          url: '#',
-        },
-        {
-          title: 'Careers',
-          description: 'Browse job listing and discover our workspace',
-          icon: <Sunset className="size-5 shrink-0" />,
-          url: '#',
-        },
-        {
-          title: 'Support',
-          description:
-            'Get in touch with our support team or visit our community forums',
-          icon: <Zap className="size-5 shrink-0" />,
-          url: '#',
-        },
-      ],
+            title: "Mis Mascotas",
+            url: routes.myPets,
+        }
+    ],
+    auth = {
+        login: { title: "Login", url: routes.signIn },
+        signup: { title: "Sign up", url: routes.signUp },
     },
   ],
   auth = {
