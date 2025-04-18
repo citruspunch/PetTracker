@@ -1,5 +1,4 @@
 import ExploreLostPets from '@/features/exploreLostPets/pages/ExploreLostPetsPage'
-import MyPetsPage from '@/features/myPets/pages/MyPetsPage'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Login from './auth/Login'
 import ResetPassword from './auth/ResetPassword'
@@ -8,6 +7,8 @@ import Dashboard from './Dashboard'
 import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
+import PetDetails from './features/myPets/pages/PetDetails'
+import MyPetsPage from './features/myPets/pages/PetPage'
 
 
 function App() {
