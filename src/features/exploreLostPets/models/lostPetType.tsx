@@ -10,6 +10,7 @@ export type LostPetType = {
   name: string | null
   image: string | null
   owner: string | null
+  sex: string | null
   species: string | null    
   breed: string | null
   spayed_or_neutered: boolean | null

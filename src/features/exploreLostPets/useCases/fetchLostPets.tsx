@@ -1,6 +1,6 @@
 import supabase from '@/lib/supabase'
-import { fetchedLostPetType } from '../models/fetchedLostPetType'
-import { LostPetType } from '../models/lostPetType'
+import { fetchedLostPetType } from '../models/FetchedLostPetType'
+import { LostPetType } from '../models/LostPetType'
 import { format } from '@formkit/tempo'
 
 export const fetchLostPets = async () : Promise<LostPetType[]> => {
@@ -56,6 +56,7 @@ export const fetchLostPets = async () : Promise<LostPetType[]> => {
     name: lostPet.pet?.name ?? '',
     image: lostPet.pet?.image ?? '',
     owner: lostPet.pet?.owner ?? '',
+    sex: lostPet.pet?.sex ?? '',
     species: lostPet.pet?.animal_type ?? '',
     breed: lostPet.pet?.breed ?? '',
     spayed_or_neutered: lostPet.pet?.spayed_or_neutered ?? false,

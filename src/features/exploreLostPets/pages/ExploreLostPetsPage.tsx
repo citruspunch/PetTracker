@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import Navbar from '@/components/navbar'
 import { useNavigate } from 'react-router-dom'
-import { fetchLostPets } from '../useCases/fetchLostPets'
-import { LostPetType } from '../models/lostPetType'
+import { fetchLostPets } from '../useCases/FetchLostPets'
+import { LostPetType } from '../models/LostPetType'
 import { Skeleton } from '@/components/ui/skeleton'
+import { routes } from '@/routes'
 
 const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
   const [lostPets, setLostPets] = useState<LostPetType[]>([])
@@ -89,7 +90,7 @@ const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
           </p>
           <Button
             variant="outline"
-            onClick={() => navigate('/reportar-mascota')}
+            onClick={() => navigate(routes.reportLostPet)}
             className="mt-6 mb-30 bg-red-700 text-white "
           >
             Reportar una mascota perdida

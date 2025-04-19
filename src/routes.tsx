@@ -1,5 +1,3 @@
-import LostPetDetails from "./features/exploreLostPets/pages/LostPetDetailsView";
-
 export const routes = {
   home: '/',
   dashboard: '/dashboard',
