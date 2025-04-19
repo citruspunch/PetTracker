@@ -34,7 +34,7 @@ const useUser = () => {
           break
       }
     })
-  })
+  }, [])
   return user
 }
 
