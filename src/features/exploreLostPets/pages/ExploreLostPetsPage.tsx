@@ -42,43 +42,58 @@ const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
             </h1>
             <div className="flex flex-col">
               <Separator />
-              {Array(3).fill(null).map((_, index) => (
-                <React.Fragment key={index}>
-                  <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-6">
-                    <div className="order-2 flex items-center gap-2 md:order-none md:col-span-2">
-                      {/* image skeleton */}
-                      <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
-                        <Skeleton className="h-full w-full rounded-md" />
-                      </span>
-                      <div className="flex flex-col w-full">
-                        {/* Name skeleton */}
-                        <Skeleton className="h-5 w-3/4 mb-2" />
-                        {/* Species Skeleton */}
-                        <Skeleton className="h-4 w-1/2 mb-1" />
-                        {/* Date skeleton */}
-                        <Skeleton className="h-4 w-1/3" />
+              {Array(3)
+                .fill(null)
+                .map((_, index) => (
+                  <React.Fragment key={index}>
+                    <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-6">
+                      <div className="order-2 flex items-center gap-2 md:order-none md:col-span-2">
+                        {/* image skeleton */}
+                        <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
+                          <Skeleton className="h-full w-full rounded-md" />
+                        </span>
+                        <div className="flex flex-col w-full">
+                          {/* Name skeleton */}
+                          <Skeleton className="h-5 w-3/4 mb-2" />
+                          {/* Species Skeleton */}
+                          <Skeleton className="h-4 w-1/2 mb-1" />
+                          {/* Date skeleton */}
+                          <Skeleton className="h-4 w-1/3" />
+                        </div>
+                      </div>
+                      {/* Address skeleton */}
+                      <div className="flex flex-row items-center gap-4 md:order-none md:col-span-3">
+                        <Skeleton className="h-6 w-6" />
+                        <Skeleton className="h-5 w-full" />
+                      </div>
+                      {/* Button Skeleton */}
+                      <div className="order-3 ml-auto w-fit gap-2 md:order-none">
+                        <Skeleton className="h-8 w-20 rounded-md" />
                       </div>
                     </div>
-                    {/* Address skeleton */}
-                    <div className="flex flex-row items-center gap-4 md:order-none md:col-span-3">
-                      <Skeleton className="h-6 w-6" />
-                      <Skeleton className="h-5 w-full" />
-                    </div>
-                    {/* Button Skeleton */}
-                    <div className="order-3 ml-auto w-fit gap-2 md:order-none">
-                      <Skeleton className="h-8 w-20 rounded-md" />
-                    </div>
-                  </div>
-                  <Separator />
-                </React.Fragment>
-              ))}
+                    <Separator />
+                  </React.Fragment>
+                ))}
             </div>
           </div>
         </section>
       )}
       {!loading && lostPets.length === 0 && (
-        <div className="flex items-center justify-center h-screen">
-          <p className="text-lg font-semibold">No hay mascotas perdidas</p>
+        <div className="flex flex-col items-center justify-center h-screen text-center">
+          <MdPets className="h-16 w-16 mb-4" />
+          <p className="text-lg font-semibold ">
+            No hay mascotas perdidas
+          </p>
+          <p className="text-sm text-muted-foreground w-5/6">
+            Parece que no hay reportes de mascotas perdidas en este momento.
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => navigate('/reportar-mascota')}
+            className="mt-6 mb-30 bg-red-700 text-white "
+          >
+            Reportar una mascota perdida
+          </Button>
         </div>
       )}
       {!loading && lostPets.length > 0 && (
