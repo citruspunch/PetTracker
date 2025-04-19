@@ -40,12 +40,38 @@ const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
             <h1 className="text-center md:text-start mb-8 px-4 text-3xl font-semibold md:text-4xl">
               {heading}
             </h1>
-            <div className="flex items-center space-x-4">
-              <Skeleton className="h-12 w-12 rounded-full" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-5/6" />
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
+            <div className="flex flex-col">
+              <Separator />
+              {Array(3).fill(null).map((_, index) => (
+                <React.Fragment key={index}>
+                  <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-6">
+                    <div className="order-2 flex items-center gap-2 md:order-none md:col-span-2">
+                      {/* image skeleton */}
+                      <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
+                        <Skeleton className="h-full w-full rounded-md" />
+                      </span>
+                      <div className="flex flex-col w-full">
+                        {/* Name skeleton */}
+                        <Skeleton className="h-5 w-3/4 mb-2" />
+                        {/* Species Skeleton */}
+                        <Skeleton className="h-4 w-1/2 mb-1" />
+                        {/* Date skeleton */}
+                        <Skeleton className="h-4 w-1/3" />
+                      </div>
+                    </div>
+                    {/* Address skeleton */}
+                    <div className="flex flex-row items-center gap-4 md:order-none md:col-span-3">
+                      <Skeleton className="h-6 w-6" />
+                      <Skeleton className="h-5 w-full" />
+                    </div>
+                    {/* Button Skeleton */}
+                    <div className="order-3 ml-auto w-fit gap-2 md:order-none">
+                      <Skeleton className="h-8 w-20 rounded-md" />
+                    </div>
+                  </div>
+                  <Separator />
+                </React.Fragment>
+              ))}
             </div>
           </div>
         </section>
