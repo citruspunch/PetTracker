@@ -1,20 +1,14 @@
-import { ArrowRight } from 'lucide-react'
-import { MdPets } from 'react-icons/md'
-import { MapPinned } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import Navbar from '@/components/navbar'
-import { useNavigate } from 'react-router-dom'
 import { fetchLostPets } from '../useCases/FetchLostPets'
 import { LostPetType } from '../models/LostPetType'
-import { Skeleton } from '@/components/ui/skeleton'
-import { routes } from '@/routes'
+import SkeletonExploreLostPets from '../components/SkeletonExploreLostPets'
+import NoLostPets from '../components/NoLostPets'
+import LostPetsList from '../components/LostPetsList'
 
 const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
   const [lostPets, setLostPets] = useState<LostPetType[]>([])
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
 
   // Fetch lost pets data when the component mounts
@@ -41,121 +35,15 @@ const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
             <h1 className="text-center md:text-start mb-8 px-4 text-3xl font-semibold md:text-4xl">
               {heading}
             </h1>
-            <div className="flex flex-col">
-              <Separator />
-              {Array(3)
-                .fill(null)
-                .map((_, index) => (
-                  <React.Fragment key={index}>
-                    <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-6">
-                      <div className="order-2 flex items-center gap-2 md:order-none md:col-span-2">
-                        {/* image skeleton */}
-                        <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
-                          <Skeleton className="h-full w-full rounded-md" />
-                        </span>
-                        <div className="flex flex-col w-full">
-                          {/* Name skeleton */}
-                          <Skeleton className="h-5 w-3/4 mb-2" />
-                          {/* Species Skeleton */}
-                          <Skeleton className="h-4 w-1/2 mb-1" />
-                          {/* Date skeleton */}
-                          <Skeleton className="h-4 w-1/3" />
-                        </div>
-                      </div>
-                      {/* Address skeleton */}
-                      <div className="flex flex-row items-center gap-4 md:order-none md:col-span-3">
-                        <Skeleton className="h-6 w-6" />
-                        <Skeleton className="h-5 w-full" />
-                      </div>
-                      {/* Button Skeleton */}
-                      <div className="order-3 ml-auto w-fit gap-2 md:order-none">
-                        <Skeleton className="h-8 w-20 rounded-md" />
-                      </div>
-                    </div>
-                    <Separator />
-                  </React.Fragment>
-                ))}
-            </div>
+            <SkeletonExploreLostPets />
           </div>
         </section>
       )}
       {!loading && lostPets.length === 0 && (
-        <div className="flex flex-col items-center justify-center h-screen text-center">
-          <MdPets className="h-16 w-16 mb-4" />
-          <p className="text-lg font-semibold ">
-            No hay mascotas perdidas
-          </p>
-          <p className="text-sm text-muted-foreground w-5/6">
-            Parece que no hay reportes de mascotas perdidas en este momento.
-          </p>
-          <Button
-            variant="outline"
-            onClick={() => navigate(routes.reportLostPet)}
-            className="mt-6 mb-30 bg-red-700 text-white "
-          >
-            Reportar una mascota perdida
-          </Button>
-        </div>
+        <NoLostPets />
       )}
       {!loading && lostPets.length > 0 && (
-        <section className="py-8">
-          <div className="container mx-auto">
-            <h1 className="text-center md:text-start mb-8 px-4 text-3xl font-semibold md:text-4xl">
-              {heading}
-            </h1>
-            <div className="flex flex-col">
-              <Separator />
-              {lostPets.map((lostPet, index) => (
-                <React.Fragment key={index}>
-                  <div className="grid items-center gap-4 px-4 py-5 md:grid-cols-6">
-                    <div className="order-2 flex items-center gap-2 md:order-none md:col-span-2">
-                      <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
-                        {lostPet.image ? (
-                          <img
-                            src={lostPet.image}
-                            alt={lostPet.name ?? 'Mascota perdida'}
-                            loading="lazy"
-                            className="h-full w-full rounded-md object-cover"
-                          />
-                        ) : (
-                          <MdPets className="h-9 w-9 text-muted-foreground" />
-                        )}
-                      </span>
-                      <div className="flex flex-col w-full ">
-                        <h3 className="text-[18px] font-semibold">
-                          {lostPet.name}
-                        </h3>
-                        <span className="text-[15px] text-muted-foreground">
-                          {lostPet.species}
-                        </span>
-                        <span className="text-[15px] font-semibold text-muted-foreground text-red-400">
-                          {lostPet.created_at}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center gap-4 md:order-none md:col-span-3">
-                      <MapPinned />
-                      <p className="order-1 text-2xl font-semibold md:order-none md:col-span-2 line-clamp-2">
-                        {lostPet.last_seen_address}
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        navigate(`/mascotas-perdidas/${lostPet.id}`)
-                      }
-                      className="order-3 ml-auto w-fit gap-2 md:order-none"
-                    >
-                      <span>Ver más</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <Separator />
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        </section>
+        <LostPetsList heading={heading} lostPets={lostPets} />
       )}
     </>
   )
