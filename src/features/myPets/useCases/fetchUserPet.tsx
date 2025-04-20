@@ -4,44 +4,49 @@ import { fetchedPetType } from '../models/fetchedPetType'
 import { petType } from '../models/petType'
 import { User } from '@supabase/supabase-js'
 
-export const fetchAllUserPets = async (user: User | null): Promise<petType[]> => {
+export const fetchUserPet = async (
+  user: User | null,
+  petId: string
+): Promise<petType | null> => {
   if (!user) {
-    console.error('User is not logged in');
-    return [];
+    console.error('User is not logged in')
+    return null
   }
   const petsQuery = supabase
     .from('pet')
     .select('*')
     .eq('owner', user!.id)
+    .eq('id', petId)
+    .single()
 
   const { data, error } = await petsQuery
 
-  console.log('Pets data:', data)
+  console.log('User Pet data:', data)
 
   if (error) {
     console.error('Error fetching pets:', error.message)
-    return []
+    return null
   }
 
   if (!data) {
-    return []
+    return null
   }
 
-  const userPets = data as fetchedPetType[]
+  const userPet = data as fetchedPetType
 
-  return userPets.map((lostPet) => ({
-    id: lostPet.id,
-    created_at: format(new Date(lostPet.created_at), 'dd/MM/yyyy'),
-    name: lostPet.name,
-    image: lostPet.image,
-    owner: lostPet.owner,
-    sex: lostPet.sex,
-    species: lostPet.animal_type,
-    breed: lostPet.breed,
-    spayed_or_neutered: lostPet.spayed_or_neutered,
-    notes: lostPet.notes,
-    age: lostPet.birth_date ? calculateAge(lostPet.birth_date) : null,
-  }))
+  return {
+    id: userPet.id,
+    created_at: format(new Date(userPet.created_at), 'dd/MM/yyyy'),
+    name: userPet.name,
+    image: userPet.image,
+    owner: userPet.owner,
+    sex: userPet.sex,
+    species: userPet.animal_type,
+    breed: userPet.breed,
+    spayed_or_neutered: userPet.spayed_or_neutered,
+    notes: userPet.notes,
+    age: userPet.birth_date ? calculateAge(userPet.birth_date) : null,
+  }
 }
 
 const calculateAge = (birthDate: string): string => {
