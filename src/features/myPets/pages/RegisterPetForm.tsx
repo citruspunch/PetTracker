@@ -42,12 +42,12 @@ import { toast } from 'sonner'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 
-enum Sex {
+export enum Sex {
   Male = 'male',
   Female = 'female',
 }
 
-const animalTypes = [
+export const animalTypes = [
   { label: 'Perro', value: 'dog' },
   { label: 'Gato', value: 'cat' },
 ] as const
