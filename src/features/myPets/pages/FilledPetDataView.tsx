@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
-import Navbar from '@/components/navbar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -54,112 +53,109 @@ const FilledPetDataView = ({
   pet,
 }: Props) => {
   return (
-    <>
-      <Navbar />
-      <section className="py-12">
-        <div className="container mx-auto">
-          <div className="flex flex-col items-center gap-4 text-center">
-            <Badge variant="outline">{badge}</Badge>
-            <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
-              {heading}
-            </h1>
-            <p className="text-muted-foreground">{description}</p>
-          </div>
-          <Tabs defaultValue={tabs[0].value} className="mt-6">
-            <TabsList className="container flex flex-col items-center justify-center gap-2 sm:flex-row md:gap-10">
+    <section className="py-12">
+      <div className="container mx-auto">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <Badge variant="outline">{badge}</Badge>
+          <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
+            {heading}
+          </h1>
+          <p className="text-muted-foreground">{description}</p>
+        </div>
+        <Tabs defaultValue={tabs[0].value} className="mt-6">
+          <TabsList className="container flex flex-col items-center justify-center gap-2 sm:flex-row md:gap-10">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground data-[state=active]:bg-muted data-[state=active]:text-primary"
+              >
+                {tab.icon} {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          <div className="mx-auto mt-5 md:mt-8 max-w-5/6 md:max-w-screen-xl rounded-2xl bg-muted/70 p-6 lg:p-16">
+            <div className="relative">
               {tabs.map((tab) => (
-                <TabsTrigger
+                <TabsContent
                   key={tab.value}
                   value={tab.value}
-                  className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground data-[state=active]:bg-muted data-[state=active]:text-primary"
+                  className="grid place-items-start gap-7 lg:grid-cols-2 lg:gap-10"
                 >
-                  {tab.icon} {tab.label}
-                </TabsTrigger>
+                  <div className="flex flex-col gap-5 w-full lg:w-4/5 h-full justify-center">
+                    <h3 className="text-3xl font-semibold lg:text-5xl">
+                      {tab.content.title}
+                    </h3>
+                    <ul className="text-muted-foreground lg:text-lg">
+                      <Separator className="my-2" />
+                      {tab.content.attributes?.map((attribute, index) => (
+                        <React.Fragment key={index}>
+                          <li className="flex">
+                            <span className="font-medium w-2/5">
+                              {attribute.label}:
+                            </span>
+                            <span className="w-3/5 text-right">
+                              {attribute.value}
+                            </span>
+                          </li>
+                          <Separator className="my-2" />
+                        </React.Fragment>
+                      )) || <li>No attributes available</li>}
+                    </ul>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0"
+                          size="lg"
+                        >
+                          {tab.content.buttonText}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>{tab.content.buttonText}</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          {tab.content.attributes?.map((attribute) => (
+                            <React.Fragment key={attribute.label}>
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                  htmlFor={attribute.label}
+                                  className="text-right"
+                                >
+                                  {attribute.label}
+                                </Label>
+                                <Input
+                                  id={attribute.label}
+                                  defaultValue={attribute.value}
+                                  className="col-span-3"
+                                />
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Guardar cambios</Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <div className="relative h-[300px] w-full lg:h-[400px]">
+                    <img
+                      src={tab.content.imageSrc}
+                      alt={tab.content.imageAlt}
+                      className="h-full w-full rounded-xl object-cover"
+                      width={600}
+                      height={400}
+                    />
+                  </div>
+                </TabsContent>
               ))}
-            </TabsList>
-            <div className="mx-auto mt-5 md:mt-8 max-w-5/6 md:max-w-screen-xl rounded-2xl bg-muted/70 p-6 lg:p-16">
-              <div className="relative">
-                {tabs.map((tab) => (
-                  <TabsContent
-                    key={tab.value}
-                    value={tab.value}
-                    className="grid place-items-start gap-7 lg:grid-cols-2 lg:gap-10"
-                  >
-                    <div className="flex flex-col gap-5 w-full lg:w-4/5 h-full justify-center">
-                      <h3 className="text-3xl font-semibold lg:text-5xl">
-                        {tab.content.title}
-                      </h3>
-                      <ul className="text-muted-foreground lg:text-lg">
-                        <Separator className="my-2" />
-                        {tab.content.attributes?.map((attribute, index) => (
-                          <React.Fragment key={index}>
-                            <li className="flex">
-                              <span className="font-medium w-2/5">
-                                {attribute.label}:
-                              </span>
-                              <span className="w-3/5 text-right">
-                                {attribute.value}
-                              </span>
-                            </li>
-                            <Separator className="my-2" />
-                          </React.Fragment>
-                        )) || <li>No attributes available</li>}
-                      </ul>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            className="md:mt-2 w-fit gap-2 mx-auto lg:mx-0"
-                            size="lg"
-                          >
-                            {tab.content.buttonText}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>{tab.content.buttonText}</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            {tab.content.attributes?.map((attribute) => (
-                              <React.Fragment key={attribute.label}>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                  <Label
-                                    htmlFor={attribute.label}
-                                    className="text-right"
-                                  >
-                                    {attribute.label}
-                                  </Label>
-                                  <Input
-                                    id={attribute.label}
-                                    defaultValue={attribute.value}
-                                    className="col-span-3"
-                                  />
-                                </div>
-                              </React.Fragment>
-                            ))}
-                          </div>
-                          <DialogFooter>
-                            <Button type="submit">Guardar cambios</Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                    <div className="relative h-[300px] w-full lg:h-[400px]">
-                      <img
-                        src={tab.content.imageSrc}
-                        alt={tab.content.imageAlt}
-                        className="h-full w-full rounded-xl object-cover"
-                        width={600}
-                        height={400}
-                      />
-                    </div>
-                  </TabsContent>
-                ))}
-              </div>
             </div>
-          </Tabs>
-        </div>
-      </section>
-    </>
+          </div>
+        </Tabs>
+      </div>
+    </section>
   )
 }
 
