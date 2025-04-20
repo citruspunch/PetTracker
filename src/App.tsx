@@ -9,15 +9,31 @@ import MyPetsPage from './features/myPets/pages/PetPage'
 import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
+import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
+import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
 
 function App() {
-
   const user = useUser()
 
   return (
     <Router>
       <Routes>
-        <Route path={routes.home} element={<HomePage />} />
+        <Route
+          path={routes.home}
+          element={
+            user ? (
+              <Dashboard
+                heading={'Panel de Control'}
+                feature1={feature1}
+                feature2={feature2}
+                feature3={feature3}
+                feature4={feature4}
+              />
+            ) : (
+              <HomePage />
+            )
+          }
+        />
         <Route
           path={routes.dashboard}
           element={
@@ -39,10 +55,12 @@ function App() {
         <Route path={routes.resetPassword} element={<ResetPassword />} />
         <Route path={routes.myPets} element={<MyPetsPage />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
+        <Route path={routes.LostPetDetails} element={<LostPetDetails />} />
         <Route
           path={`${routes.petDetails}/:petId`}
           element={<PetDetailsView />}
         />
+        <Route path={routes.reportLostPet} element={<ReportLostPetPage />} />
       </Routes>
     </Router>
   )
