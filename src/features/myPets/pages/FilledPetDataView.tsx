@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import useUser from '@/hooks/useUser'
+import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
 import { calculateAge, formatAge, formatAnimalSex } from '@/lib/utils'
@@ -21,7 +22,6 @@ import {
   TrashBinTrash,
 } from '@solar-icons/react'
 import React from 'react'
-import { animalTypes } from './RegisterPetForm'
 
 type Attribute = {
   label: string
@@ -61,8 +61,7 @@ const FilledPetDataView = ({ pet }: Props) => {
           { label: 'Sexo', value: formatAnimalSex(pet.sex!) },
           {
             label: 'Especie',
-            value: animalTypes.find((type) => type.value === pet.animal_type!)!
-              .label,
+            value: formatAnimalType(pet.animal_type!),
           },
           { label: 'Raza', value: pet.breed ?? 'No especificada' },
           { label: 'Notas', value: pet.notes },

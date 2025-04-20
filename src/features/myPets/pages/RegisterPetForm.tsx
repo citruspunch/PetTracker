@@ -28,6 +28,8 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import useUser from '@/hooks/useUser'
+import { AnimalSex } from '@/lib/animalSex'
+import { animalTypes, formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
 import { cn } from '@/lib/utils'
@@ -41,16 +43,6 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
-
-export enum Sex {
-  Male = 'male',
-  Female = 'female',
-}
-
-export const animalTypes = [
-  { label: 'Perro', value: 'dog' },
-  { label: 'Gato', value: 'cat' },
-] as const
 
 const MAX_FILE_SIZE = 5000000
 const ACCEPTED_IMAGE_TYPES = [
@@ -69,7 +61,7 @@ const formSchema = z.object({
     required_error:
       'Es necesaria la fecha de nacimiento/adopción de tu mascota para aproximar su edad.',
   }),
-  sex: z.nativeEnum(Sex, {
+  sex: z.nativeEnum(AnimalSex, {
     required_error: 'Selecciona el sexo de tu mascota.',
   }),
   animalType: z.string({
@@ -244,13 +236,13 @@ const RegisterPetForm = ({
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value={Sex.Male} />
+                      <RadioGroupItem value={AnimalSex.Male} />
                     </FormControl>
                     <FormLabel>Macho</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value={Sex.Female} />
+                      <RadioGroupItem value={AnimalSex.Female} />
                     </FormControl>
                     <FormLabel>Hembra</FormLabel>
                   </FormItem>
@@ -278,8 +270,7 @@ const RegisterPetForm = ({
                       )}
                     >
                       {field.value
-                        ? animalTypes.find((type) => type.value === field.value)
-                            ?.label
+                        ? formatAnimalType(field.value)
                         : 'Selecciona la especie de tu mascota'}
                       <ChevronsUpDown className="opacity-50" />
                     </Button>
