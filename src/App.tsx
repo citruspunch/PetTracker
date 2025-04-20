@@ -4,13 +4,13 @@ import Login from './auth/Login'
 import ResetPassword from './auth/ResetPassword'
 import Signup from './auth/Signup'
 import Dashboard from './Dashboard'
+import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
+import MyPetsView from './features/myPets/pages/MyPetsView'
 import PetDetailsView from './features/myPets/pages/PetDetailsView'
-import MyPetsPage from './features/myPets/pages/PetPage'
+import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
 import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
-import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
-import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
 
 function App() {
   const user = useUser()
@@ -53,7 +53,7 @@ function App() {
         <Route path={routes.logIn} element={<Login />} />
         <Route path={routes.signUp} element={<Signup />} />
         <Route path={routes.resetPassword} element={<ResetPassword />} />
-        <Route path={routes.myPets} element={<MyPetsPage />} />
+        <Route path={routes.myPets} element={<MyPetsView />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
         <Route path={routes.LostPetDetails} element={<LostPetDetails />} />
         <Route
