@@ -83,6 +83,7 @@ export type Database = {
           id: string
           last_seen_address: string
           last_seen_date: string
+          notes: string
           pet: string
         }
         Insert: {
@@ -92,6 +93,7 @@ export type Database = {
           id?: string
           last_seen_address: string
           last_seen_date: string
+          notes?: string
           pet: string
         }
         Update: {
@@ -101,6 +103,7 @@ export type Database = {
           id?: string
           last_seen_address?: string
           last_seen_date?: string
+          notes?: string
           pet?: string
         }
         Relationships: [

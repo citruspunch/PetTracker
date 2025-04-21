@@ -1,11 +1,15 @@
 import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { formatAnimalType } from '@/lib/animalTypes'
+import supabase from '@/lib/supabase'
 import { routes } from '@/routes'
 import { ArrowRight, CircleAlert, MapPinned } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LostPetType } from '../models/lostPetType'
 import { MdPets } from 'react-icons/md'
-import { Separator } from '@/components/ui/separator'
+import { useNavigate } from 'react-router-dom'
+import { LostPetType } from '../models/lostPetType'
 
 interface LostPetsListProps {
   heading: string
@@ -41,7 +45,11 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
                   <span className="flex mr-2 h-20 w-22 shrink-0 items-center justify-center rounded-md bg-muted">
                     {lostPet.image ? (
                       <img
-                        src={lostPet.image}
+                        src={
+                          supabase.storage
+                            .from('pets-portraits')
+                            .getPublicUrl(lostPet.image).data.publicUrl
+                        }
                         alt={lostPet.name ?? 'Mascota perdida'}
                         loading="lazy"
                         className="h-full w-full rounded-md object-cover"
@@ -55,9 +63,9 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
                       {lostPet.name}
                     </h3>
                     <span className="text-[15px] text-muted-foreground">
-                      {lostPet.species}
+                      {formatAnimalType(lostPet.species!)}
                     </span>
-                    <span className="text-[15px] font-semibold text-muted-foreground text-red-400">
+                    <span className="text-[15px] font-semibold  text-red-400">
                       {lostPet.created_at}
                     </span>
                   </div>
@@ -71,7 +79,7 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
                 <Button
                   variant="outline"
                   onClick={() =>
-                    navigate(`${routes.exploreLostPets}/${lostPet.id}`)
+                    navigate(`${routes.petDetails}/${lostPet.petId}`)
                   }
                   className="order-3 ml-auto w-fit gap-2 md:order-none"
                 >

@@ -1,7 +1,12 @@
-export const animalTypes = [
-  { label: 'Perro', value: 'dog' },
-  { label: 'Gato', value: 'cat' },
-] as const
+export const animalTypes = ['dog', 'cat'] as const
 
-export const formatAnimalType = (animalType: string): string =>
-  animalTypes.find((element) => element.value === animalType)!.label
+export const formatAnimalType = (animalType: string): string => {
+  switch (animalType) {
+    case 'dog':
+      return 'Perro'
+    case 'cat':
+      return 'Gato'
+    default:
+      throw new Error(`Unexpected animal type: ${animalType}`)
+  }
+}

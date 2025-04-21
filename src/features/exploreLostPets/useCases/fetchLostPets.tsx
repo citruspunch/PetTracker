@@ -2,6 +2,8 @@ import supabase from '@/lib/supabase'
 import { fetchedLostPetType } from '../models/fetchedLostPetType'
 import { LostPetType } from '../models/lostPetType'
 import { format } from '@formkit/tempo'
+import { fetchedLostPetType } from '../models/fetchedLostPetType'
+import { LostPetType } from '../models/LostPetType'
 
 export const fetchLostPets = async (): Promise<LostPetType[]> => {
   // Query to fetch lost pets and the pet's properties from the database
@@ -50,7 +52,6 @@ export const fetchLostPets = async (): Promise<LostPetType[]> => {
   return lostPets.map((lostPet) => ({
     id: lostPet.id,
     created_at: format(new Date(lostPet.created_at), 'long', 'es'),
-    is_active: lostPet.is_active,
     last_seen_date: lostPet.last_seen_date,
     found_date: lostPet.found_date
       ? format(new Date(lostPet.found_date), 'long', 'es')
