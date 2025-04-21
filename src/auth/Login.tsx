@@ -1,4 +1,3 @@
-import { FaApple, FaFacebook } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 
 import { Button } from '@/components/ui/button'
@@ -125,7 +124,11 @@ const Login = ({
                   {loginText}
                 </Button>
               )}
-              <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleGoogleSignIn}
+              >
                 <FcGoogle className="mr-2 size-5" />
                 {googleText}
               </Button>

@@ -2,10 +2,9 @@ import { FcGoogle } from 'react-icons/fc'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { routes } from '@/routes'
-import { FaApple, FaFacebook, FaGithub } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
 import supabase from '@/lib/supabase'
+import { routes } from '@/routes'
+import { Link } from 'react-router-dom'
 
 interface SignupProps {
   heading?: string
@@ -86,7 +85,11 @@ const Signup = ({
                 <Button type="submit" className="mt-2 w-full">
                   {signupText}
                 </Button>
-                <Button variant="outline" className="w-full" onClick={handleGoogleSignUp}>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleGoogleSignUp}
+                >
                   <FcGoogle className="mr-2 size-5" />
                   {googleText}
                 </Button>
