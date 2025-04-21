@@ -1,12 +1,10 @@
 import Navbar from '@/components/navbar'
 import ErrorView from '@/features/myPets/pages/ErrorView'
-import FilledPetDataView from '@/features/myPets/pages/FilledPetDataView'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-
 
 const LostPetDetails = () => {
   const { petId } = useParams()
@@ -47,7 +45,7 @@ const LostPetDetails = () => {
           <ErrorView message={error} />
         </div>
       )}
-      {pet && <FilledPetDataView pet={pet} />}
+      {pet && <p>Hola</p>}
     </>
   )
 }

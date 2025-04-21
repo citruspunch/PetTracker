@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button"
-import { MdPets } from "react-icons/md"
-import { useNavigate } from "react-router-dom"
+import { Button } from '@/components/ui/button'
+import { MdPets } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 
 interface EmptyStateProps {
   heading?: string
@@ -16,21 +16,18 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   url,
   variant = 'outline',
   buttonText = 'Continuar',
-
-} : EmptyStateProps) => {
+}: EmptyStateProps) => {
   const navigate = useNavigate()
 
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center">
       <MdPets className="h-16 w-16 mb-4" />
       <p className="text-lg font-semibold ">{heading}</p>
-      <p className="text-sm text-muted-foreground w-5/6">
-        {description}
-      </p>
+      <p className="text-sm text-muted-foreground w-5/6">{description}</p>
       <Button
-        variant= {variant}
+        variant={variant}
         onClick={() => navigate(url)}
-        className="mt-6 mb-30 bg-red-700 text-white "
+        className="mt-6 mb-30"
       >
         {buttonText}
       </Button>
