@@ -27,10 +27,10 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
             <Button
               variant="destructive"
               onClick={() => navigate(routes.reportLostPet)}
-              className="bg-red-700 text-white rounded-full p-5 shadow-lg sm:rounded-md sm:p-1"
+              className="bg-red-700 text-white rounded-md p-5 shadow-lg sm:rounded-md sm:p-1"
             >
               <CircleAlert className="h-10 w-10 sm:h-8 sm:w-8" />
-              <span className="hidden sm:inline">Reportar mascota perdida</span>
+              <span>Reportar mascota perdida</span>
             </Button>
           </div>
         </div>
