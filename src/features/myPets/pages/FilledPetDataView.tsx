@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
+import ReportLostPetAlertDialog from '@/features/reportLostPets/components/ReportLostPetAlertDialog'
 import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
@@ -97,34 +98,7 @@ const FilledPetDataView = ({ pet }: Props) => {
             <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
               {pet.name}
             </h1>
-            {isOwner && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex text-muted-foreground data-[state=open]:bg-muted"
-                    size="icon"
-                  >
-                    <MenuDotsCircle weight="Linear" size={52} />
-                    <span className="sr-only">Open menu</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                  <DropdownMenuItem>
-                    <Pen />
-                    Editar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <TrashBinTrash />
-                    Eliminar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem variant="destructive">
-                    <DangerCircle weight="Linear" />
-                    Reportar como perdido
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            {isOwner && <Options pet={pet} />}
           </div>
           <div className="relative h-[200px] w-full lg:h-[400px]">
             <img
@@ -184,6 +158,42 @@ const FilledPetDataView = ({ pet }: Props) => {
         </Tabs>
       </div>
     </section>
+  )
+}
+
+const Options = ({ pet }: { pet: Tables<'pet'> }) => {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          className="flex text-muted-foreground data-[state=open]:bg-muted"
+          size="icon"
+        >
+          <MenuDotsCircle weight="Linear" size={52} />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40">
+        <DropdownMenuItem>
+          <Pen />
+          Editar
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <TrashBinTrash />
+          Eliminar
+        </DropdownMenuItem>
+        <ReportLostPetAlertDialog pet={pet}>
+          <DropdownMenuItem
+            variant="destructive"
+            onSelect={(event) => event.preventDefault()}
+          >
+            <DangerCircle weight="Linear" />
+            Reportar como perdido
+          </DropdownMenuItem>
+        </ReportLostPetAlertDialog>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
