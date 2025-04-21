@@ -36,31 +36,34 @@ export type Database = {
     Tables: {
       found_pet_report: {
         Row: {
+          city: string | null
           contact_number: string
           created_at: string
           found_by: string | null
           id: string
           location: string
+          notes: string | null
           pet: string
-          status: string
         }
         Insert: {
+          city?: string | null
           contact_number: string
           created_at?: string
           found_by?: string | null
           id?: string
           location: string
+          notes?: string | null
           pet: string
-          status: string
         }
         Update: {
+          city?: string | null
           contact_number?: string
           created_at?: string
           found_by?: string | null
           id?: string
           location?: string
+          notes?: string | null
           pet?: string
-          status?: string
         }
         Relationships: [
           {
@@ -78,7 +81,6 @@ export type Database = {
           created_at: string
           found_date: string | null
           id: string
-          is_active: boolean
           last_seen_address: string
           last_seen_date: string
           pet: string
@@ -88,7 +90,6 @@ export type Database = {
           created_at?: string
           found_date?: string | null
           id?: string
-          is_active?: boolean
           last_seen_address: string
           last_seen_date: string
           pet: string
@@ -98,7 +99,6 @@ export type Database = {
           created_at?: string
           found_date?: string | null
           id?: string
-          is_active?: boolean
           last_seen_address?: string
           last_seen_date?: string
           pet?: string
@@ -115,7 +115,7 @@ export type Database = {
       }
       pet: {
         Row: {
-          animal_type: string | null
+          animal_type: Database['public']['Enums']['animal type'] | null
           birth_date: string | null
           breed: string | null
           created_at: string
@@ -124,11 +124,11 @@ export type Database = {
           name: string | null
           notes: string
           owner: string | null
-          sex: string | null
+          sex: Database['public']['Enums']['sex'] | null
           spayed_or_neutered: boolean | null
         }
         Insert: {
-          animal_type?: string | null
+          animal_type?: Database['public']['Enums']['animal type'] | null
           birth_date?: string | null
           breed?: string | null
           created_at?: string
@@ -137,11 +137,11 @@ export type Database = {
           name?: string | null
           notes?: string
           owner?: string | null
-          sex?: string | null
+          sex?: Database['public']['Enums']['sex'] | null
           spayed_or_neutered?: boolean | null
         }
         Update: {
-          animal_type?: string | null
+          animal_type?: Database['public']['Enums']['animal type'] | null
           birth_date?: string | null
           breed?: string | null
           created_at?: string
@@ -150,7 +150,7 @@ export type Database = {
           name?: string | null
           notes?: string
           owner?: string | null
-          sex?: string | null
+          sex?: Database['public']['Enums']['sex'] | null
           spayed_or_neutered?: boolean | null
         }
         Relationships: []
@@ -163,7 +163,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      'animal type': 'dog' | 'cat'
+      sex: 'male' | 'female'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -281,6 +282,9 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      'animal type': ['dog', 'cat'],
+      sex: ['male', 'female'],
+    },
   },
 } as const

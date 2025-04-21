@@ -3,7 +3,7 @@ import { routes } from '@/routes'
 import { ArrowRight, CircleAlert, MapPinned } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { LostPetType } from '../models/LostPetType'
+import { LostPetType } from '../models/lostPetType'
 import { MdPets } from 'react-icons/md'
 import { Separator } from '@/components/ui/separator'
 

@@ -15,42 +15,43 @@ import CarouselCard from '../components/CarouselCard'
 import CarouselControls from '../components/CarouselControls'
 import EmptyState from '../components/EmptyState'
 import SkeletonLoader from '../components/SkeletonLoaderLostPets'
+import { routes } from '@/routes'
 
 const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
-  const user = useUser();
-  const [userPets, setUserPets] = useState<petType[]>([]);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const user = useUser()
+  const [userPets, setUserPets] = useState<petType[]>([])
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [canScrollPrev, setCanScrollPrev] = useState(false)
+  const [canScrollNext, setCanScrollNext] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return;
+      if (!user) return
       try {
-        const data = await fetchAllUserPets(user);
-        setUserPets(data);
-        setLoading(false);
+        const data = await fetchAllUserPets(user)
+        setUserPets(data)
+        setLoading(false)
       } catch (error) {
-        console.error('Error fetching user pets:', error);
+        console.error('Error fetching user pets:', error)
       }
-    };
-    fetchData();
-  }, [user]);
+    }
+    fetchData()
+  }, [user])
 
   useEffect(() => {
-    if (!carouselApi) return;
+    if (!carouselApi) return
 
     const updateSelection = () => {
-      setCanScrollPrev(carouselApi.canScrollPrev());
-      setCanScrollNext(carouselApi.canScrollNext());
-    };
-    updateSelection();
-    carouselApi.on('select', updateSelection);
+      setCanScrollPrev(carouselApi.canScrollPrev())
+      setCanScrollNext(carouselApi.canScrollNext())
+    }
+    updateSelection()
+    carouselApi.on('select', updateSelection)
     return () => {
-      carouselApi.off('select', updateSelection);
-    };
-  }, [carouselApi]);
+      carouselApi.off('select', updateSelection)
+    }
+  }, [carouselApi])
 
   return (
     <>
@@ -96,9 +97,11 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
           </div>
         </section>
       )}
-      {!loading && userPets.length === 0 && <EmptyState />}
+      {!loading && userPets.length === 0 && (
+        <EmptyState heading="No tienes mascotas" description="Adquiere tu tag NFC en nuestros puntos de venta y registra a tu mascota!" url={routes.home} />
+      )}
     </>
-  );
-};
+  )
+}
 
 export default ReportLostPetPage
