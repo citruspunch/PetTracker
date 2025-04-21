@@ -2,6 +2,7 @@ import Loader from '@/components/Loader'
 import Navbar from '@/components/navbar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
@@ -13,14 +14,14 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const MyPetsView = () => {
-  const [isLoadingPets, setIsLoadingPets] = useState(false)
+  const [isLoadingPets, setIsLoadingPets] = useState(true)
   const [pets, setPets] = useState<Tables<'pet'>[]>([])
   const user = useUser()!
 
   useEffect(() => {
     const loadPets = async () => {
       if (!user) {
-        return;
+        return
       }
       setIsLoadingPets(true)
       const result = await supabase.from('pet').select('*').eq('owner', user.id)
@@ -47,7 +48,16 @@ const MyPetsView = () => {
             </div>
             <div className="mx-auto mt-6 flex flex-col md:mt-14">
               {isLoadingPets && <Loader />}
+              {!isLoadingPets && pets.length === 0 && (
+                <EmptyState
+                  url={routes.myPets}
+                  heading="No tienes mascotas"
+                  description="Dirígete a un punto de venta y adquiere tu tag para tu mascota"
+                  variant="destructive"
+                />
+              )}
               {!isLoadingPets &&
+                pets.length !== 0 &&
                 pets.map((pet) => (
                   <div key={pet.id}>
                     <div className="flex items-center justify-between">
