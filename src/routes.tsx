@@ -5,7 +5,7 @@ export const routes = {
   exploreLostPets: '/lost-pets',
   LostPetDetails: '/lost-pet/:petId',
   reportLostPet: '/report-lost-pet',
-  reportFoundPet: '/report-found-pet/:petId',
+  reportFoundPet: '/report-found-pet',
   petDetails: '/pet-details',
   editPet: '/edit-pet',
   editUser: '/edit-user',
