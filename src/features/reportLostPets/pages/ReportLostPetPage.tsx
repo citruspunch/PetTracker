@@ -2,61 +2,97 @@
 
 import { useEffect, useState } from 'react'
 
+import Navbar from '@/components/navbar'
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
 } from '@/components/ui/carousel'
-import { petType } from '@/features/myPets/models/petType'
-import { fetchAllUserPets } from '@/features/myPets/useCases/fetchAllUserPets'
 import useUser from '@/hooks/useUser'
-import Navbar from '@/components/navbar'
+import supabase from '@/lib/supabase'
+import { Tables } from '@/lib/supabase-types'
+import { toast } from 'sonner'
 import CarouselCard from '../components/CarouselCard'
 import CarouselControls from '../components/CarouselControls'
 import EmptyState from '../components/EmptyState'
 import SkeletonLoader from '../components/SkeletonLoaderLostPets'
 
 const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
-  const user = useUser();
-  const [userPets, setUserPets] = useState<petType[]>([]);
-  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const user = useUser()
+  const [petsWithNotActiveLostReports, setPetsWithNotActiveLostReports] =
+    useState<Tables<'pet'>[]>([])
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>()
+  const [canScrollPrev, setCanScrollPrev] = useState(false)
+  const [canScrollNext, setCanScrollNext] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) return;
-      try {
-        const data = await fetchAllUserPets(user);
-        setUserPets(data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching user pets:', error);
+      setLoading(true)
+
+      const allUserPetsResult = await supabase
+        .from('pet')
+        .select('*')
+        .eq('owner', user!.id)
+      if (allUserPetsResult.error !== null) {
+        toast.error(
+          'Ocurrió un error al obtener tus mascotas. Inténtalo de nuevo.'
+        )
+        setLoading(false)
+        return
       }
-    };
-    fetchData();
-  }, [user]);
+
+      for (const pet of allUserPetsResult.data) {
+        const reportsResult = await supabase
+          .from('lost_pet_report')
+          .select('*')
+          .eq('pet', pet.id)
+
+        if (reportsResult.error !== null) {
+          toast.error(
+            'Ocurrió un error al obtener tus mascotas. Inténtalo de nuevo.'
+          )
+          setLoading(false)
+          setPetsWithNotActiveLostReports([])
+          break
+        }
+
+        const reports = reportsResult.data
+        if (
+          reports.length === 0 ||
+          reports.every((report) => report.found_date !== null)
+        ) {
+          setPetsWithNotActiveLostReports((currentPets) => [
+            ...currentPets,
+            pet,
+          ])
+        }
+      }
+      setLoading(false)
+    }
+    if (!user) return
+    fetchData()
+  }, [user])
 
   useEffect(() => {
-    if (!carouselApi) return;
+    if (!carouselApi) return
 
     const updateSelection = () => {
-      setCanScrollPrev(carouselApi.canScrollPrev());
-      setCanScrollNext(carouselApi.canScrollNext());
-    };
-    updateSelection();
-    carouselApi.on('select', updateSelection);
+      setCanScrollPrev(carouselApi.canScrollPrev())
+      setCanScrollNext(carouselApi.canScrollNext())
+    }
+    updateSelection()
+    carouselApi.on('select', updateSelection)
     return () => {
-      carouselApi.off('select', updateSelection);
-    };
-  }, [carouselApi]);
+      carouselApi.off('select', updateSelection)
+    }
+  }, [carouselApi])
 
   return (
     <>
       <Navbar />
       {loading && <SkeletonLoader />}
-      {!loading && userPets.length > 0 && (
+      {!loading && petsWithNotActiveLostReports.length > 0 && (
         <section className="py-12">
           <div className="container mx-auto">
             <div className="mb-8 ml-7 lg:ml-15 flex flex-col justify-between md:mb-14 md:flex-row md:items-end lg:mb-16">
@@ -88,7 +124,7 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
               className="relative left-[-1rem]"
             >
               <CarouselContent className="-mr-4 ml-8 2xl:mr-[max(0rem,calc(50vw-700px-1rem))] 2xl:ml-[max(8rem,calc(50vw-700px+1rem))]">
-                {userPets.map((userPet) => (
+                {petsWithNotActiveLostReports.map((userPet) => (
                   <CarouselCard key={userPet.id} userPet={userPet} />
                 ))}
               </CarouselContent>
@@ -96,9 +132,9 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
           </div>
         </section>
       )}
-      {!loading && userPets.length === 0 && <EmptyState />}
+      {!loading && petsWithNotActiveLostReports.length === 0 && <EmptyState />}
     </>
-  );
-};
+  )
+}
 
 export default ReportLostPetPage
