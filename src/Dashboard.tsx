@@ -19,7 +19,6 @@ const Dashboard = ({
   heading,
   description = 'Consulta la actividad reciente, accede rápidamente a tus mascotas y mantente al tanto de cualquier novedad.',
   feature1,
-  feature2,
   feature3,
   feature4,
 }: DashboardProps) => {

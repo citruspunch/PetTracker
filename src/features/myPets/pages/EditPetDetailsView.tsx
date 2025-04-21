@@ -1,3 +1,4 @@
+import Loader from '@/components/Loader'
 import Navbar from '@/components/navbar'
 import {
   Card,
@@ -6,16 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import RegisterPetForm from './RegisterPetForm'
-import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'sonner'
-import { routes } from '@/routes'
-import { useEffect, useState } from 'react'
+import { AnimalSex } from '@/lib/animalSex'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
-import Loader from '@/components/Loader'
-import { AnimalSex } from '@/lib/animalSex'
+import { cn } from '@/lib/utils'
+import { routes } from '@/routes'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
+import RegisterPetForm from './RegisterPetForm'
 
 const EditPetDetailsView = ({
   className,
@@ -24,7 +24,6 @@ const EditPetDetailsView = ({
   const { petId } = useParams()
   const navigate = useNavigate()
   const [isLoadingPet, setIsLoadingPet] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [pet, setPet] = useState<Tables<'pet'> | null>(null)
 
   const onPetRegistered = () => {
@@ -45,7 +44,6 @@ const EditPetDetailsView = ({
         .eq('id', petId)
         .single()
       if (error !== null) {
-        setError('Mascota no encontrada')
         return
       }
       setPet(data)
@@ -67,7 +65,7 @@ const EditPetDetailsView = ({
       {!isLoadingPet && (
         <Card className={cn('m-3', className)} {...props}>
           <CardHeader>
-            <CardTitle className='text-2xl'>Editar Información</CardTitle>
+            <CardTitle className="text-2xl">Editar Información</CardTitle>
             <CardDescription>
               Edita la información de tu mascota. Asegúrate de que todos los
               detalles sean correctos.
@@ -79,15 +77,17 @@ const EditPetDetailsView = ({
               onRegisterUpdated={onPetRegistered}
               previousValues={{
                 name: pet?.name || '',
-                birthDate: pet?.birth_date ? new Date(pet.birth_date) : undefined,
+                birthDate: pet?.birth_date
+                  ? new Date(pet.birth_date)
+                  : undefined,
                 sex: pet?.sex as AnimalSex,
-                animalType: pet?.animal_type ?? undefined, 
+                animalType: pet?.animal_type ?? undefined,
                 breed: pet?.breed ?? undefined,
                 spayedOrNeutered: pet?.spayed_or_neutered ?? undefined,
                 image: pet?.image ?? undefined,
                 notes: pet?.notes,
               }}
-              isUpdate = {true}
+              isUpdate={true}
             />
           </CardContent>
         </Card>

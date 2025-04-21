@@ -1,8 +1,8 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
 import { routes } from '@/routes'
+import { Link } from 'react-router-dom'
 import Navbar from './components/navbar'
 
 interface Testimonial {
@@ -58,10 +58,10 @@ const HomePage = ({
     ],
   },
   images = {
-    first: 'src/assets/asset1.png',
-    second: 'src/assets/asset2.png',
-    third: 'src/assets/asset3.png',
-    fourth: 'src/assets/asset4.png',
+    first: '/asset1.png',
+    second: '/asset2.png',
+    third: '/asset3.png',
+    fourth: '/asset4.png',
   },
 }: HomePageProps) => {
   return (
