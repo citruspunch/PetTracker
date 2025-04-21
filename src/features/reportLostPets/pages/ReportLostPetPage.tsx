@@ -16,6 +16,7 @@ import CarouselCard from '../components/CarouselCard'
 import CarouselControls from '../components/CarouselControls'
 import EmptyState from '../components/EmptyState'
 import SkeletonLoader from '../components/SkeletonLoaderLostPets'
+import { routes } from '@/routes'
 
 const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
   const user = useUser()
@@ -28,6 +29,7 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+
       setLoading(true)
 
       const allUserPetsResult = await supabase
@@ -132,7 +134,7 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
           </div>
         </section>
       )}
-      {!loading && petsWithNotActiveLostReports.length === 0 && <EmptyState />}
+      {!loading && petsWithNotActiveLostReports.length === 0 && <EmptyState heading="No tienes mascotas mascotas para reportar" description="Adquiere tu tag NFC en nuestros puntos de venta y registra a tu mascota!" url={routes.myPets} />}
     </>
   )
 }

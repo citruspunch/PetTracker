@@ -1,11 +1,16 @@
 import supabase from '@/lib/supabase'
+import { fetchedLostPetType } from '../models/fetchedLostPetType'
+import { LostPetType } from '../models/lostPetType'
 import { format } from '@formkit/tempo'
 import { fetchedLostPetType } from '../models/fetchedLostPetType'
 import { LostPetType } from '../models/LostPetType'
 
 export const fetchLostPets = async (): Promise<LostPetType[]> => {
   // Query to fetch lost pets and the pet's properties from the database
-  const lostPetsQuery = supabase.from('lost_pet_report').select(`
+  const lostPetsQuery = supabase
+    .from('lost_pet_report')
+    .select(
+      `
         id,
         created_at,
         last_seen_date,
@@ -24,7 +29,10 @@ export const fetchLostPets = async (): Promise<LostPetType[]> => {
           notes,
           birth_date
         )
-      `)
+      `
+    )
+    .is('found_date', null)
+    .order('created_at', { ascending: false })
 
   const { data, error } = await lostPetsQuery
 

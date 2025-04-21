@@ -45,3 +45,33 @@ export const formatAnimalSex = (sex: string): string => {
       throw new Error('Unexpected sex value')
   }
 }
+
+export const citiesGuatemala = [
+  'Alta Verapaz',
+  'Baja Verapaz',
+  'Chimaltenango',
+  'Chiquimula',
+  'El Progreso',
+  'Escuintla',
+  'Guatemala',
+  'Huehuetenango',
+  'Izabal',
+  'Jalapa',
+  'Jutiapa',
+  'Petén',
+  'Quetzaltenango',
+  'Quiché',
+  'Retalhuleu',
+  'Sacatepéquez',
+  'San Marcos',
+  'Santa Rosa',
+  'Sololá',
+  'Suchitepéquez',
+  'Totonicapán',
+  'Zacapa'
+] as const;
+
+export const citiesGuatemalaForDropdown = citiesGuatemala.map((city) => ({
+  value: city,
+  label: city,
+}));
