@@ -13,7 +13,7 @@ import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
-import { calculateAge, formatAge, formatAnimalSex } from '@/lib/utils'
+import { calculateAge, cn, formatAge, formatAnimalSex } from '@/lib/utils'
 import {
   ClipboardHeart,
   DangerCircle,
@@ -22,7 +22,7 @@ import {
   Pen,
   TrashBinTrash,
 } from '@solar-icons/react'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 
 type Attribute = {
   label: string
@@ -85,30 +85,33 @@ const FilledPetDataView = ({ pet }: Props) => {
       },
     },
   ]
-  const petImageUrl = supabase.storage
-    .from('pets-portraits')
-    .getPublicUrl(pet.image!).data.publicUrl
+  const petImageUrl = pet.image
+    ? supabase.storage.from('pets-portraits').getPublicUrl(pet.image!).data
+        .publicUrl
+    : null
   const user = useUser()
   const isOwner = user?.id === pet.owner
   return (
     <section className="py-12">
       <div className="container mx-auto">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex flow-row items-center gap-3">
+          <div className="flex flow-row items-center justify-center">
             <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
               {pet.name}
             </h1>
-            {isOwner && <Options pet={pet} />}
+            {isOwner && <Options pet={pet} className="ml-3" />}
           </div>
-          <div className="relative h-[200px] w-full lg:h-[400px]">
-            <img
-              src={petImageUrl}
-              alt="Foto de la mascota"
-              className="h-full w-full rounded-xl object-contain"
-              width={600}
-              height={400}
-            />
-          </div>
+          {petImageUrl && (
+            <div className="relative h-[200px] w-full lg:h-[400px]">
+              <img
+                src={petImageUrl}
+                alt="Foto de la mascota"
+                className="h-full w-full rounded-xl object-contain"
+                width={600}
+                height={400}
+              />
+            </div>
+          )}
         </div>
         <Tabs defaultValue={tabs[0].id} className="mt-6">
           <TabsList className="container flex flex-col items-center justify-center gap-2 sm:flex-row md:gap-10">
@@ -161,14 +164,22 @@ const FilledPetDataView = ({ pet }: Props) => {
   )
 }
 
-const Options = ({ pet }: { pet: Tables<'pet'> }) => {
+const Options = ({
+  pet,
+  className,
+  ...props
+}: { pet: Tables<'pet'> } & ComponentProps<typeof Button>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex text-muted-foreground data-[state=open]:bg-muted"
+          className={cn(
+            'flex text-muted-foreground data-[state=open]:bg-muted',
+            className
+          )}
           size="icon"
+          {...props}
         >
           <MenuDotsCircle weight="Linear" size={52} />
           <span className="sr-only">Open menu</span>
