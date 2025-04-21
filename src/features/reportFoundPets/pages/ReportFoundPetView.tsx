@@ -7,10 +7,11 @@ import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabase'
 import useUser from '@/hooks/useUser'
 import { z } from 'zod'
-import { Loader } from 'lucide-react'
+import { Loader, SearchCheck } from 'lucide-react'
 import ReportFoundPetForm from './ReportFoundPetForm'
 import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import { reportFoundPetSchema } from '../models/formSchemas'
+import { Separator } from '@/components/ui/separator'
 
 const ReportFoundPetView = () => {
   const navigate = useNavigate()
@@ -53,13 +54,9 @@ const ReportFoundPetView = () => {
       notes: values.notes,
       city: values.city.trim(),
     })
-    const result = await supabase
-      .from('lost_pet_report')
-      .update({ found_date: new Date().toISOString() })
-      .eq('pet', pet!.id)
 
     setIsLoading(false)
-    if (error || result.error) {
+    if (error ) {
       toast.error(
         'Ocurrió un error al reportar tu mascota como perdida. Inténtalo de nuevo.'
       )
@@ -78,11 +75,16 @@ const ReportFoundPetView = () => {
       {isLoadingPet && <Loader className="mx-auto mt-5" />}
       {!isLoadingPet && !pet && <EmptyState url={routes.home} />}
       {!isLoadingPet && pet && (
-        <div className="p-5">
-          <h2 className="font-bold text-3xl mb-8">
-            Reportar a {pet.name} como{' '}
-            {pet.sex === 'male' ? 'encontrado' : 'encontrada'}
-          </h2>
+        <div className="p-5 mt-5 w-6/7 sm:w-3/4 md:w-2/3 mx-auto">
+          <div className="flex items-center mb-5">
+            <SearchCheck className='mr-3 h-10 w-10 hidden sm:block'/>
+            <h2 className="font-bold text-3xl mb-1">
+              Reportar a {pet.name} como{' '}
+              {pet.sex === 'male' ? 'encontrado' : 'encontrada'}
+            </h2>
+          </div>
+
+          <Separator className="mb-8" />
           <ReportFoundPetForm
             petName={pet.name!}
             onReport={handleSubmit}

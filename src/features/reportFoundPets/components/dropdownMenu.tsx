@@ -43,11 +43,11 @@ export function CitiesGuatemalaDropdown({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full sm:w-1/2 lg:w-1/5 justify-between"
         >
           {value
             ? cities.find((city) => city.value === value)?.label
-            : 'Select city...'}
+            : 'Seleccionar...'}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>

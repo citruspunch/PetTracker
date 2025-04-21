@@ -18,7 +18,6 @@ import { z } from 'zod'
 import CitiesGuatemalaDropdown from '../components/dropdownMenu'
 import { reportFoundPetSchema } from '../models/formSchemas'
 
-
 type Props = {
   petName: string
   submitButtonText?: string
@@ -28,7 +27,7 @@ type Props = {
 
 const ReportFoundPetForm = ({
   petName,
-  submitButtonText = 'Reportar mascota encontrada',
+  submitButtonText = 'Reportar',
   onReport,
   isLoading,
 }: Props) => {
@@ -72,8 +71,8 @@ const ReportFoundPetForm = ({
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                {`Indica la dirección donde encontraste a ${petName}.`}
-                <br /> Ejemplo: Calle 1-23, Zona 1
+                {`Indica la dirección donde encontraste a ${petName}.`} Ej:
+                Calle 1-23, Zona 1
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -88,8 +87,26 @@ const ReportFoundPetForm = ({
               <FormControl>
                 <Input type="tel" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notas adicionales</FormLabel>
+              <FormControl>
+                <textarea
+                  {...field}
+                  rows={3}
+                  className="w-full rounded-md border border-gray-200 p-2"
+                />
+              </FormControl>
               <FormDescription>
-                {`Número de teléfono donde podemos contactarte para coordinar la entrega de ${petName}.`}
+                {`Si tienes alguna información adicional sobre ${petName}, puedes incluirla aquí.`}
               </FormDescription>
               <FormMessage />
             </FormItem>
