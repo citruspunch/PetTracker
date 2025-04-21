@@ -105,8 +105,9 @@ const ReportLostPetView = () => {
     <>
       <Navbar />
       {isLoadingPet && <Loader className="mx-auto mt-5" />}
-      {/* TODO: create a proper empty state */}
-      {!isLoadingPet && !pet && <EmptyState />}
+      {!isLoadingPet && !pet && (
+        <EmptyState url={routes.home} buttonText="Entendido" />
+      )}
       {!isLoadingPet && pet && (
         <div className="p-5">
           <h2 className="font-bold text-3xl mb-8">
