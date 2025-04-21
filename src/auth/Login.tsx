@@ -66,13 +66,13 @@ const Login = ({
   return (
     <section className="h-screen flex items-center justify-center bg-muted">
       <div className="container mx-auto">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mx-5">
           <div className="mx-auto w-full max-w-sm rounded-md p-6 shadow bg-white">
             <div className="mb-6 flex flex-col items-center">
               <Link to={logo.url} className="mb-3 flex items-center gap-2">
                 <img src={logo.src} className="max-h-11" alt={logo.alt} />
               </Link>
-              <h1 className="mb-2 text-4xl font-bold">{heading}</h1>
+              <h1 className="mb-2 text-3xl sm:text-4xl font-bold text-center">{heading}</h1>
               <p className="text-muted-foreground">{subheading}</p>
             </div>
             <div className="grid gap-4">
@@ -109,7 +109,7 @@ const Login = ({
                 </div>
                 <Link
                   to={routes.resetPassword}
-                  className="text-sm text-primary hover:underline"
+                  className="text-sm text-primary text-right hover:underline leading-4"
                 >
                   Olvidé mi contraseña
                 </Link>
