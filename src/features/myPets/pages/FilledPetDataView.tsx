@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
+import ReportFoundPetAlertDialog from '@/features/reportLostPets/components/ReportFoundPetAlertDialog'
 import ReportLostPetAlertDialog from '@/features/reportLostPets/components/ReportLostPetAlertDialog'
 import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
@@ -17,6 +18,7 @@ import { calculateAge, cn, formatAge, formatAnimalSex } from '@/lib/utils'
 import {
   ClipboardHeart,
   DangerCircle,
+  Flag,
   MenuDotsCircle,
   Paw,
   Pen,
@@ -44,9 +46,11 @@ type Tab = {
 type Props = {
   tabs?: Tab[]
   pet: Tables<'pet'>
+  activeLostReport: Tables<'lost_pet_report'> | null
+  onMarkPetAsFound: () => void
 }
 
-const FilledPetDataView = ({ pet }: Props) => {
+const FilledPetDataView = ({ pet, ...props }: Props) => {
   const tabs: Tab[] = [
     {
       id: 'tab-1',
@@ -99,7 +103,7 @@ const FilledPetDataView = ({ pet }: Props) => {
             <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
               {pet.name}
             </h1>
-            {isOwner && <Options pet={pet} className="ml-3" />}
+            {isOwner && <Options pet={pet} {...props} className="ml-3" />}
           </div>
           {petImageUrl && (
             <div className="relative h-[200px] w-full lg:h-[400px]">
@@ -166,9 +170,11 @@ const FilledPetDataView = ({ pet }: Props) => {
 
 const Options = ({
   pet,
+  activeLostReport,
+  onMarkPetAsFound,
   className,
   ...props
-}: { pet: Tables<'pet'> } & ComponentProps<typeof Button>) => {
+}: Props & ComponentProps<typeof Button>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -194,15 +200,29 @@ const Options = ({
           <TrashBinTrash />
           Eliminar
         </DropdownMenuItem>
-        <ReportLostPetAlertDialog pet={pet}>
-          <DropdownMenuItem
-            variant="destructive"
-            onSelect={(event) => event.preventDefault()}
+        {activeLostReport !== null && (
+          <ReportFoundPetAlertDialog
+            pet={pet}
+            report={activeLostReport}
+            onMarked={onMarkPetAsFound}
           >
-            <DangerCircle weight="Linear" />
-            Reportar como perdido
-          </DropdownMenuItem>
-        </ReportLostPetAlertDialog>
+            <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+              <Flag weight="Linear" />
+              Reportar como encontrada
+            </DropdownMenuItem>
+          </ReportFoundPetAlertDialog>
+        )}
+        {activeLostReport === null && (
+          <ReportLostPetAlertDialog pet={pet}>
+            <DropdownMenuItem
+              variant="destructive"
+              onSelect={(event) => event.preventDefault()}
+            >
+              <DangerCircle weight="Linear" />
+              Reportar como perdido
+            </DropdownMenuItem>
+          </ReportLostPetAlertDialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

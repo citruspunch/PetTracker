@@ -15,10 +15,17 @@ const PetDetailsView = () => {
   const [isLoadingPet, setIsLoadingPet] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pet, setPet] = useState<Tables<'pet'> | null>(null)
+  const [activeLostReport, setActiveLostReport] =
+    useState<Tables<'lost_pet_report'> | null>(null)
 
   const onRegisteredPet = (pet: Tables<'pet'>) => {
     setPet(pet)
     toast.success('Tu mascota ha sido registrada')
+  }
+
+  const onMarkPetAsFound = () => {
+    setActiveLostReport(null)
+    toast.success('Tu mascota ha sido marcada como encontrada. ¡Felicidades!')
   }
 
   useEffect(() => {
@@ -33,10 +40,31 @@ const PetDetailsView = () => {
         .select('*')
         .eq('id', petId)
         .single()
-      setIsLoadingPet(false)
-      if (error !== null) setError('Mascota no encontrada')
+      if (error !== null) {
+        setError('Mascota no encontrada')
+        return
+      }
       setPet(data)
+      loadPetActiveLostReports(data)
     }
+
+    const loadPetActiveLostReports = async (pet: Tables<'pet'>) => {
+      const result = await supabase
+        .from('lost_pet_report')
+        .select('*')
+        .eq('pet', pet.id)
+      setIsLoadingPet(false)
+      if (result.error !== null) {
+        setError('Mascota no encontrada')
+        return
+      }
+      const reports = result.data
+      const activeReports = reports.filter(
+        (report) => report.found_date === null
+      )
+      if (activeReports.length >= 1) setActiveLostReport(activeReports.at(0)!)
+    }
+
     loadPet()
   }, [petId])
 
@@ -54,8 +82,14 @@ const PetDetailsView = () => {
           <ErrorView message={error} />
         </div>
       )}
-      {pet && isPetDataAlreadyFilled(pet) && <FilledPetDataView pet={pet} />}
-      {pet && !isPetDataAlreadyFilled(pet) && (
+      {!isLoadingPet && pet && isPetDataAlreadyFilled(pet) && (
+        <FilledPetDataView
+          pet={pet}
+          activeLostReport={activeLostReport}
+          onMarkPetAsFound={onMarkPetAsFound}
+        />
+      )}
+      {!isLoadingPet && pet && !isPetDataAlreadyFilled(pet) && (
         <RegisterPetIntroductionView
           petId={petId!}
           onPetRegistered={onRegisteredPet}
