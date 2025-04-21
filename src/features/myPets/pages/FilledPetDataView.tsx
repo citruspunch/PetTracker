@@ -15,6 +15,7 @@ import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
 import { calculateAge, cn, formatAge, formatAnimalSex } from '@/lib/utils'
+import { routes } from '@/routes'
 import {
   ClipboardHeart,
   DangerCircle,
@@ -25,9 +26,9 @@ import {
   TrashBinTrash,
 } from '@solar-icons/react'
 import React, { ComponentProps } from 'react'
-import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog'
 import { Link } from 'react-router-dom'
-import { routes } from '@/routes'
+import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog'
+import LostPetAlert from './LostPetAlert'
 
 type Attribute = {
   label: string
@@ -48,12 +49,10 @@ type Tab = {
 
 type Props = {
   tabs?: Tab[]
-  pet: Tables<'pet'>
-  activeLostReport: Tables<'lost_pet_report'> | null
-  onMarkPetAsFound: () => void
-}
+  wasScannedFromTag: boolean
+} & OptionsProps
 
-const FilledPetDataView = ({ pet, ...props }: Props) => {
+const FilledPetDataView = ({ pet, wasScannedFromTag, ...props }: Props) => {
   const tabs: Tab[] = [
     {
       id: 'tab-1',
@@ -102,9 +101,17 @@ const FilledPetDataView = ({ pet, ...props }: Props) => {
     <section className="py-12">
       <div className="container mx-auto">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex flow-row items-center justify-center">
-            {isOwner && <Options pet={pet} {...props} className="mr-1 pt-1.5 " />}  
-            <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl mr-7">
+          {wasScannedFromTag && props.activeLostReport !== null && (
+            <LostPetAlert pet={pet} className="mb-5" />
+          )}
+          <div className="flex flow-row items-baseline justify-center">
+            {isOwner && <Options pet={pet} {...props} className="mr-1" />}
+            <h1
+              className={cn(
+                'max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl',
+                isOwner && 'mr-7'
+              )}
+            >
               {pet.name}
             </h1>
           </div>
@@ -171,13 +178,19 @@ const FilledPetDataView = ({ pet, ...props }: Props) => {
   )
 }
 
+type OptionsProps = {
+  pet: Tables<'pet'>
+  activeLostReport: Tables<'lost_pet_report'> | null
+  onMarkPetAsFound: () => void
+}
+
 const Options = ({
   pet,
   activeLostReport,
   onMarkPetAsFound,
   className,
   ...props
-}: Props & ComponentProps<typeof Button>) => {
+}: OptionsProps & ComponentProps<typeof Button>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

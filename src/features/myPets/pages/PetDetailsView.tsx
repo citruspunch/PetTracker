@@ -4,7 +4,7 @@ import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
 import { isPetDataAlreadyFilled } from '@/lib/utils'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import ErrorView from './ErrorView'
 import FilledPetDataView from './FilledPetDataView'
@@ -12,11 +12,15 @@ import RegisterPetIntroductionView from './RegisterPetIntroductionView'
 
 const PetDetailsView = () => {
   const { petId } = useParams()
+  const [queryParameters] = useSearchParams()
   const [isLoadingPet, setIsLoadingPet] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pet, setPet] = useState<Tables<'pet'> | null>(null)
   const [activeLostReport, setActiveLostReport] =
     useState<Tables<'lost_pet_report'> | null>(null)
+
+  const encryptedPetId = queryParameters.get('pet')
+  const wasScannedFromTag = encryptedPetId !== null && encryptedPetId === petId
 
   const onRegisteredPet = (pet: Tables<'pet'>) => {
     setPet(pet)
@@ -87,6 +91,7 @@ const PetDetailsView = () => {
           pet={pet}
           activeLostReport={activeLostReport}
           onMarkPetAsFound={onMarkPetAsFound}
+          wasScannedFromTag={wasScannedFromTag}
         />
       )}
       {!isLoadingPet && pet && !isPetDataAlreadyFilled(pet) && (

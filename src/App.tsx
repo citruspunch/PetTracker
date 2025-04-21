@@ -5,15 +5,15 @@ import ResetPassword from './auth/ResetPassword'
 import Signup from './auth/Signup'
 import Dashboard from './Dashboard'
 import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
+import EditPetDetailsView from './features/myPets/pages/EditPetDetailsView'
 import MyPetsView from './features/myPets/pages/MyPetsView'
 import PetDetailsView from './features/myPets/pages/PetDetailsView'
+import ReportFoundPetView from './features/reportFoundPets/pages/ReportFoundPetView'
 import ReportLostPetView from './features/reportLostPets/pages/ReportLostPetForm'
 import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
 import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
-import ReportFoundPetView from './features/reportFoundPets/pages/ReportFoundPetView'
-import EditPetDetailsView from './features/myPets/pages/EditPetDetailsView'
 
 function App() {
   const user = useUser()
@@ -64,12 +64,18 @@ function App() {
           element={<PetDetailsView />}
         />
         <Route path={routes.reportLostPet} element={<ReportLostPetPage />} />
-        <Route path={routes.reportFoundPet} element={<ReportFoundPetView />} />
+        <Route
+          path={`${routes.reportFoundPet}/:petId`}
+          element={<ReportFoundPetView />}
+        />
         <Route
           path={`${routes.reportLostPet}/:petId`}
           element={<ReportLostPetView />}
         />
-        <Route path={`${routes.editPet}/:petId`} element={<EditPetDetailsView  />} />
+        <Route
+          path={`${routes.editPet}/:petId`}
+          element={<EditPetDetailsView />}
+        />
       </Routes>
     </Router>
   )
