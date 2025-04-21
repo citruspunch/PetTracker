@@ -2,8 +2,8 @@ import { TbPasswordUser } from 'react-icons/tb'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { routes } from '../routes'
 import { Link } from 'react-router-dom'
+import { routes } from '../routes'
 
 interface ResetPasswordProps {
   heading?: string
@@ -19,7 +19,7 @@ const ResetPassword = ({
   subheading = 'Ingresa tu correo electrónico para restablecer tu contraseña',
   resetText = 'Enviar correo de restablecimiento',
   loginText = '¿Recuerdas tu contraseña?',
-  loginUrl = routes.signIn,
+  loginUrl = routes.logIn,
   logoUrl = routes.home,
 }: ResetPasswordProps) => {
   return (

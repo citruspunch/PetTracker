@@ -1,11 +1,13 @@
 import { FcGoogle } from 'react-icons/fc'
-import { FaGithub } from 'react-icons/fa'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
+import supabase from '@/lib/supabase'
+import { Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { routes } from '../routes'
-import { Link } from 'react-router-dom'
 
 interface LoginProps {
   heading?: string
@@ -17,25 +19,48 @@ interface LoginProps {
   }
   loginText?: string
   googleText?: string
-  githubText?: string
+  facebookText?: string
+  appleText?: string
   signupText?: string
   signupUrl?: string
 }
 
 const Login = ({
-  heading = 'Iniciar Sesión',
+  heading = 'Iniciar sesión',
   subheading = 'Bienvenido de nuevo',
   logo = {
     url: routes.home,
-    src: './src/assets/PetTrackerLogo.png',
+    src: '/PetTrackerLogo.png',
     alt: 'PetTrackerLogo',
   },
   loginText = 'Iniciar Sesión',
   googleText = 'Acceder con Google',
-  githubText = 'Acceder con GitHub',
   signupText = '¿Aún no tienes cuenta?',
   signupUrl = routes.signUp,
 }: LoginProps) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
+  const login = async () => {
+    setLoading(true)
+    // TODO: add validations for empty fields
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
+    if (error === null) navigate(routes.dashboard)
+    setLoading(false)
+  }
+
+  const handleGoogleSignIn = async () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
+  }
+
   return (
     <section className="h-screen flex items-center justify-center bg-muted">
       <div className="container mx-auto">
@@ -53,20 +78,31 @@ const Login = ({
                 type="email"
                 placeholder="Ingresa tu correo electrónico"
                 required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
               />
               <Input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Ingresa tu contraseña"
                 required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
               />
               <div className="flex justify-between">
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="remember" className="border-muted-foreground" />
+                  <Checkbox
+                    id="remember"
+                    className="border-muted-foreground"
+                    checked={showPassword}
+                    onCheckedChange={(checked) =>
+                      setShowPassword(checked as boolean)
+                    }
+                  />
                   <label
                     htmlFor="remember"
                     className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    Recordar contraseña
+                    Mostrar contraseña
                   </label>
                 </div>
                 <Link
@@ -78,16 +114,23 @@ const Login = ({
               </div>
             </div>
             <div className="mt-4 flex flex-col gap-3">
-              <Button type="submit" className="mt-2 w-full">
-                {loginText}
-              </Button>
-              <Button variant="outline" className="w-full">
+              {loading ? (
+                <Button disabled>
+                  <Loader2 className="animate-spin mr-2" />
+                  Iniciando sesión...
+                </Button>
+              ) : (
+                <Button type="submit" className="mt-2 w-full" onClick={login}>
+                  {loginText}
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleGoogleSignIn}
+              >
                 <FcGoogle className="mr-2 size-5" />
                 {googleText}
-              </Button>
-              <Button variant="outline" className="w-full">
-                <FaGithub className="mr-2 size-5" />
-                {githubText}
               </Button>
             </div>
             <div className="mx-auto mt-7 mb-2 flex justify-center gap-1 text-sm text-muted-foreground">

@@ -1,54 +1,47 @@
-# React + TypeScript + Vite
+# PetTracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+PetTracker is a web application designed to help pet owners manage their pets' information, track lost pets, and explore lost pet reports in their area. Built with modern web technologies, PetTracker provides a user-friendly interface for pet management and community collaboration.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Pet Management**: Add, edit, and view details about your pets.
+- **Lost Pet Reports**: Report lost pets and explore lost pet reports in your area.
+- **Found Pet Reports**: Report found pets to help reunite them with their owners.
+- **User Authentication**: Secure login and registration system.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Frontend**: React with TypeScript 
+- **Styling**: Tailwind CSS and ShadCN UI
+- **Backend**: Supabase (PostgreSQL and authentication)
+- **Build Tool**: Vite
+- **Icons**: Lucide React and React Icons
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Installation
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/pettracker.git
+   cd pettracker
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+3. Set up environment variables. Create a `.env` file in the root directory and add your Supabase URL and API key:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. Start the development server:
+   ```bash
+    pnpm dev
+    ```
+5. Open your browser and navigate to `http://localhost:5173` to view the application.
+6. Create a Supabase project and set up the database schema as described in the `supabase_schema.sql` file in the `supabase` directory. You can use the Supabase dashboard to run the SQL commands.
+7. Make sure to enable authentication in your Supabase project and configure the necessary policies for the `pets` and `lost_pets` tables.
+
+

@@ -39,7 +39,7 @@ const Dashboard = ({
           <div className="relative flex justify-center">
             <div className="border-muted2 relative flex w-5/6 flex-col border lg:w-full">
               <div className="relative flex flex-col lg:flex-row">
-                <div className="border-muted2 flex flex-col justify-between border-b border-solid p-10 lg:w-3/5 lg:border-r lg:border-b-0">
+                <div className="border-muted2 flex flex-col justify-between border-b border-solid p-10 lg:border-r lg:border-b-0">
                   <h2 className="text-xl font-semibold">{feature1.title}</h2>
                   <p className="text-muted-foreground">
                     {feature1.description}
@@ -48,17 +48,6 @@ const Dashboard = ({
                     src={feature1.image}
                     alt={feature1.title}
                     className="mt-8 aspect-[1.5] h-full w-full object-contain lg:aspect-[2.4] bg-muted"
-                  />
-                </div>
-                <div className="flex flex-col justify-between p-10 lg:w-2/5">
-                  <h2 className="text-xl font-semibold">{feature2.title}</h2>
-                  <p className="text-muted-foreground">
-                    {feature2.description}
-                  </p>
-                  <img
-                    src={feature2.image}
-                    alt={feature2.title}
-                    className="mt-8 aspect-[1.45] h-full w-full object-contain bg-muted"
                   />
                 </div>
               </div>

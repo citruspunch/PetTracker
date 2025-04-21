@@ -1,27 +1,46 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import MyPetsPage from '@/features/myPets/pages/PetPage'
 import ExploreLostPets from '@/features/exploreLostPets/pages/ExploreLostPetsPage'
-import HomePage from './home'
-import Dashboard from './Dashboard'
-import { useState } from 'react'
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Login from './auth/Login'
-import Signup from './auth/Signup'
-import { routes } from './routes'
 import ResetPassword from './auth/ResetPassword'
-import PetDetails from '@/features/myPets/pages/PetDetails'
+import Signup from './auth/Signup'
+import Dashboard from './Dashboard'
+import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
+import EditPetDetailsView from './features/myPets/pages/EditPetDetailsView'
+import MyPetsView from './features/myPets/pages/MyPetsView'
+import PetDetailsView from './features/myPets/pages/PetDetailsView'
+import ReportFoundPetView from './features/reportFoundPets/pages/ReportFoundPetView'
+import ReportLostPetView from './features/reportLostPets/pages/ReportLostPetForm'
+import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
+import HomePage from './home'
+import useUser from './hooks/useUser'
+import { routes } from './routes'
 
 function App() {
-  // TODO - Implement authentication logic
-  const [user, setUser] = useState<String | null>(null)
+  const user = useUser()
 
   return (
     <Router>
       <Routes>
-        <Route path={routes.home} element={<HomePage />} />
+        <Route
+          path={routes.home}
+          element={
+            user ? (
+              <Dashboard
+                heading={'Panel de Control'}
+                feature1={feature1}
+                feature2={feature2}
+                feature3={feature3}
+                feature4={feature4}
+              />
+            ) : (
+              <HomePage />
+            )
+          }
+        />
         <Route
           path={routes.dashboard}
           element={
-            !user ? (
+            user ? (
               <Dashboard
                 heading={'Panel de Control'}
                 feature1={feature1}
@@ -34,12 +53,29 @@ function App() {
             )
           }
         />
-        <Route path={routes.signIn} element={<Login />} />
+        <Route path={routes.logIn} element={<Login />} />
         <Route path={routes.signUp} element={<Signup />} />
         <Route path={routes.resetPassword} element={<ResetPassword />} />
-        <Route path={routes.myPets} element={<MyPetsPage />} />
+        <Route path={routes.myPets} element={<MyPetsView />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
-        <Route path={routes.petDetails} element={<PetDetails />} />
+        <Route path={routes.LostPetDetails} element={<LostPetDetails />} />
+        <Route
+          path={`${routes.petDetails}/:petId`}
+          element={<PetDetailsView />}
+        />
+        <Route path={routes.reportLostPet} element={<ReportLostPetPage />} />
+        <Route
+          path={`${routes.reportFoundPet}/:petId`}
+          element={<ReportFoundPetView />}
+        />
+        <Route
+          path={`${routes.reportLostPet}/:petId`}
+          element={<ReportLostPetView />}
+        />
+        <Route
+          path={`${routes.editPet}/:petId`}
+          element={<EditPetDetailsView />}
+        />
       </Routes>
     </Router>
   )

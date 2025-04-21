@@ -1,6 +1,6 @@
-import { Menu } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { routes } from '@/routes'
+import { Menu } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 
 import {
   Accordion,
@@ -24,6 +24,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import useUser from '@/hooks/useUser'
+import supabase from '@/lib/supabase'
 
 interface MenuItem {
   title: string
@@ -57,7 +59,7 @@ interface NavbarProps {
 const Navbar = ({
   logo = {
     url: routes.dashboard,
-    src: './src/assets/PetTrackerLogo.png',
+    src: '/PetTrackerLogo.png',
     alt: 'logo',
     title: 'Pet Tracker',
   },
@@ -72,12 +74,14 @@ const Navbar = ({
     },
   ],
   auth = {
-    login: { title: 'Login', url: routes.signIn },
+    login: { title: 'Login', url: routes.logIn },
     signup: { title: 'Sign up', url: routes.signUp },
   },
   hideMenu = false,
 }: NavbarProps) => {
-  const isAuthenticated = true
+  const user = useUser()
+  const navigate = useNavigate()
+
   return (
     <section className="py-4 bg-white shadow-sm">
       <div className="container mx-auto">
@@ -101,7 +105,7 @@ const Navbar = ({
             )}
           </div>
           <div className="flex gap-2">
-            {!isAuthenticated ? (
+            {!user ? (
               <>
                 <Button asChild variant="outline" size="default">
                   <Link to={auth.login.url}>{auth.login.title}</Link>
@@ -111,8 +115,15 @@ const Navbar = ({
                 </Button>
               </>
             ) : (
-              <Button asChild variant="outline" size="default">
-                <Link to={routes.logout}>Cerrar Sesión</Link>
+              <Button
+                variant="outline"
+                size="default"
+                onClick={async () => {
+                  await supabase.auth.signOut()
+                  navigate(routes.home)
+                }}
+              >
+                Cerrar sesión
               </Button>
             )}
           </div>
@@ -156,7 +167,7 @@ const Navbar = ({
                     </Accordion>
 
                     <div className="flex flex-col gap-3">
-                      {!isAuthenticated ? (
+                      {!user ? (
                         <>
                           <Button asChild variant="outline">
                             <Link to={auth.login.url}>{auth.login.title}</Link>
@@ -168,8 +179,13 @@ const Navbar = ({
                           </Button>
                         </>
                       ) : (
-                        <Button asChild>
-                          <Link to={routes.logout}>Cerrar Sesión</Link>
+                        <Button
+                          onClick={async () => {
+                            await supabase.auth.signOut()
+                            navigate(routes.home)
+                          }}
+                        >
+                          Cerrar sesión
                         </Button>
                       )}
                     </div>

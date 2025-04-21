@@ -2,8 +2,8 @@ import { FcGoogle } from 'react-icons/fc'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import supabase from '@/lib/supabase'
 import { routes } from '@/routes'
-import { FaGithub } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
 interface SignupProps {
@@ -17,7 +17,8 @@ interface SignupProps {
   }
   signupText?: string
   googleText?: string
-  githubText?: string
+  facebookText?: string
+  appleText?: string
   loginText?: string
   loginUrl?: string
 }
@@ -32,11 +33,15 @@ const Signup = ({
     title: 'Pet Tracker',
   },
   googleText = 'Registrarse con Google',
-  githubText = 'Registrarse con GitHub',
   signupText = 'Crear cuenta',
   loginText = '¿Ya tienes una cuenta?',
-  loginUrl = routes.signIn,
+  loginUrl = routes.logIn,
 }: SignupProps) => {
+  const handleGoogleSignUp = async () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
+  }
   return (
     <section className="h-screen bg-muted">
       <div className="flex h-full items-center justify-center mx-auto">
@@ -80,13 +85,13 @@ const Signup = ({
                 <Button type="submit" className="mt-2 w-full">
                   {signupText}
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleGoogleSignUp}
+                >
                   <FcGoogle className="mr-2 size-5" />
                   {googleText}
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <FaGithub className="mr-2 size-5" />
-                  {githubText}
                 </Button>
               </div>
             </div>
