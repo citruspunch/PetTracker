@@ -7,6 +7,7 @@ import Dashboard from './Dashboard'
 import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
 import MyPetsView from './features/myPets/pages/MyPetsView'
 import PetDetailsView from './features/myPets/pages/PetDetailsView'
+import ReportLostPetView from './features/reportLostPets/pages/ReportLostPetForm'
 import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
 import HomePage from './home'
 import useUser from './hooks/useUser'
@@ -61,6 +62,10 @@ function App() {
           element={<PetDetailsView />}
         />
         <Route path={routes.reportLostPet} element={<ReportLostPetPage />} />
+        <Route
+          path={`${routes.reportLostPet}/:petId`}
+          element={<ReportLostPetView />}
+        />
       </Routes>
     </Router>
   )

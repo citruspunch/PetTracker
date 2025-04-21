@@ -64,7 +64,7 @@ const formSchema = z.object({
   sex: z.nativeEnum(AnimalSex, {
     required_error: 'Selecciona el sexo de tu mascota.',
   }),
-  animalType: z.string({
+  animalType: z.enum(animalTypes, {
     required_error: 'La especie de tu mascota es requerida para su registro.',
   }),
   breed: z.string().optional(),
@@ -289,17 +289,17 @@ const RegisterPetForm = ({
                       <CommandGroup>
                         {animalTypes.map((type) => (
                           <CommandItem
-                            value={type.label}
-                            key={type.value}
+                            value={type}
+                            key={type}
                             onSelect={() => {
-                              form.setValue('animalType', type.value)
+                              form.setValue('animalType', type)
                             }}
                           >
-                            {type.label}
+                            {formatAnimalType(type)}
                             <Check
                               className={cn(
                                 'ml-auto',
-                                type.value === field.value
+                                type === field.value
                                   ? 'opacity-100'
                                   : 'opacity-0'
                               )}

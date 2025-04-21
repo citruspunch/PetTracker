@@ -46,11 +46,8 @@ const MyPetsView = () => {
               {isLoadingPets && <Loader />}
               {!isLoadingPets &&
                 pets.map((pet) => (
-                  <>
-                    <div
-                      key={pet.id}
-                      className="flex items-center justify-between"
-                    >
+                  <div key={pet.id}>
+                    <div className="flex items-center justify-between">
                       <div className="flex flex-col">
                         <h3 className="font-semibold text-xl">{pet.name}</h3>
                         <span className="text-sm">
@@ -68,7 +65,7 @@ const MyPetsView = () => {
                       </Button>
                     </div>
                     <Separator className="my-5" />
-                  </>
+                  </div>
                 ))}
             </div>
           </div>
