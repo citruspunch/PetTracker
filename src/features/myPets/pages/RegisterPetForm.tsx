@@ -43,77 +43,71 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
-
-const MAX_FILE_SIZE = 5000000
-const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-]
-
-const formSchema = z.object({
-  name: z
-    .string({ required_error: 'El nombre de tu mascota es requerido.' })
-    .trim()
-    .min(2, 'El nombre debe contener al menos 2 caracteres.'),
-  birthDate: z.date({
-    required_error:
-      'Es necesaria la fecha de nacimiento/adopción de tu mascota para aproximar su edad.',
-  }),
-  sex: z.nativeEnum(AnimalSex, {
-    required_error: 'Selecciona el sexo de tu mascota.',
-  }),
-  animalType: z.enum(animalTypes, {
-    required_error: 'La especie de tu mascota es requerida para su registro.',
-  }),
-  breed: z.string().optional(),
-  spayedOrNeutered: z.boolean(),
-  portrait: z
-    .instanceof(FileList)
-    .refine(
-      (files) => files?.length === 1,
-      'La imagen de tu mascota es requerida.'
-    )
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.item(0)?.type ?? ''),
-      'Solo archivos en formato .jpg, .jpeg, .png y .webp son aceptados.'
-    )
-    .refine(
-      (files) => (files?.item(0)?.size ?? MAX_FILE_SIZE + 1) <= MAX_FILE_SIZE,
-      'El tamaño máximo de la foto es 5MB.'
-    ),
-  notes: z.string().optional(),
-})
+import { formSchemaForUpdate } from '../models/formSchemaForUpdate'
+import { formSchemaForRegister } from '../models/formSchemaForRegister'
 
 type Props = {
   petId: string
   onRegisterUpdated: (pet: Tables<'pet'>) => void
   submitButtonText?: string
+  isUpdate?: boolean
+  previousValues?: {
+    name: string
+    birthDate: Date | undefined
+    sex: AnimalSex | undefined
+    animalType: 'dog' | 'cat' | undefined
+    breed: string | undefined
+    spayedOrNeutered: boolean | undefined
+    image: string | undefined
+    notes: string | undefined
+  }
 }
 
 const RegisterPetForm = ({
   petId,
   onRegisterUpdated,
   submitButtonText = 'Actualizar información',
+  previousValues,
+  isUpdate = false,
 }: Props) => {
-  const [isUpdating, setIsUpdating] = useState(false)
+  const formSchema = isUpdate ? formSchemaForUpdate : formSchemaForRegister
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const petImageUrl = previousValues?.image
+    ? supabase.storage.from('pets-portraits').getPublicUrl(previousValues.image)
+        .data.publicUrl
+    : undefined
+
+  const [imagePreview, setImagePreview] = useState<string | undefined>(
+    petImageUrl
+  )
   const user = useUser()!
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      birthDate: undefined,
-      sex: undefined,
-      animalType: undefined,
-      breed: undefined,
-      spayedOrNeutered: false,
-      notes: undefined,
+      name: previousValues?.name || '',
+      birthDate: previousValues?.birthDate || undefined,
+      sex: previousValues?.sex || undefined,
+      animalType: previousValues?.animalType || undefined,
+      breed: previousValues?.breed || undefined,
+      spayedOrNeutered: previousValues?.spayedOrNeutered || false,
+      notes: previousValues?.notes || undefined,
     },
   })
   const portraitReference = form.register('portrait')
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   const uploadPortrait = async (files: FileList): Promise<string | null> => {
     const file = files.item(0)!
@@ -126,8 +120,11 @@ const RegisterPetForm = ({
   }
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsUpdating(true)
-    const uploadedImagePath = await uploadPortrait(values.portrait)
+    setIsLoading(true)
+    let uploadedImagePath = values.portrait?.length
+      ? await uploadPortrait(values.portrait)
+      : previousValues?.image
+    //const uploadedImagePath = await uploadPortrait(values.portrait)
     if (uploadedImagePath === null) {
       toast.error(
         'Ocurrió un error al editar la información de tu mascota. Inténtalo de nuevo.'
@@ -150,7 +147,7 @@ const RegisterPetForm = ({
       .eq('id', petId)
       .select()
       .single()
-    setIsUpdating(false)
+    setIsLoading(false)
     if (updateResult.error === null) {
       onRegisterUpdated(updateResult.data)
       return
@@ -355,7 +352,22 @@ const RegisterPetForm = ({
             <FormItem>
               <FormLabel>Foto</FormLabel>
               <FormControl>
-                <Input type="file" {...portraitReference} />
+                <div className="flex flex-col items-center space-y-4">
+                  {imagePreview && (
+                    <img
+                      src={imagePreview}
+                      alt="Vista previa"
+                      className="h-32 w-32 rounded-full object-cover"
+                    />
+                  )}
+                  <Input
+                    type="file"
+                    {...portraitReference}
+                    onChange={(event) => {
+                      handleImageChange(event)
+                    }}
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -383,7 +395,7 @@ const RegisterPetForm = ({
           )}
         />
         <Button type="submit" className="w-full">
-          {isUpdating ? (
+          {isLoading ? (
             <Loader />
           ) : (
             <>

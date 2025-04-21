@@ -19,6 +19,9 @@ const MyPetsView = () => {
 
   useEffect(() => {
     const loadPets = async () => {
+      if (!user) {
+        return;
+      }
       setIsLoadingPets(true)
       const result = await supabase.from('pet').select('*').eq('owner', user.id)
       setIsLoadingPets(false)

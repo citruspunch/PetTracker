@@ -6,10 +6,6 @@ import { LostPetType } from '../models/lostPetType'
 import SkeletonExploreLostPets from '../components/SkeletonExploreLostPets'
 import NoLostPets from '../components/NoLostPets'
 import LostPetsList from '../components/LostPetsList'
-import NoLostPets from '../components/NoLostPets'
-import SkeletonExploreLostPets from '../components/SkeletonExploreLostPets'
-import { LostPetType } from '../models/lostPetType'
-import { fetchLostPets } from '../useCases/fetchLostPets'
 
 const ExploreLostPets = ({ heading = 'Mascotas Perdidas' }) => {
   const [lostPets, setLostPets] = useState<LostPetType[]>([])

@@ -25,6 +25,9 @@ import {
   TrashBinTrash,
 } from '@solar-icons/react'
 import React, { ComponentProps } from 'react'
+import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog'
+import { Link } from 'react-router-dom'
+import { routes } from '@/routes'
 
 type Attribute = {
   label: string
@@ -192,14 +195,18 @@ const Options = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-40">
-        <DropdownMenuItem>
-          <Pen />
-          Editar
+        <DropdownMenuItem onSelect={(event) => event.preventDefault()} asChild>
+          <Link to={`${routes.editPet}/${pet.id}`} className="flex w-full">
+            <Pen />
+            Editar
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <TrashBinTrash />
-          Eliminar
-        </DropdownMenuItem>
+        <ConfirmDeleteDialog pet={pet}>
+          <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+            <TrashBinTrash />
+            Eliminar
+          </DropdownMenuItem>
+        </ConfirmDeleteDialog>
         {activeLostReport !== null && (
           <ReportFoundPetAlertDialog
             pet={pet}

@@ -13,6 +13,7 @@ import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
 import ReportFoundPetView from './features/reportFoundPets/pages/ReportFoundPetView'
+import EditPetDetailsView from './features/myPets/pages/EditPetDetailsView'
 
 function App() {
   const user = useUser()
@@ -68,6 +69,7 @@ function App() {
           path={`${routes.reportLostPet}/:petId`}
           element={<ReportLostPetView />}
         />
+        <Route path={`${routes.editPet}/:petId`} element={<EditPetDetailsView  />} />
       </Routes>
     </Router>
   )
