@@ -28,7 +28,7 @@ const Signup = ({
   subheading = 'Crea una cuenta para comenzar',
   logo = {
     url: routes.home,
-    src: './src/assets/PetTrackerLogo.png',
+    src: '/PetTrackerLogo.png',
     alt: 'PetTrackerLogo',
     title: 'Pet Tracker',
   },
@@ -45,7 +45,7 @@ const Signup = ({
   return (
     <section className="h-screen bg-muted">
       <div className="flex h-full items-center justify-center mx-auto">
-        <div className="flex w-full max-w-sm flex-col items-center gap-y-6 rounded-md border border-muted bg-white px-6 py-8 shadow-md">
+        <div className="flex w-full max-w-sm flex-col items-center gap-y-6 rounded-md border border-muted bg-white px-6 py-8 shadow-md mx-5">
           <div className="flex flex-col items-center gap-y-3">
             {/* Logo */}
             <div className="flex items-center gap-2 lg:justify-start">
@@ -58,7 +58,7 @@ const Signup = ({
                 />
               </Link>
             </div>
-            <h1 className="mb-1 text-4xl font-semibold">{heading}</h1>
+            <h1 className="mb-1 text-3xl sm:text-4xl font-bold">{heading}</h1>
             {subheading && (
               <p className="text-muted-foreground">{subheading}</p>
             )}

@@ -104,7 +104,7 @@ const FilledPetDataView = ({ pet, wasScannedFromTag, ...props }: Props) => {
           {wasScannedFromTag && props.activeLostReport !== null && (
             <LostPetAlert pet={pet} className="mb-5" />
           )}
-          <div className="flex flow-row items-baseline justify-center">
+          <div className="flex flow-row items-baseline justify-center mx-2">
             {isOwner && <Options pet={pet} {...props} className="mr-1" />}
             <h1
               className={cn(
@@ -116,7 +116,7 @@ const FilledPetDataView = ({ pet, wasScannedFromTag, ...props }: Props) => {
             </h1>
           </div>
           {petImageUrl && (
-            <div className="relative h-[200px] w-full lg:h-[400px]">
+            <div className="relative h-[200px] w-full lg:h-[400px] sm:hidden px-5 sm:px-0">
               <img
                 src={petImageUrl}
                 alt="Foto de la mascota"
@@ -167,6 +167,19 @@ const FilledPetDataView = ({ pet, wasScannedFromTag, ...props }: Props) => {
                         </React.Fragment>
                       ))}
                     </ul>
+                  </div>
+                  <div className="relative h-[300px] w-full lg:h-[400px] hidden sm:block">
+                    {petImageUrl && (
+                      <div className="relative h-[300px] w-full lg:h-[400px] ">
+                        <img
+                          src={petImageUrl}
+                          alt="Foto de la mascota"
+                          className="h-full w-full rounded-xl object-cover"
+                          width={600}
+                          height={400}
+                        />
+                      </div>
+                    )}
                   </div>
                 </TabsContent>
               ))}
