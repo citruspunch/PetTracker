@@ -36,8 +36,6 @@ const Login = ({
   },
   loginText = 'Iniciar Sesión',
   googleText = 'Acceder con Google',
-  facebookText = 'Acceder con Facebook',
-  appleText = 'Acceder con apple',
   signupText = '¿Aún no tienes cuenta?',
   signupUrl = routes.signUp,
 }: LoginProps) => {
@@ -56,6 +54,12 @@ const Login = ({
     })
     if (error === null) navigate(routes.dashboard)
     setLoading(false)
+  }
+
+  const handleGoogleSignIn = async () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
   }
 
   return (
@@ -121,17 +125,9 @@ const Login = ({
                   {loginText}
                 </Button>
               )}
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={handleGoogleSignIn}>
                 <FcGoogle className="mr-2 size-5" />
                 {googleText}
-              </Button>
-              <Button variant="outline" className="w-full">
-                <FaFacebook className="mr-2 size-5" />
-                {facebookText}
-              </Button>
-              <Button variant="outline" className="w-full">
-                <FaApple className="mr-2 size-5" />
-                {appleText}
               </Button>
             </div>
             <div className="mx-auto mt-7 mb-2 flex justify-center gap-1 text-sm text-muted-foreground">

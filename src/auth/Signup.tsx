@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { routes } from '@/routes'
 import { FaApple, FaFacebook, FaGithub } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import supabase from '@/lib/supabase'
 
 interface SignupProps {
   heading?: string
@@ -33,12 +34,15 @@ const Signup = ({
     title: 'Pet Tracker',
   },
   googleText = 'Registrarse con Google',
-  facebookText = 'Registrarse con Facebook',
-  appleText = 'Registrarse con GitHub',
   signupText = 'Crear cuenta',
   loginText = '¿Ya tienes una cuenta?',
   loginUrl = routes.logIn,
 }: SignupProps) => {
+  const handleGoogleSignUp = async () => {
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+    })
+  }
   return (
     <section className="h-screen bg-muted">
       <div className="flex h-full items-center justify-center mx-auto">
@@ -82,17 +86,9 @@ const Signup = ({
                 <Button type="submit" className="mt-2 w-full">
                   {signupText}
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" onClick={handleGoogleSignUp}>
                   <FcGoogle className="mr-2 size-5" />
                   {googleText}
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <FaFacebook className="mr-2 size-5" />
-                  {facebookText}
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <FaApple className="mr-2 size-5" />
-                  {appleText}
                 </Button>
               </div>
             </div>
