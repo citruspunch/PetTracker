@@ -103,10 +103,10 @@ const FilledPetDataView = ({ pet, ...props }: Props) => {
       <div className="container mx-auto">
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="flex flow-row items-center justify-center">
-            <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl">
+            {isOwner && <Options pet={pet} {...props} className="mr-1 pt-1.5 " />}  
+            <h1 className="max-w max-w-5/6 md:max-w-2xl text-3xl font-semibold md:text-4xl mr-7">
               {pet.name}
             </h1>
-            {isOwner && <Options pet={pet} {...props} className="ml-3" />}
           </div>
           {petImageUrl && (
             <div className="relative h-[200px] w-full lg:h-[400px]">
@@ -194,7 +194,7 @@ const Options = ({
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-40">
+      <DropdownMenuContent align="center" className="w-40">
         <DropdownMenuItem onSelect={(event) => event.preventDefault()} asChild>
           <Link to={`${routes.editPet}/${pet.id}`} className="flex w-full">
             <Pen />

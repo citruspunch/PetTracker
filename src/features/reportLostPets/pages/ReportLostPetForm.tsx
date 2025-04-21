@@ -97,6 +97,7 @@ const ReportLostPetView = () => {
       console.error(result.error)
       return
     }
+    toast.info('Tu mascota ha sido reportada como perdida.')
     navigate(`${routes.petDetails}/${pet!.id}`, { replace: true })
   }
 
