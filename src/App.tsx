@@ -61,7 +61,7 @@ function App() {
         <Route path={routes.LostPetDetails} element={<LostPetDetails />} />
         <Route
           path={`${routes.petDetails}/:petId`}
-          element={<PetDetailsView />}
+          element={user ? <PetDetailsView /> : <Login />}
         />
         <Route path={routes.reportLostPet} element={<ReportLostPetPage />} />
         <Route

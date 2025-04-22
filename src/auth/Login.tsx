@@ -23,6 +23,7 @@ interface LoginProps {
   appleText?: string
   signupText?: string
   signupUrl?: string
+  redirectRoute?: string
 }
 
 const Login = ({
@@ -37,6 +38,7 @@ const Login = ({
   googleText = 'Acceder con Google',
   signupText = '¿Aún no tienes cuenta?',
   signupUrl = routes.signUp,
+  redirectRoute = routes.dashboard,
 }: LoginProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -51,7 +53,7 @@ const Login = ({
       email: email,
       password: password,
     })
-    if (error === null) navigate(routes.dashboard)
+    if (error === null) navigate(redirectRoute)
     setLoading(false)
   }
 

@@ -22,7 +22,7 @@ PetTracker is a web application designed to help pet owners manage their pets' i
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/pettracker.git
+   git clone https://github.com/pastelcode/PetTracker.git
    cd pettracker
 
 2. Install dependencies:
