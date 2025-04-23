@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AnimalSex } from '@/lib/animalSex'
-import supabase from '@/lib/supabase'
-import { Tables } from '@/lib/supabase-types'
+import supabase from '@/lib/supabase/supabase'
+import { Tables } from '@/lib/supabase/types'
 import { cn } from '@/lib/utils'
 import { routes } from '@/routes'
 import { useEffect, useState } from 'react'

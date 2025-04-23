@@ -17,14 +17,15 @@ export const appRoutes = {
   editPet: '/edit-pet',
   editUser: '/edit-user',
   resetPassword: '/reset-password',
-  logIn: '/log-in',
+  logIn: '/login',
   signUp: '/sign-up',
   logout: '/logout',
 }
 
 export default [
   index('routes/landing.tsx'),
-  layout('routes/authored_layout.tsx', [
+  layout('routes/authorized_layout.tsx', [
     route(appRoutes.dashboard, 'routes/dashboard.tsx'),
   ]),
+  route(appRoutes.logIn, 'routes/login.tsx'),
 ] satisfies RouteConfig

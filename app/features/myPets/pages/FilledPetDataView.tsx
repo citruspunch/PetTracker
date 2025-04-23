@@ -12,8 +12,8 @@ import ReportFoundPetAlertDialog from '@/features/reportLostPets/components/Repo
 import ReportLostPetAlertDialog from '@/features/reportLostPets/components/ReportLostPetAlertDialog'
 import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
-import supabase from '@/lib/supabase'
-import { Tables } from '@/lib/supabase-types'
+import supabase from '@/lib/supabase/supabase'
+import { Tables } from '@/lib/supabase/types'
 import { calculateAge, cn, formatAge, formatAnimalSex } from '@/lib/utils'
 import { routes } from '@/routes'
 import {

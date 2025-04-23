@@ -1,13 +1,12 @@
-import { FcGoogle } from 'react-icons/fc'
-
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import supabase from '@/lib/supabase'
+import supabase from '@/lib/supabase/supabase'
+import { appRoutes } from '@/routes'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { routes } from '../routes'
+import { FcGoogle } from 'react-icons/fc'
+import { Link, useNavigate } from 'react-router'
 
 interface LoginProps {
   heading?: string
@@ -30,15 +29,15 @@ const Login = ({
   heading = 'Iniciar sesión',
   subheading = 'Bienvenido de nuevo',
   logo = {
-    url: routes.home,
+    url: appRoutes.landing,
     src: '/PetTrackerLogo.png',
     alt: 'PetTrackerLogo',
   },
   loginText = 'Iniciar Sesión',
   googleText = 'Acceder con Google',
   signupText = '¿Aún no tienes cuenta?',
-  signupUrl = routes.signUp,
-  redirectRoute = routes.dashboard,
+  signupUrl = appRoutes.signUp,
+  redirectRoute = appRoutes.dashboard,
 }: LoginProps) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -110,7 +109,7 @@ const Login = ({
                   </label>
                 </div>
                 <Link
-                  to={routes.resetPassword}
+                  to={appRoutes.resetPassword}
                   className="text-sm text-primary text-right hover:underline leading-4"
                 >
                   Olvidé mi contraseña

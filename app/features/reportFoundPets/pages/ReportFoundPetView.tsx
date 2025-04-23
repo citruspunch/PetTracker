@@ -1,17 +1,17 @@
-import { Tables } from '@/lib/supabase-types'
-import { toast } from 'sonner'
-import { useNavigate, useParams } from 'react-router-dom'
-import { routes } from '@/routes'
 import Navbar from '@/components/navbar'
-import { useEffect, useState } from 'react'
-import supabase from '@/lib/supabase'
-import useUser from '@/hooks/useUser'
-import { z } from 'zod'
-import { Loader, SearchCheck } from 'lucide-react'
-import ReportFoundPetForm from './ReportFoundPetForm'
-import EmptyState from '@/features/reportLostPets/components/EmptyState'
-import { reportFoundPetSchema } from '../models/formSchemas'
 import { Separator } from '@/components/ui/separator'
+import EmptyState from '@/features/reportLostPets/components/EmptyState'
+import useUser from '@/hooks/useUser'
+import supabase from '@/lib/supabase/supabase'
+import { Tables } from '@/lib/supabase/types'
+import { routes } from '@/routes'
+import { Loader, SearchCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { reportFoundPetSchema } from '../models/formSchemas'
+import ReportFoundPetForm from './ReportFoundPetForm'
 
 const ReportFoundPetView = () => {
   const navigate = useNavigate()
@@ -56,7 +56,7 @@ const ReportFoundPetView = () => {
     })
 
     setIsLoading(false)
-    if (error ) {
+    if (error) {
       toast.error(
         'Ocurrió un error al reportar tu mascota como perdida. Inténtalo de nuevo.'
       )
@@ -77,7 +77,7 @@ const ReportFoundPetView = () => {
       {!isLoadingPet && pet && (
         <div className="p-5 mt-5 w-6/7 sm:w-3/4 md:w-2/3 mx-auto">
           <div className="flex items-center mb-5">
-            <SearchCheck className='mr-3 h-10 w-10 hidden sm:block'/>
+            <SearchCheck className="mr-3 h-10 w-10 hidden sm:block" />
             <h2 className="font-bold text-3xl mb-1">
               Reportar a {pet.name} como{' '}
               {pet.sex === 'male' ? 'encontrado' : 'encontrada'}

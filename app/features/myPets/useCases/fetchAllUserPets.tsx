@@ -1,18 +1,17 @@
-import supabase from '@/lib/supabase'
+import supabase from '@/lib/supabase/supabase'
 import { format } from '@formkit/tempo'
+import { User } from '@supabase/supabase-js'
 import { fetchedPetType } from '../models/fetchedPetType'
 import { petType } from '../models/petType'
-import { User } from '@supabase/supabase-js'
 
-export const fetchAllUserPets = async (user: User | null): Promise<petType[]> => {
+export const fetchAllUserPets = async (
+  user: User | null
+): Promise<petType[]> => {
   if (!user) {
-    console.error('User is not logged in');
-    return [];
+    console.error('User is not logged in')
+    return []
   }
-  const petsQuery = supabase
-    .from('pet')
-    .select('*')
-    .eq('owner', user!.id)
+  const petsQuery = supabase.from('pet').select('*').eq('owner', user!.id)
 
   const { data, error } = await petsQuery
 
