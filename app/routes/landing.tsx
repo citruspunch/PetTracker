@@ -1,7 +1,9 @@
 import LandingView from '@/features/landing/LandingView'
-import type { MetaDescriptor } from 'react-router'
+import type { Route } from './+types/landing'
 
-export const meta = (): MetaDescriptor[] => [{ title: 'Pet Tracker' }]
+export function meta(_: Route.MetaArgs) {
+  return [{ title: 'Pet Tracker' }]
+}
 
 export default function LandingRoute() {
   return <LandingView />

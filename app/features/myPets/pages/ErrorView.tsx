@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { AlertCircle } from 'lucide-react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 
 const ErrorView = ({ message }: { message: string }) => {
   const navigate = useNavigate()

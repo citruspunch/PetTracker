@@ -1,1 +1,0 @@
-import{o as s}from"./chunk-LSOULM7L-D3xIczIm.js";import{c as a}from"./supabase-BKc26Het.js";import{L as m}from"./loader-circle-BEFSAAKo.js";const p=({className:o,...r})=>s.jsx(m,{className:a("animate-spin",o),...r});export{p as L};

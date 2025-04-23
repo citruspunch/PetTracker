@@ -1,7 +1,7 @@
 import { CarouselItem } from '@/components/ui/carousel'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase/supabase'
-import { type Tables } from '@/lib/supabase/types'
+import { Tables } from '@/lib/supabase/supabase-types'
 import { formatAnimalSex } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
 import { MdPets } from 'react-icons/md'

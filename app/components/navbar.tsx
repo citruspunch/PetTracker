@@ -22,9 +22,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import useUser from '@/hooks/useUser'
 import supabase from '@/lib/supabase/supabase'
 import { appRoutes } from '@/routes'
+import { useUser } from '@/routes/authorized_layout'
 import { Link, useNavigate } from 'react-router'
 
 interface MenuItem {
@@ -74,7 +74,7 @@ const Navbar = ({
     },
   ],
   auth = {
-    login: { title: 'Login', url: appRoutes.login },
+    login: { title: 'Login', url: appRoutes.logIn },
     signup: { title: 'Sign up', url: appRoutes.signUp },
   },
   hideMenu = false,

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
-import { appRoutes } from '@/routes'
+import { routes } from '@/routes'
 import { MdPets } from 'react-icons/md'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 
 const NoLostPets = () => {
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ const NoLostPets = () => {
       </p>
       <Button
         variant="destructive"
-        onClick={() => navigate(appRoutes.reportLostPet)}
+        onClick={() => navigate(routes.reportLostPet)}
         className="mt-6 mb-30 bg-red-700 text-white "
       >
         Reportar una mascota perdida

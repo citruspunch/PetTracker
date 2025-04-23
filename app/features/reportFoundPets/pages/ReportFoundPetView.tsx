@@ -3,11 +3,11 @@ import { Separator } from '@/components/ui/separator'
 import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import useUser from '@/hooks/useUser'
 import supabase from '@/lib/supabase/supabase'
-import { type Tables } from '@/lib/supabase/types'
-import { appRoutes } from '@/routes'
+import { Tables } from '@/lib/supabase/types'
+import { routes } from '@/routes'
 import { Loader, SearchCheck } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { reportFoundPetSchema } from '../models/formSchemas'
@@ -66,14 +66,14 @@ const ReportFoundPetView = () => {
       toast.success(`Gracias por reportar a ${pet!.name} como encontrada.`)
     }
 
-    navigate(`${appRoutes.petDetails}/${pet!.id}`, { replace: true })
+    navigate(`${routes.petDetails}/${pet!.id}`, { replace: true })
   }
 
   return (
     <>
       <Navbar />
       {isLoadingPet && <Loader className="mx-auto mt-5" />}
-      {!isLoadingPet && !pet && <EmptyState url={appRoutes.landing} />}
+      {!isLoadingPet && !pet && <EmptyState url={routes.home} />}
       {!isLoadingPet && pet && (
         <div className="p-5 mt-5 w-6/7 sm:w-3/4 md:w-2/3 mx-auto">
           <div className="flex items-center mb-5">

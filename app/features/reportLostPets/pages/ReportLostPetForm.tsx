@@ -19,16 +19,16 @@ import {
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import supabase from '@/lib/supabase/supabase'
-import { type Tables } from '@/lib/supabase/types'
+import { Tables } from '@/lib/supabase/supabase-types'
 import { cn } from '@/lib/utils'
-import { appRoutes } from '@/routes'
+import { routes } from '@/routes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Calendar as CalendarIcon } from '@solar-icons/react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import EmptyState from '../components/EmptyState'
@@ -98,7 +98,7 @@ const ReportLostPetView = () => {
       return
     }
     toast.info('Tu mascota ha sido reportada como perdida.')
-    navigate(`${appRoutes.petDetails}/${pet!.id}`, { replace: true })
+    navigate(`${routes.petDetails}/${pet!.id}`, { replace: true })
   }
 
   return (
@@ -106,7 +106,7 @@ const ReportLostPetView = () => {
       <Navbar />
       {isLoadingPet && <Loader className="mx-auto mt-5" />}
       {!isLoadingPet && !pet && (
-        <EmptyState url={appRoutes.landing} buttonText="Entendido" />
+        <EmptyState url={routes.home} buttonText="Entendido" />
       )}
       {!isLoadingPet && pet && (
         <div className="p-5">

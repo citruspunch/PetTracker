@@ -10,8 +10,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import supabase from '@/lib/supabase/supabase'
-import { type Tables } from '@/lib/supabase/types'
-import { type ReactNode } from 'react'
+import { Tables } from '@/lib/supabase/types'
+import { ReactNode } from 'react'
 import { toast } from 'sonner'
 
 type Props = {

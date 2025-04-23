@@ -2,12 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase/supabase'
-import { appRoutes } from '@/routes'
+import { routes } from '@/routes'
 import { ArrowRight, CircleAlert, MapPinned } from 'lucide-react'
 import React from 'react'
 import { MdPets } from 'react-icons/md'
-import { useNavigate } from 'react-router'
-import { type LostPetType } from '../models/lostPetType'
+import { useNavigate } from 'react-router-dom'
+import { LostPetType } from '../models/lostPetType'
 
 interface LostPetsListProps {
   heading: string
@@ -26,7 +26,7 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
           <div className="fixed bottom-7 right-6 sm:static">
             <Button
               variant="destructive"
-              onClick={() => navigate(appRoutes.reportLostPet)}
+              onClick={() => navigate(routes.reportLostPet)}
               className="bg-red-700 text-white rounded-md p-5 shadow-lg sm:rounded-md sm:p-1"
             >
               <CircleAlert className="h-10 w-10 sm:h-8 sm:w-8" />
@@ -77,7 +77,7 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
                 <Button
                   variant="outline"
                   onClick={() =>
-                    navigate(`${appRoutes.petDetails}/${lostPet.petId}`)
+                    navigate(`${routes.petDetails}/${lostPet.petId}`)
                   }
                   className="order-3 ml-auto w-fit gap-2 md:order-none"
                 >

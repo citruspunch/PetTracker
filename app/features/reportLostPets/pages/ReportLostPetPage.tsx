@@ -1,16 +1,17 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import Navbar from '@/components/navbar'
 import {
   Carousel,
-  type CarouselApi,
+  CarouselApi,
   CarouselContent,
 } from '@/components/ui/carousel'
 import useUser from '@/hooks/useUser'
 import supabase from '@/lib/supabase/supabase'
-import { type Tables } from '@/lib/supabase/types'
-import { appRoutes } from '@/routes'
-import { useEffect, useState } from 'react'
+import { Tables } from '@/lib/supabase/supabase-types'
+import { routes } from '@/routes'
 import { toast } from 'sonner'
 import CarouselCard from '../components/CarouselCard'
 import CarouselControls from '../components/CarouselControls'
@@ -136,7 +137,7 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
         <EmptyState
           heading="No tienes mascotas mascotas para reportar"
           description="Adquiere tu tag NFC en nuestros puntos de venta y registra a tu mascota!"
-          url={appRoutes.myPets}
+          url={routes.myPets}
         />
       )}
     </>

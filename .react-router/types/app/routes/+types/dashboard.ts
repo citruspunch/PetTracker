@@ -4,7 +4,7 @@
 import type * as T from "react-router/route-module"
 
 import type { Info as Parent0 } from "../../+types/root.js"
-import type { Info as Parent1 } from "./protected_layout.js"
+import type { Info as Parent1 } from "./authorized_layout.js"
 
 type Module = typeof import("../dashboard.js")
 
