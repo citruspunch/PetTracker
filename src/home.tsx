@@ -1,9 +1,9 @@
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { appRoutes } from '@/routes'
-import { Link } from 'react-router'
-import Navbar from '../../components/navbar'
+import { routes } from '@/routes'
+import { Link } from 'react-router-dom'
+import Navbar from './components/navbar'
 
 interface Testimonial {
   quote: string
@@ -31,12 +31,12 @@ interface HomePageProps {
   }
 }
 
-const LandingView = ({
+const HomePage = ({
   heading = 'Encuentra. Conecta. Protege.',
   description = 'Con PetTracker, vincula tu mascota a una placa inteligente y recibe alertas si alguien la encuentra. Tu compañero siempre estará un escaneo más cerca.',
   button = {
     text: 'Vincula tu mascota',
-    url: appRoutes.dashboard,
+    url: routes.dashboard,
   },
   testimonial = {
     quote:
@@ -144,4 +144,4 @@ const LandingView = ({
   )
 }
 
-export default LandingView
+export default HomePage

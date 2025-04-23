@@ -72,9 +72,7 @@ const Login = ({
               <Link to={logo.url} className="mb-3 flex items-center gap-2">
                 <img src={logo.src} className="max-h-11" alt={logo.alt} />
               </Link>
-              <h1 className="mb-2 text-3xl sm:text-4xl font-bold text-center">
-                {heading}
-              </h1>
+              <h1 className="mb-2 text-3xl sm:text-4xl font-bold text-center">{heading}</h1>
               <p className="text-muted-foreground">{subheading}</p>
             </div>
             <div className="grid gap-4">

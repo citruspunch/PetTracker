@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import type { Tables } from './supabase-types'
+import { Tables } from './supabase-types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -68,10 +68,10 @@ export const citiesGuatemala = [
   'Sololá',
   'Suchitepéquez',
   'Totonicapán',
-  'Zacapa',
-] as const
+  'Zacapa'
+] as const;
 
 export const citiesGuatemalaForDropdown = citiesGuatemala.map((city) => ({
   value: city,
   label: city,
-}))
+}));

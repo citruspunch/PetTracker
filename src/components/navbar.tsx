@@ -1,4 +1,6 @@
+import { routes } from '@/routes'
 import { Menu } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
 
 import {
   Accordion,
@@ -22,10 +24,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import useUser from '@/hooks/useUser'
 import supabase from '@/lib/supabase'
-import { appRoutes } from '@/routes'
-import { useUser } from '@/routes/authored_layout'
-import { Link, useNavigate } from 'react-router'
 
 interface MenuItem {
   title: string
@@ -58,7 +58,7 @@ interface NavbarProps {
 
 const Navbar = ({
   logo = {
-    url: appRoutes.dashboard,
+    url: routes.dashboard,
     src: '/PetTrackerLogo.png',
     alt: 'logo',
     title: 'Pet Tracker',
@@ -66,16 +66,16 @@ const Navbar = ({
   menu = [
     {
       title: 'Explorar Mascotas Pérdidas',
-      url: appRoutes.exploreLostPets,
+      url: routes.exploreLostPets,
     },
     {
       title: 'Mis Mascotas',
-      url: appRoutes.myPets,
+      url: routes.myPets,
     },
   ],
   auth = {
-    login: { title: 'Login', url: appRoutes.logIn },
-    signup: { title: 'Sign up', url: appRoutes.signUp },
+    login: { title: 'Login', url: routes.logIn },
+    signup: { title: 'Sign up', url: routes.signUp },
   },
   hideMenu = false,
 }: NavbarProps) => {
@@ -120,7 +120,7 @@ const Navbar = ({
                 size="default"
                 onClick={async () => {
                   await supabase.auth.signOut()
-                  navigate(appRoutes.landing)
+                  navigate(routes.home)
                 }}
               >
                 Cerrar sesión
@@ -182,7 +182,7 @@ const Navbar = ({
                         <Button
                           onClick={async () => {
                             await supabase.auth.signOut()
-                            navigate(appRoutes.landing)
+                            navigate(routes.home)
                           }}
                         >
                           Cerrar sesión

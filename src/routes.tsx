@@ -1,12 +1,5 @@
-import {
-  index,
-  layout,
-  route,
-  type RouteConfig,
-} from '@react-router/dev/routes'
-
-export const appRoutes = {
-  landing: '/',
+export const routes = {
+  home: '/',
   dashboard: '/dashboard',
   myPets: '/my-pets',
   exploreLostPets: '/lost-pets',
@@ -21,10 +14,3 @@ export const appRoutes = {
   signUp: '/sign-up',
   logout: '/logout',
 }
-
-export default [
-  index('routes/landing.tsx'),
-  layout('routes/authored_layout.tsx', [
-    route(appRoutes.dashboard, 'routes/dashboard.tsx'),
-  ]),
-] satisfies RouteConfig
