@@ -19,18 +19,18 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-interface City {
+interface Department {
   value: string
   label: string
 }
 
 interface CitiesGuatemalaDropdownProps {
-  cities: City[]
+  departments: Department[]
   value: string
   onChange: (value: string) => void
 }
 export function CitiesGuatemalaDropdown({
-  cities,
+  departments,
   value,
   onChange,
 }: CitiesGuatemalaDropdownProps) {
@@ -46,7 +46,7 @@ export function CitiesGuatemalaDropdown({
           className="w-full sm:w-1/2 lg:w-1/5 justify-between"
         >
           {value
-            ? cities.find((city) => city.value === value)?.label
+            ? departments.find((city) => city.value === value)?.label
             : 'Seleccionar...'}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -57,7 +57,7 @@ export function CitiesGuatemalaDropdown({
           <CommandList>
             <CommandEmpty>Sin resultados.</CommandEmpty>
             <CommandGroup>
-              {cities.map((city) => (
+              {departments.map((city) => (
                 <CommandItem
                   key={city.value}
                   value={city.value}

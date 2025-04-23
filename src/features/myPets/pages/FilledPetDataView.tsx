@@ -50,9 +50,10 @@ type Tab = {
 type Props = {
   tabs?: Tab[]
   wasScannedFromTag: boolean
+  isOwner: boolean
 } & OptionsProps
 
-const FilledPetDataView = ({ pet, wasScannedFromTag, ...props }: Props) => {
+const FilledPetDataView = ({ pet, wasScannedFromTag, isOwner, ...props }: Props) => {
   const tabs: Tab[] = [
     {
       id: 'tab-1',
@@ -95,14 +96,12 @@ const FilledPetDataView = ({ pet, wasScannedFromTag, ...props }: Props) => {
     ? supabase.storage.from('pets-portraits').getPublicUrl(pet.image!).data
         .publicUrl
     : null
-  const user = useUser()
-  const isOwner = user?.id === pet.owner
   return (
     <section className="py-12">
       <div className="container mx-auto">
         <div className="flex flex-col items-center gap-4 text-center">
           {wasScannedFromTag && props.activeLostReport !== null && (
-            <LostPetAlert pet={pet} className="mb-5" />
+            <LostPetAlert pet={pet} className="mb-5 mx-7" />
           )}
           <div className="flex flow-row items-baseline justify-center mx-2">
             {isOwner && <Options pet={pet} {...props} className="mr-1" />}

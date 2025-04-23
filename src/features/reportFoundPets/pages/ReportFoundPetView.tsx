@@ -1,17 +1,22 @@
-import { Tables } from '@/lib/supabase-types'
-import { toast } from 'sonner'
-import { useNavigate, useParams } from 'react-router-dom'
-import { routes } from '@/routes'
 import Navbar from '@/components/navbar'
-import { useEffect, useState } from 'react'
-import supabase from '@/lib/supabase'
-import useUser from '@/hooks/useUser'
-import { z } from 'zod'
-import { Loader, SearchCheck } from 'lucide-react'
-import ReportFoundPetForm from './ReportFoundPetForm'
-import EmptyState from '@/features/reportLostPets/components/EmptyState'
-import { reportFoundPetSchema } from '../models/formSchemas'
 import { Separator } from '@/components/ui/separator'
+import SendPetFoundNotification from '@/features/emails/SendPetFoundNotification'
+import EmptyState from '@/features/reportLostPets/components/EmptyState'
+import useUser from '@/hooks/useUser'
+import supabase from '@/lib/supabase'
+import { Tables } from '@/lib/supabase-types'
+import { routes } from '@/routes'
+import { Loader, SearchCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { reportFoundPetSchema } from '../models/formSchemas'
+import ReportFoundPetForm from './ReportFoundPetForm'
+type Profile = {
+  first_name: string | null
+  last_name: string | null
+}
 
 const ReportFoundPetView = () => {
   const navigate = useNavigate()
@@ -55,16 +60,61 @@ const ReportFoundPetView = () => {
       city: values.city.trim(),
     })
 
+    const ownerEmail = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('id', pet!.owner!)
+      .single()
+
+    const existingProfile = await supabase
+      .from('profiles')
+      .select('first_name, last_name')
+      .eq('id', user.id)
+      .single()
+
+    if (existingProfile.error) {
+      console.error('Error fetching profile:', existingProfile.error.message)
+      toast.error(
+        'Ocurrió un error al obtener tu información de perfil. Inténtalo de nuevo.'
+      )
+      setIsLoading(false)
+      return
+    }
+
+    if (ownerEmail.error) {
+      console.error('Error fetching owner email:', ownerEmail.error.message)
+      toast.error(
+        'Ocurrió un error al obtener la información del propietario de la mascota. Inténtalo de nuevo.'
+      )
+      setIsLoading(false)
+      return
+    }
+
+    const ownerEmailAddress = ownerEmail.data.email
+    const first_name: string = existingProfile.data.first_name!
+    const last_name: string | null = existingProfile.data.last_name
+
     setIsLoading(false)
-    if (error ) {
+    if (error) {
       toast.error(
         'Ocurrió un error al reportar tu mascota como perdida. Inténtalo de nuevo.'
       )
       console.error(error)
       return
-    } else {
-      toast.success(`Gracias por reportar a ${pet!.name} como encontrada.`)
     }
+    await SendPetFoundNotification({
+      petName: pet!.name!,
+      petSex: pet!.sex!,
+      finderName: first_name,
+      finderLastName: last_name ? last_name : ' ',
+      city: values.city,
+      location: values.location,
+      contactNumber: values.contactPhone,
+      notes: values.notes,
+      link: `${routes.petDetails}/${pet!.id}`,
+      ownerEmail: ownerEmailAddress!,
+    })
+    toast.success(`Gracias por reportar a ${pet!.name} como encontrada.`)
 
     navigate(`${routes.petDetails}/${pet!.id}`, { replace: true })
   }
@@ -77,7 +127,7 @@ const ReportFoundPetView = () => {
       {!isLoadingPet && pet && (
         <div className="p-5 mt-5 w-6/7 sm:w-3/4 md:w-2/3 mx-auto">
           <div className="flex items-center mb-5">
-            <SearchCheck className='mr-3 h-10 w-10 hidden sm:block'/>
+            <SearchCheck className="mr-3 h-10 w-10 hidden sm:block" />
             <h2 className="font-bold text-3xl mb-1">
               Reportar a {pet.name} como{' '}
               {pet.sex === 'male' ? 'encontrado' : 'encontrada'}

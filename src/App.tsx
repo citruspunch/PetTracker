@@ -1,7 +1,7 @@
 import ExploreLostPets from '@/features/exploreLostPets/pages/ExploreLostPetsPage'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Login from './auth/Login'
-import ResetPassword from './auth/ResetPassword'
+import ResetPassword from './auth/SendResetPassword'
 import Signup from './auth/Signup'
 import Dashboard from './Dashboard'
 import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
@@ -14,6 +14,9 @@ import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage
 import HomePage from './home'
 import useUser from './hooks/useUser'
 import { routes } from './routes'
+import CompleteProfileView from './features/profile/views/CompleteProfileView'
+import VerifyEmail from './auth/VerifyEmail'
+import UpdatePassword from './auth/UpdatePassword'
 
 function App() {
   const user = useUser()
@@ -57,6 +60,9 @@ function App() {
         <Route path={routes.signUp} element={<Signup />} />
         <Route path={routes.resetPassword} element={<ResetPassword />} />
         <Route path={routes.myPets} element={<MyPetsView />} />
+        <Route path='/profile' element={<CompleteProfileView />} />
+        <Route path='/verify-email' element={<VerifyEmail />} />
+        <Route path='/update-password' element={<UpdatePassword />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
         <Route path={routes.LostPetDetails} element={<LostPetDetails />} />
         <Route
