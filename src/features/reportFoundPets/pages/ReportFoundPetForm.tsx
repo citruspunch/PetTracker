@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { citiesGuatemalaForDropdown } from '@/lib/utils'
+import { departmentsGuatemalaForDropdown } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircleAlert } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -52,7 +52,7 @@ const ReportFoundPetForm = ({
               <FormLabel>Departamento</FormLabel>
               <FormControl>
                 <CitiesGuatemalaDropdown
-                  cities={citiesGuatemalaForDropdown}
+                  departments={departmentsGuatemalaForDropdown}
                   value={field.value}
                   onChange={field.onChange}
                 />

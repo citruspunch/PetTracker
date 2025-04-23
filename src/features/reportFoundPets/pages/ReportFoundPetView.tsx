@@ -12,6 +12,11 @@ import ReportFoundPetForm from './ReportFoundPetForm'
 import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import { reportFoundPetSchema } from '../models/formSchemas'
 import { Separator } from '@/components/ui/separator'
+import SendPetFoundNotification from '@/features/emails/SendPetFoundNotification'
+type Profile = {
+  first_name: string | null;
+  last_name: string | null;
+};
 
 const ReportFoundPetView = () => {
   const navigate = useNavigate()
@@ -55,6 +60,48 @@ const ReportFoundPetView = () => {
       city: values.city.trim(),
     })
 
+    const ownerEmail  = await supabase
+    .from('profiles')
+    .select('email')
+    .eq('id', pet!.owner!)
+    .single()
+
+    const existingProfile = await supabase
+    .from('profiles')
+    .select('first_name, last_name')
+    .eq('id', user.id)
+    .single()
+
+    
+    if (existingProfile.error) {
+      console.error('Error fetching profile:', existingProfile.error.message)
+      toast.error(
+        'Ocurrió un error al obtener tu información de perfil. Inténtalo de nuevo.'
+      )
+      setIsLoading(false)
+      return
+    }
+
+    if (ownerEmail.error) {
+      console.error('Error fetching owner email:', ownerEmail.error.message)
+      toast.error(
+        'Ocurrió un error al obtener la información del propietario de la mascota. Inténtalo de nuevo.'
+      )
+      setIsLoading(false)
+      return
+    }
+
+    const ownerEmailAddress = ownerEmail.data.email
+    const first_name: string = existingProfile.data.first_name!
+    const last_name: string | null = existingProfile.data.last_name
+
+    
+
+  if (existingProfile.data) {
+    console.log('Perfil encontrado:', existingProfile.data)
+    return
+  }
+
     setIsLoading(false)
     if (error ) {
       toast.error(
@@ -63,6 +110,18 @@ const ReportFoundPetView = () => {
       console.error(error)
       return
     } else {
+      SendPetFoundNotification({
+        petName: pet!.name!,
+        petSex: pet!.sex!,
+        finderName: first_name,
+        finderLastName: last_name ? last_name : ' ',
+        city: values.city,
+        location: values.location,
+        contactNumber: values.contactPhone,
+        notes: values.notes,
+        link: `${routes.petDetails}/${pet!.id}`,
+        ownerEmail: ownerEmailAddress!,
+      })
       toast.success(`Gracias por reportar a ${pet!.name} como encontrada.`)
     }
 

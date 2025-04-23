@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { citiesGuatemala } from '@/lib/utils';
+import { departmentsGuatemala } from '@/lib/utils';
 
 export const reportFoundPetSchema = z.object({
-  city: z.enum(citiesGuatemala, {
+  city: z.enum(departmentsGuatemala, {
     required_error: 'La ciudad es requerida',
   }),
   location: z

@@ -20,7 +20,7 @@ const LostPetAlert = ({ pet, ...props }: Props) => {
   return (
     <Card {...props}>
       <CardHeader>
-        <CardTitle>Esta mascota se encuentra perdida</CardTitle>
+        <CardTitle className="text-3xl sm:text-4xl">Esta mascota se encuentra perdida</CardTitle>
       </CardHeader>
       <CardContent>
         Por favor repórtala como encontrada y ayuda a {pet.name} a regresar a

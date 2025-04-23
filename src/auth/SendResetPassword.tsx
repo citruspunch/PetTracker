@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Link } from 'react-router-dom'
 import { routes } from '../routes'
+import { toast } from 'sonner'
+import supabase from '@/lib/supabase'
+import { useState } from 'react'
+import { emailRegex } from '@/lib/utils'
 
 interface ResetPasswordProps {
   heading?: string
@@ -22,10 +26,27 @@ const ResetPassword = ({
   loginUrl = routes.logIn,
   logoUrl = routes.home,
 }: ResetPasswordProps) => {
+  const [email, setEmail] = useState('')
+  const handleResetPassword = async () => {
+    if (!emailRegex.test(email)) {
+      toast.error('Por favor, ingresa un correo electrónico válido.');
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://pet-tracker-eosin.vercel.app/update-password',
+    })
+    if (error) {
+      toast.error('Error al enviar el correo de restablecimiento.')
+    } else {
+      toast.success('Correo de restablecimiento enviado.')
+    }
+  }
+
   return (
     <section className="h-screen flex items-center justify-center bg-muted">
       <div className="container mx-auto">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mx-5">
           <div className="mx-auto w-full max-w-sm rounded-md p-6 shadow bg-white">
             <div className="mb-6 flex flex-col items-center">
               <Link to={logoUrl}>
@@ -38,11 +59,14 @@ const ResetPassword = ({
             </div>
             <div className="grid gap-4">
               <Input
+                name='email'
                 type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 placeholder="Ingresa tu correo electrónico"
                 required
               />
-              <Button type="submit" className="mt-2 w-full">
+              <Button type="submit" className="mt-2 w-full" onClick={handleResetPassword}>
                 {resetText}
               </Button>
             </div>

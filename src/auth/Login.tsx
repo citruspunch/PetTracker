@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { routes } from '../routes'
+import { toast } from 'sonner'
 
 interface LoginProps {
   heading?: string
@@ -54,6 +55,9 @@ const Login = ({
       password: password,
     })
     if (error === null) navigate(redirectRoute)
+    else {
+      toast.error('Error al iniciar sesión. Verifica tus credenciales.')
+    }
     setLoading(false)
   }
 
