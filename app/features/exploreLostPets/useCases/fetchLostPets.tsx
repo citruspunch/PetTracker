@@ -1,7 +1,7 @@
-import supabase from '@/lib/supabase/supabase'
-import { format } from '@formkit/tempo'
+import supabase from '@/lib/supabase'
 import { fetchedLostPetType } from '../models/fetchedLostPetType'
 import { LostPetType } from '../models/lostPetType'
+import { format } from '@formkit/tempo'
 
 export const fetchLostPets = async (): Promise<LostPetType[]> => {
   // Query to fetch lost pets and the pet's properties from the database

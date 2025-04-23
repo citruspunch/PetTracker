@@ -1,8 +1,8 @@
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { format } from '@formkit/tempo'
-import { User } from '@supabase/supabase-js'
 import { fetchedPetType } from '../models/fetchedPetType'
 import { petType } from '../models/petType'
+import { User } from '@supabase/supabase-js'
 
 export const fetchUserPet = async (
   user: User | null,

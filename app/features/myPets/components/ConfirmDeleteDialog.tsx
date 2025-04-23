@@ -9,8 +9,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import supabase from '@/lib/supabase/supabase'
-import { Tables } from '@/lib/supabase/types'
+import supabase from '@/lib/supabase'
+import { Tables } from '@/lib/supabase-types'
 import { routes } from '@/routes'
 import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'

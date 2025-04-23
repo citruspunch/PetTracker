@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatAnimalType } from '@/lib/animalTypes'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { routes } from '@/routes'
 import { ArrowRight, CircleAlert, MapPinned } from 'lucide-react'
 import React from 'react'

@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tables } from '@/lib/supabase/supabase-types'
+import { Tables } from '@/lib/supabase-types'
 import { cn } from '@/lib/utils'
 import RegisterPetForm from './RegisterPetForm'
 

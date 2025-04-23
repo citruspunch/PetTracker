@@ -1,6 +1,6 @@
 import Dashboard from '@/features/Dashboard'
 
-export default function DashboardRoute() {
+export function DashboardRoute() {
   return (
     <Dashboard
       heading="Panel de control"

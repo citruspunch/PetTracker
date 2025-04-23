@@ -1,7 +1,7 @@
 import LandingView from '@/features/landing/LandingView'
 import type { Route } from './+types/landing'
 
-export function meta(_: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [{ title: 'Pet Tracker' }]
 }
 
