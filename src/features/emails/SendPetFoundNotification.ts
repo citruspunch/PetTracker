@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { toast } from 'sonner'
 import PetFoundNotification from './PetFoundNotification'
 import SendPetFoundNotificationProps from './props/SendPetFoundNotificationProps'
 
@@ -36,6 +37,7 @@ const SendPetFoundNotification = async ({
   })
 
   if (error) {
+    toast.error('Hubo un error al notificar al dueño. Inténtalo de nuevo.')
     return console.error({ error })
   }
 
