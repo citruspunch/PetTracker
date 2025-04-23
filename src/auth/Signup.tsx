@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import supabase from '@/lib/supabase'
 import { routes } from '@/routes'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import { emailRegex, numberRegex, specialCharactersRegex } from '@/lib/utils'
 
 interface SignupProps {
   heading?: string
@@ -42,6 +44,51 @@ const Signup = ({
       provider: 'google',
     })
   }
+
+  const navigate = useNavigate()
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    // Email Validation
+    if (!emailRegex.test(email)) {
+      toast.error('Por favor, ingresa un correo electrónico válido.');
+      return;
+    }
+
+    // Password Validation
+    if (password.length < 8) {
+      toast.error('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    if (!numberRegex.test(password)) {
+      toast.error('La contraseña debe incluir al menos un número.');
+      return;
+    }
+    if (!specialCharactersRegex.test(password)) {
+      toast.error('La contraseña debe incluir al menos un carácter especial.');
+      return;
+    }
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      toast.error('Error al registrarse, por favor intenta de nuevo.');
+      return;
+    }
+    toast.success('Registro exitoso, verifica tu correo electrónico para confirmar tu cuenta.');
+    navigate('/verify-email', { state: { userEmail: email } });
+
+  };
+
+
   return (
     <section className="h-screen bg-muted">
       <div className="flex h-full items-center justify-center mx-auto">
@@ -63,10 +110,11 @@ const Signup = ({
               <p className="text-muted-foreground">{subheading}</p>
             )}
           </div>
-          <div className="flex w-full flex-col gap-8">
+          <form onSubmit={handleSubmit} className="flex w-full flex-col gap-8">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <Input
+                  name='email'
                   type="email"
                   placeholder="Correo Electrónico"
                   required
@@ -75,6 +123,7 @@ const Signup = ({
               </div>
               <div className="flex flex-col gap-2">
                 <Input
+                  name='password'
                   type="password"
                   placeholder="Contraseña"
                   required
@@ -95,7 +144,7 @@ const Signup = ({
                 </Button>
               </div>
             </div>
-          </div>
+          </form>
           <div className="flex justify-center gap-1 text-sm text-muted-foreground">
             <p>{loginText}</p>
             <Link

@@ -23,7 +23,7 @@ const RegisterPetIntroductionView = ({
   return (
     <Card className={cn('m-3', className)} {...props}>
       <CardHeader>
-        <CardTitle>Registra a tu mascota</CardTitle>
+        <CardTitle className="text-3xl sm:text-4xl">Registra a tu mascota</CardTitle>
         <CardDescription>
           Notamos que tu mascota aún no tiene un perfil creado. Llena la
           siguiente información para que cualquier persona que encuentre a tu

@@ -1,14 +1,8 @@
 import { AnimalSex } from '@/lib/animalSex'
 import { animalTypes } from '@/lib/animalTypes'
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/lib/utils'
 import { z } from 'zod'
 
-const MAX_FILE_SIZE = 5000000
-const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/jpg',
-  'image/png',
-  'image/webp',
-]
 
 export const formSchemaForUpdate = z.object({
   name: z

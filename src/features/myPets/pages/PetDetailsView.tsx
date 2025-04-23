@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import ErrorView from './ErrorView'
 import FilledPetDataView from './FilledPetDataView'
 import RegisterPetIntroductionView from './RegisterPetIntroductionView'
+import useUser from '@/hooks/useUser'
 
 const PetDetailsView = () => {
   const { petId } = useParams()
@@ -21,6 +22,9 @@ const PetDetailsView = () => {
 
   const encryptedPetId = queryParameters.get('pet')
   const wasScannedFromTag = encryptedPetId !== null && encryptedPetId === petId
+
+  const user = useUser()
+  const isOwner = user?.id === pet?.owner
 
   const onRegisteredPet = (pet: Tables<'pet'>) => {
     setPet(pet)
@@ -92,6 +96,7 @@ const PetDetailsView = () => {
           activeLostReport={activeLostReport}
           onMarkPetAsFound={onMarkPetAsFound}
           wasScannedFromTag={wasScannedFromTag}
+          isOwner={isOwner}
         />
       )}
       {!isLoadingPet && pet && !isPetDataAlreadyFilled(pet) && (

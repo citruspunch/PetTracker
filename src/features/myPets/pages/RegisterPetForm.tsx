@@ -32,7 +32,7 @@ import { AnimalSex } from '@/lib/animalSex'
 import { animalTypes, formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
 import { Tables } from '@/lib/supabase-types'
-import { cn } from '@/lib/utils'
+import { cn, uploadPortrait } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PenNewRound } from '@solar-icons/react'
 import { format } from 'date-fns'
@@ -41,7 +41,6 @@ import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 import { formSchemaForUpdate } from '../models/formSchemaForUpdate'
 import { formSchemaForRegister } from '../models/formSchemaForRegister'
@@ -109,22 +108,11 @@ const RegisterPetForm = ({
     }
   }
 
-  const uploadPortrait = async (files: FileList): Promise<string | null> => {
-    const file = files.item(0)!
-    const buffer = await file.arrayBuffer()
-    const result = await supabase.storage
-      .from('pets-portraits')
-      .upload(uuid(), buffer, { contentType: file.type })
-    if (result.error !== null) return null
-    return result.data.path
-  }
-
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     let uploadedImagePath = values.portrait?.length
-      ? await uploadPortrait(values.portrait)
+      ? await uploadPortrait(values.portrait, 'pets-portraits')
       : previousValues?.image
-    //const uploadedImagePath = await uploadPortrait(values.portrait)
     if (uploadedImagePath === null) {
       toast.error(
         'Ocurrió un error al editar la información de tu mascota. Inténtalo de nuevo.'
