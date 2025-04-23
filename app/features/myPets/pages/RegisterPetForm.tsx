@@ -31,7 +31,7 @@ import useUser from '@/hooks/useUser'
 import { AnimalSex } from '@/lib/animalSex'
 import { animalTypes, formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase/supabase'
-import { Tables } from '@/lib/supabase/types'
+import { type Tables } from '@/lib/supabase/types'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PenNewRound } from '@solar-icons/react'
@@ -121,7 +121,7 @@ const RegisterPetForm = ({
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
-    let uploadedImagePath = values.portrait?.length
+    const uploadedImagePath = values.portrait?.length
       ? await uploadPortrait(values.portrait)
       : previousValues?.image
     //const uploadedImagePath = await uploadPortrait(values.portrait)

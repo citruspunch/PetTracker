@@ -6,11 +6,11 @@ import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase/supabase'
-import { Tables } from '@/lib/supabase/types'
-import { routes } from '@/routes'
+import type { Tables } from '@/lib/supabase/types'
+import { appRoutes } from '@/routes'
 import { ArrowRight } from '@solar-icons/react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { toast } from 'sonner'
 
 const MyPetsView = () => {
@@ -20,9 +20,6 @@ const MyPetsView = () => {
 
   useEffect(() => {
     const loadPets = async () => {
-      if (!user) {
-        return
-      }
       setIsLoadingPets(true)
       const result = await supabase.from('pet').select('*').eq('owner', user.id)
       setIsLoadingPets(false)
@@ -50,7 +47,7 @@ const MyPetsView = () => {
               {isLoadingPets && <Loader />}
               {!isLoadingPets && pets.length === 0 && (
                 <EmptyState
-                  url={routes.myPets}
+                  url={appRoutes.myPets}
                   heading="No tienes mascotas"
                   description="Dirígete a un punto de venta y adquiere tu tag para tu mascota"
                   variant="destructive"
@@ -69,7 +66,7 @@ const MyPetsView = () => {
                       </div>
                       <Button variant="outline">
                         <Link
-                          to={`${routes.petDetails}/${pet.id}`}
+                          to={`${appRoutes.petDetails}/${pet.id}`}
                           className="flex items-center gap-2"
                         >
                           <span className="text-xs">Ver</span>

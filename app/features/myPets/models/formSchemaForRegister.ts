@@ -11,35 +11,34 @@ const ACCEPTED_IMAGE_TYPES = [
 ]
 
 export const formSchemaForRegister = z.object({
-    name: z
-      .string({ required_error: 'El nombre de tu mascota es requerido.' })
-      .trim()
-      .min(2, 'El nombre debe contener al menos 2 caracteres.'),
-    birthDate: z.date({
-      required_error:
-        'Es necesaria la fecha de nacimiento/adopción de tu mascota para aproximar su edad.',
-    }),
-    sex: z.nativeEnum(AnimalSex, {
-      required_error: 'Selecciona el sexo de tu mascota.',
-    }),
-    animalType: z.enum(animalTypes, {
-      required_error: 'La especie de tu mascota es requerida para su registro.',
-    }),
-    breed: z.string().optional(),
-    spayedOrNeutered: z.boolean(),
-    portrait: z
-      .instanceof(FileList)
-      .refine(
-        (files) => files?.length === 1,
-        'La imagen de tu mascota es requerida.'
-      )
-      .refine(
-        (files) => ACCEPTED_IMAGE_TYPES.includes(files?.item(0)?.type ?? ''),
-        'Solo archivos en formato .jpg, .jpeg, .png y .webp son aceptados.'
-      )
-      .refine(
-        (files) => (files?.item(0)?.size ?? MAX_FILE_SIZE + 1) <= MAX_FILE_SIZE,
-        'El tamaño máximo de la foto es 5MB.'
-      ),
-    notes: z.string().optional(),
-  })
+  name: z
+    .string({ required_error: 'El nombre de tu mascota es requerido.' })
+    .trim()
+    .min(2, 'El nombre debe contener al menos 2 caracteres.'),
+  birthDate: z.date({
+    required_error:
+      'Es necesaria la fecha de nacimiento/adopción de tu mascota para aproximar su edad.',
+  }),
+  sex: z.nativeEnum(AnimalSex, {
+    required_error: 'Selecciona el sexo de tu mascota.',
+  }),
+  animalType: z.enum(animalTypes, {
+    required_error: 'La especie de tu mascota es requerida para su registro.',
+  }),
+  breed: z.string().optional(),
+  spayedOrNeutered: z.boolean(),
+  portrait: (typeof window === 'undefined' ? z.any() : z.instanceof(FileList))
+    .refine(
+      (files) => files?.length === 1,
+      'La imagen de tu mascota es requerida.'
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.item(0)?.type ?? ''),
+      'Solo archivos en formato .jpg, .jpeg, .png y .webp son aceptados.'
+    )
+    .refine(
+      (files) => (files?.item(0)?.size ?? MAX_FILE_SIZE + 1) <= MAX_FILE_SIZE,
+      'El tamaño máximo de la foto es 5MB.'
+    ),
+  notes: z.string().optional(),
+})

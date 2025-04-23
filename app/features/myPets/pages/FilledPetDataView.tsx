@@ -13,9 +13,9 @@ import ReportLostPetAlertDialog from '@/features/reportLostPets/components/Repor
 import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase/supabase'
-import { Tables } from '@/lib/supabase/types'
+import type { Tables } from '@/lib/supabase/types'
 import { calculateAge, cn, formatAge, formatAnimalSex } from '@/lib/utils'
-import { routes } from '@/routes'
+import { appRoutes } from '@/routes'
 import {
   ClipboardHeart,
   DangerCircle,
@@ -25,8 +25,8 @@ import {
   Pen,
   TrashBinTrash,
 } from '@solar-icons/react'
-import React, { ComponentProps } from 'react'
-import { Link } from 'react-router-dom'
+import React, { type ComponentProps } from 'react'
+import { Link } from 'react-router'
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog'
 import LostPetAlert from './LostPetAlert'
 
@@ -222,7 +222,7 @@ const Options = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="w-40">
         <DropdownMenuItem onSelect={(event) => event.preventDefault()} asChild>
-          <Link to={`${routes.editPet}/${pet.id}`} className="flex w-full">
+          <Link to={`${appRoutes.editPet}/${pet.id}`} className="flex w-full">
             <Pen />
             Editar
           </Link>
