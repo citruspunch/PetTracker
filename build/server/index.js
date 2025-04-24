@@ -1,7 +1,7 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { PassThrough } from "node:stream";
 import { createReadableStreamFromReadable } from "@react-router/node";
-import { ServerRouter, useMatches, useActionData, useLoaderData, useParams, useRouteError, Meta, Links, ScrollRestoration, Scripts, Outlet, isRouteErrorResponse, useOutletContext, useNavigate, Link, redirect, useSearchParams } from "react-router";
+import { ServerRouter, useMatches, useActionData, useLoaderData, useParams, useRouteError, Meta, Links, ScrollRestoration, Scripts, Outlet, isRouteErrorResponse, useOutletContext, useNavigate, Link, redirect, useSearchParams, useFetcher, useLocation } from "react-router";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import * as React from "react";
@@ -39,10 +39,10 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { z } from "zod";
 import useEmblaCarousel from "embla-carousel-react";
+import { Html, Head, Font, Preview, Tailwind, Body, Container, Section, Row, Column, Link as Link$1, Img, Heading, Text, Button as Button$1, Hr } from "@react-email/components";
 import { Resend } from "resend";
-import { Html, Head, Font, Preview, Tailwind, Body, Container, Section, Row, Column, Link as Link$1, Img, Text, Heading, Button as Button$1, Hr } from "@react-email/components";
-import { format as format$1 } from "@formkit/tempo";
 import { TbPasswordUser } from "react-icons/tb";
+import { format as format$1 } from "@formkit/tempo";
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
   return new Promise((resolve, reject) => {
@@ -237,7 +237,7 @@ const departmentsGuatemalaForDropdown = departmentsGuatemala.map(
     label: city
   })
 );
-const formatContactNumber = (contactNumber) => {
+const formatPhoneNumber = (contactNumber) => {
   const cleanedNumber = contactNumber.replace(/\D/g, "");
   const formattedNumber = cleanedNumber.replace(/(\d{4})(\d{4})/, "$1-$2");
   return formattedNumber;
@@ -254,8 +254,7 @@ const uploadPortrait = async (files, storageBucket) => {
     return null;
   }
   const file = files.item(0);
-  const buffer = await file.arrayBuffer();
-  const result = await supabase.storage.from(storageBucket).upload(v4(), buffer, { contentType: file.type });
+  const result = await supabase.storage.from(storageBucket).upload(v4(), file, { contentType: file.type });
   if (result.error !== null) return null;
   return result.data.path;
 };
@@ -361,7 +360,9 @@ const appRoutes = {
   editUserProfile: "/edit-user",
   resetPassword: "/reset-password",
   login: "/login",
-  signUp: "/sign-up"
+  signUp: "/sign-up",
+  updatePassword: "update-password",
+  verifyEmail: "verify-email"
 };
 [
   index("routes/landing.tsx"),
@@ -380,7 +381,9 @@ const appRoutes = {
       "routes/report_lost_pet_form.tsx"
     ),
     route(`${appRoutes.reportFoundPet}/:petId`, "routes/report_found_pet.tsx"),
-    route(appRoutes.editUserProfile, "routes/edit_user_profile.tsx")
+    route(appRoutes.editUserProfile, "routes/edit_user_profile.tsx"),
+    route(appRoutes.updatePassword, "routes/update_password.tsx"),
+    route(appRoutes.verifyEmail, "routes/verify_email.tsx")
   ]),
   route(appRoutes.exploreLostPets, "routes/lost_pets.tsx"),
   route(appRoutes.resetPassword, "routes/reset_password.tsx")
@@ -1200,8 +1203,8 @@ const Signup = ({
     ] })
   ] }) }) });
 };
-const Component$6 = () => /* @__PURE__ */ jsx(Signup, {});
-const signup = withComponentProps(Component$6);
+const Component$8 = () => /* @__PURE__ */ jsx(Signup, {});
+const signup = withComponentProps(Component$8);
 const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: signup
@@ -2922,8 +2925,8 @@ const EditPetDetailsView = ({
     ] })
   ] });
 };
-const Component$5 = () => /* @__PURE__ */ jsx(EditPetDetailsView, {});
-const edit_pet = withComponentProps(Component$5);
+const Component$7 = () => /* @__PURE__ */ jsx(EditPetDetailsView, {});
+const edit_pet = withComponentProps(Component$7);
 const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: edit_pet
@@ -3256,8 +3259,8 @@ const ReportLostPetPage = ({ heading = "Reportar Mascota" }) => {
     )
   ] });
 };
-const Component$4 = () => /* @__PURE__ */ jsx(ReportLostPetPage, {});
-const report_lost_pet = withComponentProps(Component$4);
+const Component$6 = () => /* @__PURE__ */ jsx(ReportLostPetPage, {});
+const report_lost_pet = withComponentProps(Component$6);
 const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: report_lost_pet
@@ -3431,34 +3434,31 @@ const ReportLostPetForm = ({
     /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", disabled: isReporting, children: isReporting ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsx("span", { children: "Reportar" }) })
   ] }) });
 };
-const Component$3 = () => /* @__PURE__ */ jsx(ReportLostPetView, {});
-const report_lost_pet_form = withComponentProps(Component$3);
+const Component$5 = () => /* @__PURE__ */ jsx(ReportLostPetView, {});
+const report_lost_pet_form = withComponentProps(Component$5);
 const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: report_lost_pet_form
 }, Symbol.toStringTag, { value: "Module" }));
 const baseUrl = "https://www.reactemailtemplate.com/";
-const PetFoundNotification = ({
-  petName,
-  petSex,
+const FoundPetEmailTemplate = ({
+  pet: pet2,
   finderName,
-  finderLastName,
+  contactNumber,
   city,
   location,
-  contactNumber,
-  notes,
-  link
+  notes
 }) => {
-  const heading = petSex === "male" ? `¡${petName} ha sido reportado como encontrado!` : `¡${petName} ha sido reportada como encontrada!`;
-  const found = petSex === "male" ? "encontrado" : "encontrada";
+  const heading = pet2.sex === "male" ? `¡${pet2.name} ha sido reportado como encontrado!` : `¡${pet2.name} ha sido reportada como encontrada!`;
+  const found = pet2.sex === "male" ? "encontrado" : "encontrada";
   return /* @__PURE__ */ jsxs(Html, { children: [
     /* @__PURE__ */ jsx(Head, { children: /* @__PURE__ */ jsx(
       Font,
       {
-        fontFamily: "Inter",
+        fontFamily: "Manrope",
         fallbackFontFamily: "Helvetica",
         webFont: {
-          url: "https://fonts.googleapis.com/css2?family=Inter&display=swap",
+          url: "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap",
           format: "woff2"
         },
         fontWeight: 400,
@@ -3508,11 +3508,17 @@ const PetFoundNotification = ({
         ] }) })
       ] }) }),
       /* @__PURE__ */ jsx(Section, { className: "rounded-xl bg-blue-500", children: /* @__PURE__ */ jsxs("div", { className: "mx-auto my-auto p-10", children: [
-        /* @__PURE__ */ jsx(Text, { className: "m-0 text-white" }),
-        /* @__PURE__ */ jsx(Heading, { className: "m-0 mt-1 leading-[35px] font-bold text-white", as: "h1", children: heading }),
-        /* @__PURE__ */ jsxs(Text, { className: "mb-1 text-[16px] italic leading-[20px] mt-3 text-white", children: [
+        /* @__PURE__ */ jsx(
+          Heading,
+          {
+            className: "m-0 mt-1 leading-[35px] font-bold text-white",
+            as: "h1",
+            children: heading
+          }
+        ),
+        /* @__PURE__ */ jsxs(Text, { className: "mb-1 text-[16px] leading-[20px] mt-3 text-white", children: [
           "Reporta a ",
-          petName,
+          pet2.name,
           " como ",
           found,
           " para que se elimine de mascotas perdidas. ",
@@ -3521,8 +3527,8 @@ const PetFoundNotification = ({
         /* @__PURE__ */ jsxs(
           Button$1,
           {
-            className: "mt-4 rounded-lg bg-white px-10 py-3 font-semibold text-indigo-600 text-center",
-            href: link,
+            className: "mt-4 rounded-lg bg-white px-10 py-3 font-semibold text-blue-500 text-center",
+            href: `http://localhost:5173/pet/${pet2.id}`,
             rel: "noopener noreferrer",
             children: [
               "Reportar como ",
@@ -3535,20 +3541,16 @@ const PetFoundNotification = ({
       /* @__PURE__ */ jsxs(Section, { children: [
         /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
           /* @__PURE__ */ jsxs(Text, { className: "m-0 text-xl font-semibold text-gray-900 leading-[24px]", children: [
-            petName,
+            pet2.name,
             " ha sido ",
             found,
             " por:"
           ] }),
-          /* @__PURE__ */ jsxs(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: [
-            finderName,
-            " ",
-            finderLastName
-          ] })
+          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: finderName })
         ] }),
         /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
           /* @__PURE__ */ jsx(Text, { className: "m-0 text-xl font-semibold text-gray-900", children: "Número de contacto:" }),
-          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: formatContactNumber(contactNumber) })
+          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: formatPhoneNumber(contactNumber) })
         ] }),
         /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
           /* @__PURE__ */ jsxs(Text, { className: "m-0 text-xl font-semibold text-gray-900", children: [
@@ -3559,8 +3561,7 @@ const PetFoundNotification = ({
           /* @__PURE__ */ jsxs(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: [
             location,
             ", ",
-            city,
-            " "
+            city
           ] }),
           /* @__PURE__ */ jsx(
             Link$1,
@@ -3569,14 +3570,14 @@ const PetFoundNotification = ({
                 location
               )},${encodeURIComponent(city)}`,
               rel: "noopener noreferrer",
-              className: "text-indigo-600 underline",
+              className: "text-blue-500 underline",
               children: "Ver en Google Maps"
             }
           )
         ] }),
         /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
           /* @__PURE__ */ jsx(Text, { className: "m-0 text-xl font-semibold text-gray-900", children: "Notas" }),
-          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: notes ?? `${finderName} no añadió notas adicionales` })
+          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: !notes || (notes == null ? void 0 : notes.trim().length) === 0 ? `${finderName} no añadió notas adicionales` : notes })
         ] })
       ] }),
       /* @__PURE__ */ jsx(Hr, { className: "mx-0 mb-8 w-full border border-solid border-gray-200" }),
@@ -3637,58 +3638,12 @@ const PetFoundNotification = ({
     ] }) }) })
   ] });
 };
-PetFoundNotification.PreviewProps = {
-  petName: "Chocobanano",
-  finderName: "Samuel Marroquin",
-  city: "Ciudad de Guatemala",
-  location: "Calle 1-23, Zona 1",
-  contactNumber: "1234-5678",
-  ownerName: "Andres Tobar",
-  finderImage: "https://static.vecteezy.com/system/resources/previews/003/428/270/non_2x/businessman-explain-pose-character-design-free-vector.jpg",
-  petImage: "https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80"
-};
-const resend = new Resend("re_THFJVak7_Mjmiarjs4BH1i8YvSd5PFpx8");
-const SendPetFoundNotification = async ({
-  petName,
-  petSex,
-  finderName,
-  finderLastName,
-  city,
-  location,
-  contactNumber,
-  notes,
-  link,
-  ownerEmail
-}) => {
-  const subject = `¡Tu mascota ${petName} ha sido encontrada!`;
-  const { data, error } = await resend.emails.send({
-    from: "Acme <onboarding@resend.dev>",
-    to: ownerEmail,
-    subject,
-    react: PetFoundNotification({
-      petName,
-      petSex,
-      finderName,
-      finderLastName,
-      city,
-      location,
-      contactNumber,
-      notes,
-      link
-    })
-  });
-  if (error) {
-    toast.error("Hubo un error al notificar al dueño. Inténtalo de nuevo.");
-    return console.error({ error });
-  }
-  console.log({ data });
-};
-const reportFoundPetSchema = z.object({
+const foundPetReportFormSchema = z.object({
   city: z.enum(departmentsGuatemala, {
     required_error: "La ciudad es requerida"
   }),
   location: z.string({ required_error: "La ubicación es requerida" }).trim().min(5, "La ubicación debe contener al menos 5 caracteres."),
-  contactPhone: z.string({
+  contactNumber: z.string({
     required_error: "El teléfono de contacto es requerido",
     invalid_type_error: "Ingresa únicamente números"
   }).regex(/^\d{8}$/, "Ingresa un número de teléfono válido"),
@@ -3749,18 +3704,18 @@ function CitiesGuatemalaDropdown({
 const ReportFoundPetForm = ({
   petName,
   submitButtonText = "Reportar",
-  onReport,
-  isLoading
+  onReport
 }) => {
   const form = useForm({
-    resolver: zodResolver(reportFoundPetSchema),
+    resolver: zodResolver(foundPetReportFormSchema),
     defaultValues: {
       city: void 0,
       location: void 0,
-      contactPhone: void 0,
+      contactNumber: void 0,
       notes: void 0
     }
   });
+  const fetcher = useFetcher({ key: "found-pet-report" });
   return /* @__PURE__ */ jsx(Form, { ...form, children: /* @__PURE__ */ jsxs("form", { onSubmit: form.handleSubmit(onReport), className: "space-y-6", children: [
     /* @__PURE__ */ jsx(
       FormField,
@@ -3790,8 +3745,9 @@ const ReportFoundPetForm = ({
           /* @__PURE__ */ jsx(FormLabel, { children: "Ubicación" }),
           /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { ...field }) }),
           /* @__PURE__ */ jsxs(FormDescription, { children: [
-            `Indica la dirección donde encontraste a ${petName}.`,
-            " Ej: Calle 1-23, Zona 1"
+            "Indica la dirección donde encontraste a ",
+            petName,
+            ". Ej: Calle 1-23, Zona 1"
           ] }),
           /* @__PURE__ */ jsx(FormMessage, {})
         ] })
@@ -3801,7 +3757,7 @@ const ReportFoundPetForm = ({
       FormField,
       {
         control: form.control,
-        name: "contactPhone",
+        name: "contactNumber",
         render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
           /* @__PURE__ */ jsx(FormLabel, { children: "Teléfono de contacto" }),
           /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { type: "tel", ...field }) }),
@@ -3824,12 +3780,16 @@ const ReportFoundPetForm = ({
               className: "w-full rounded-md border border-gray-200 p-2"
             }
           ) }),
-          /* @__PURE__ */ jsx(FormDescription, { children: `Si tienes alguna información adicional sobre ${petName}, puedes incluirla aquí.` }),
+          /* @__PURE__ */ jsxs(FormDescription, { children: [
+            "Si tienes alguna información adicional sobre ",
+            petName,
+            ", puedes incluirla aquí."
+          ] }),
           /* @__PURE__ */ jsx(FormMessage, {})
         ] })
       }
     ),
-    /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", children: isLoading ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", children: fetcher.state !== "idle" ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsxs(Fragment, { children: [
       /* @__PURE__ */ jsx(CircleAlert, {}),
       " ",
       submitButtonText
@@ -3837,16 +3797,15 @@ const ReportFoundPetForm = ({
   ] }) });
 };
 const ReportFoundPetView = () => {
-  const navigate = useNavigate();
-  const { petId } = useParams();
-  const user = useUser();
-  const [isLoading, setIsLoading] = useState(false);
+  const petId = useParams().petId;
+  useUser();
+  const fetcher = useFetcher({ key: "found-pet-report" });
   const [isLoadingPet, setIsLoadingPet] = useState(true);
   const [pet2, setPet] = useState(null);
   useEffect(() => {
-    const fetchPet = async () => {
+    (async () => {
       setIsLoadingPet(true);
-      const result = await supabase.from("pet").select("*").eq("id", petId);
+      const result = await supabase.from("lost_pet_report").select("pet(*)").eq("pet", petId).is("found_date", null);
       setIsLoadingPet(false);
       if (result.error !== null) {
         toast.error("Ocurrió un error. Inténtalo de nuevo.");
@@ -3854,69 +3813,22 @@ const ReportFoundPetView = () => {
       }
       if (result.data.length === 0) {
         toast.error(
-          "La mascota que intentas reportar como encontrada no existe."
+          "La mascota que intentas reportar como encontrada no existe o no ha sido reportada como perdida."
         );
         return;
       }
-      setPet(result.data.at(0));
-    };
-    if (petId === null) return;
-    fetchPet();
+      setPet(result.data.at(0).pet);
+    })();
   }, [petId]);
-  const handleSubmit = async (values) => {
-    setIsLoading(true);
-    const { error } = await supabase.from("found_pet_report").insert({
-      pet: pet2.id,
-      found_by: user.id,
-      location: values.location,
-      contact_number: values.contactPhone,
-      notes: values.notes,
-      city: values.city.trim()
-    });
-    const ownerEmail = await supabase.from("profiles").select("email").eq("id", pet2.owner).single();
-    const existingProfile = await supabase.from("profiles").select("first_name, last_name").eq("id", user.id).single();
-    if (existingProfile.error) {
-      console.error("Error fetching profile:", existingProfile.error.message);
-      toast.error(
-        "Ocurrió un error al obtener tu información de perfil. Inténtalo de nuevo."
-      );
-      setIsLoading(false);
-      return;
-    }
-    if (ownerEmail.error) {
-      console.error("Error fetching owner email:", ownerEmail.error.message);
-      toast.error(
-        "Ocurrió un error al obtener la información del propietario de la mascota. Inténtalo de nuevo."
-      );
-      setIsLoading(false);
-      return;
-    }
-    const ownerEmailAddress = ownerEmail.data.email;
-    const first_name = existingProfile.data.first_name;
-    const last_name = existingProfile.data.last_name;
-    setIsLoading(false);
-    if (error) {
-      toast.error(
-        "Ocurrió un error al reportar tu mascota como perdida. Inténtalo de nuevo."
-      );
-      console.error(error);
-      return;
-    }
-    await SendPetFoundNotification({
-      petName: pet2.name,
-      petSex: pet2.sex,
-      finderName: first_name,
-      finderLastName: last_name ? last_name : " ",
-      city: values.city,
-      location: values.location,
-      contactNumber: values.contactPhone,
-      notes: values.notes,
-      link: `${appRoutes.petDetails}/${pet2.id}`,
-      ownerEmail: ownerEmailAddress
-    });
-    toast.success(`Gracias por reportar a ${pet2.name} como encontrada.`);
-    navigate(`${appRoutes.petDetails}/${pet2.id}`, { replace: true });
-  };
+  const handleSubmit = async (values) => fetcher.submit(
+    {
+      ...values,
+      pet: pet2,
+      finderName: "Samuel",
+      ownerEmail: "pettracker.gt@gmail.com"
+    },
+    { method: "post", encType: "application/json" }
+  );
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(Navbar, {}),
     isLoadingPet && /* @__PURE__ */ jsx(Loader$1, { className: "mx-auto mt-5" }),
@@ -3933,27 +3845,61 @@ const ReportFoundPetView = () => {
         ] })
       ] }),
       /* @__PURE__ */ jsx(Separator, { className: "mb-8" }),
-      /* @__PURE__ */ jsx(
-        ReportFoundPetForm,
-        {
-          petName: pet2.name,
-          onReport: handleSubmit,
-          isLoading
-        }
-      )
+      /* @__PURE__ */ jsx(ReportFoundPetForm, { petName: pet2.name, onReport: handleSubmit })
     ] })
   ] });
 };
-const Component$2 = () => /* @__PURE__ */ jsx(ReportFoundPetView, {});
-const report_found_pet = withComponentProps(Component$2);
+const action = async ({
+  request
+}) => {
+  const resend = new Resend("re_DuzuaDXY_CkefYn1kVbpFyLb8Z12M6eaF");
+  const formData = await request.clone().json();
+  const {
+    data
+  } = await resend.emails.send({
+    from: "Pet Tracker <onboarding@resend.dev>",
+    to: "pettracker.gt@gmail.com",
+    subject: `Encontraron a ${formData.pet.name}`,
+    react: FoundPetEmailTemplate(formData)
+  });
+  return data !== null;
+};
+const clientAction = async ({
+  serverAction,
+  request
+}) => {
+  const formData = await request.clone().json();
+  const {
+    error
+  } = await supabase.from("found_pet_report").insert({
+    pet: formData.pet.id,
+    city: formData.city,
+    location: formData.location,
+    contact_number: formData.contactNumber,
+    notes: formData.notes
+  });
+  if (error) {
+    toast.error("Ocurrió un error al reportar a la mascota. Inténtalo de nuevo.");
+    return;
+  }
+  const wasEmailSent = await serverAction();
+  if (wasEmailSent) {
+    toast.success(`Se notificó al dueño de ${formData.pet.name} acerca de tu reporte. ¡Gracias!`);
+    return redirect(`${appRoutes.petDetails}/${formData.pet.id}`);
+  } else toast.error("Ocurrió un error al reportar a la mascota. Inténtalo de nuevo.");
+};
+const Component$4 = () => /* @__PURE__ */ jsx(ReportFoundPetView, {});
+const report_found_pet = withComponentProps(Component$4);
 const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
+  action,
+  clientAction,
   default: report_found_pet
 }, Symbol.toStringTag, { value: "Module" }));
 const userProfileSchema = z.object({
   first_name: z.string({ required_error: "El nombre es requerido" }).trim().nonempty("El nombre no puede estar vacío"),
   last_name: z.string().trim().optional(),
-  image_url: z.instanceof(FileList).optional().refine(
+  image_url: (typeof window === "undefined" ? z.any() : z.instanceof(FileList)).optional().refine(
     (files) => {
       var _a;
       return (files == null ? void 0 : files.length) === 0 || ACCEPTED_IMAGE_TYPES.includes(((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.type) ?? "");
@@ -3996,6 +3942,7 @@ const CompleteProfileForm = ({
   };
   const handleSubmit = async (values) => {
     setIsLoading(true);
+    console.log(values);
     const uploadedImagePath = values.image_url ? await uploadPortrait(values.image_url, "profiles-pictures") : null;
     const updateResult = await supabase.from("profiles").update({
       first_name: values.first_name,
@@ -4095,11 +4042,137 @@ const CompleteProfileView = () => {
     !loading && /* @__PURE__ */ jsx(CompleteProfileCard, { userId: user.id })
   ] });
 };
-const Component$1 = () => /* @__PURE__ */ jsx(CompleteProfileView, {});
-const edit_user_profile = withComponentProps(Component$1);
+const Component$3 = () => /* @__PURE__ */ jsx(CompleteProfileView, {});
+const edit_user_profile = withComponentProps(Component$3);
 const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: edit_user_profile
+}, Symbol.toStringTag, { value: "Module" }));
+const UpdatePassword = ({
+  heading = "Actualizar contraseña",
+  subheading = "Ingresa tu nueva contraseña",
+  updateText = "Actualizar contraseña",
+  loginText = "¿Recuerdas tu contraseña?",
+  loginUrl = appRoutes.login,
+  logoUrl = appRoutes.landing
+}) => {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleUpdatePassword = async () => {
+    if (password.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Las contraseñas no coinciden.");
+      return;
+    }
+    setIsSubmitting(true);
+    const { error } = await supabase.auth.updateUser({
+      password
+    });
+    if (error) {
+      toast.error("Error al actualizar la contraseña.");
+      console.error("Error updating password:", error.message);
+    } else {
+      toast.success("Contraseña actualizada con éxito.");
+    }
+    setIsSubmitting(false);
+  };
+  return /* @__PURE__ */ jsx("section", { className: "h-screen flex items-center justify-center bg-muted", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto", children: /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-4 mx-5", children: /* @__PURE__ */ jsxs("div", { className: "mx-auto w-full max-w-sm rounded-md p-6 shadow bg-white", children: [
+    /* @__PURE__ */ jsxs("div", { className: "mb-6 flex flex-col items-center", children: [
+      /* @__PURE__ */ jsx(Link, { to: logoUrl, children: /* @__PURE__ */ jsx(TbPasswordUser, { className: "size-10" }) }),
+      /* @__PURE__ */ jsx("h1", { className: "mb-5 mt-3 text-4xl font-bold text-center leading-9", children: heading }),
+      /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: subheading })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "grid gap-4", children: [
+      /* @__PURE__ */ jsx(
+        Input,
+        {
+          name: "password",
+          type: "password",
+          value: password,
+          onChange: (event) => setPassword(event.target.value),
+          placeholder: "Nueva contraseña",
+          required: true
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        Input,
+        {
+          name: "confirmPassword",
+          type: "password",
+          value: confirmPassword,
+          onChange: (event) => setConfirmPassword(event.target.value),
+          placeholder: "Confirmar contraseña",
+          required: true
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        Button,
+        {
+          type: "submit",
+          className: "mt-2 w-full",
+          onClick: handleUpdatePassword,
+          disabled: isSubmitting,
+          children: isSubmitting ? "Actualizando..." : updateText
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "mx-auto mt-6 mb-2 flex justify-center gap-1 text-sm text-muted-foreground", children: [
+      /* @__PURE__ */ jsx("p", { children: loginText }),
+      /* @__PURE__ */ jsx(
+        Link,
+        {
+          to: loginUrl,
+          className: "font-medium text-primary hover:underline",
+          children: "Iniciar Sesión"
+        }
+      )
+    ] })
+  ] }) }) }) });
+};
+const Component$2 = () => /* @__PURE__ */ jsx(UpdatePassword, {});
+const update_password = withComponentProps(Component$2);
+const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: update_password
+}, Symbol.toStringTag, { value: "Module" }));
+const VerifyEmail = () => {
+  var _a;
+  const location = useLocation();
+  const userEmail = (_a = location.state) == null ? void 0 : _a.userEmail;
+  const handleResendVerificationEmail = async () => {
+    await supabase.auth.resend({
+      type: "signup",
+      email: userEmail
+    });
+    toast.info("Correo de verificación reenviado.");
+  };
+  return /* @__PURE__ */ jsx("section", { className: "h-screen bg-muted", children: /* @__PURE__ */ jsx("div", { className: "flex h-full items-center justify-center mx-auto", children: /* @__PURE__ */ jsxs(Card, { className: "w-full max-w-sm mx-8", children: [
+    /* @__PURE__ */ jsxs(CardHeader, { className: "text-center", children: [
+      /* @__PURE__ */ jsx(CardTitle, { className: "text-3xl sm:text-4xl", children: "Verifica tu correo" }),
+      /* @__PURE__ */ jsx(CardDescription, { className: "text-muted-foreground mt-3 mb-1 text-base", children: "Te hemos enviado un enlace de verificación a tu correo electrónico. Por favor, revisa tu bandeja de entrada y sigue las instrucciones para confirmar tu cuenta." })
+    ] }),
+    /* @__PURE__ */ jsxs(CardContent, { className: "flex flex-col gap-4", children: [
+      /* @__PURE__ */ jsx(Button, { className: "w-full", onClick: handleResendVerificationEmail, children: "Reenviar correo de verificación" }),
+      /* @__PURE__ */ jsx(
+        Link,
+        {
+          to: appRoutes.login,
+          className: "w-full text-center font-medium text-primary hover:underline",
+          children: "Volver a iniciar sesión"
+        }
+      )
+    ] })
+  ] }) }) });
+};
+const Component$1 = () => /* @__PURE__ */ jsx(VerifyEmail, {});
+const verify_email = withComponentProps(Component$1);
+const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: verify_email
 }, Symbol.toStringTag, { value: "Module" }));
 const LostPetsList = ({ heading, lostPets }) => {
   const navigate = useNavigate();
@@ -4299,7 +4372,7 @@ const meta = () => [{
 }];
 const LostPetsRoute = () => /* @__PURE__ */ jsx(ExploreLostPets, {});
 const lost_pets = withComponentProps(LostPetsRoute);
-const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route16 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: lost_pets,
   meta
@@ -4370,11 +4443,11 @@ const ResetPassword = ({
 };
 const Component = () => /* @__PURE__ */ jsx(ResetPassword, {});
 const reset_password = withComponentProps(Component);
-const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route17 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: reset_password
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-BHNHhhw4.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BP7SQNJh.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js", "/assets/with-props-C_P4RWeF.js", "/assets/index-DlVqQRiW.js"], "css": ["/assets/root-B12xiaMz.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/landing": { "id": "routes/landing", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/landing-CjkBzrwJ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-CGXivZb0.js", "/assets/routes-CTRM3soR.js", "/assets/button-BwhTU3xm.js", "/assets/navbar-mFlRC7PZ.js", "/assets/index-BPjMvHEu.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/auth_layout": { "id": "routes/auth_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/auth_layout-CSMW1ok1.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/routes-CTRM3soR.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/login": { "id": "routes/login", "parentId": "routes/auth_layout", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/login-tDm7B8gD.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/button-BwhTU3xm.js", "/assets/checkbox-WSwXXcMV.js", "/assets/input-Cc9Stvst.js", "/assets/routes-CTRM3soR.js", "/assets/index-DYjHuzbX.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-4zLNCx83.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-DA7cR2i0.js", "/assets/check-CcO5qCS6.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/signup": { "id": "routes/signup", "parentId": "routes/auth_layout", "path": "/sign-up", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/signup-DVbbs47l.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-DYjHuzbX.js", "/assets/button-BwhTU3xm.js", "/assets/input-Cc9Stvst.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BPjMvHEu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/protected_layout": { "id": "routes/protected_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/protected_layout-BOkZN9hO.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/routes-CTRM3soR.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/dashboard": { "id": "routes/dashboard", "parentId": "routes/protected_layout", "path": "/dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/dashboard-3pwtPx6Y.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/button-BwhTU3xm.js", "/assets/routes-CTRM3soR.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/my_pets": { "id": "routes/my_pets", "parentId": "routes/protected_layout", "path": "/my-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/my_pets-Dt0L_4as.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/button-BwhTU3xm.js", "/assets/separator-BHgjR1J0.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/routes-CTRM3soR.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/pet": { "id": "routes/pet", "parentId": "routes/protected_layout", "path": "/pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/pet-DoV-i6CQ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/button-BwhTU3xm.js", "/assets/circle-alert-CwKWgOV7.js", "/assets/index-CGXivZb0.js", "/assets/index-BAY9dnVF.js", "/assets/index-CpYXc7B6.js", "/assets/RegisterPetForm-MvXL-jgZ.js", "/assets/popover-BE-t_-9Y.js", "/assets/separator-BHgjR1J0.js", "/assets/ReportLostPetAlertDialog-BC7E2wsx.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js", "/assets/card-Cx2DBwdG.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-BPjMvHEu.js", "/assets/textarea-C0jHllX4.js", "/assets/checkbox-WSwXXcMV.js", "/assets/index-DA7cR2i0.js", "/assets/check-CcO5qCS6.js", "/assets/command-BV_hcrUj.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_pet": { "id": "routes/edit_pet", "parentId": "routes/protected_layout", "path": "/edit-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_pet-z0t0faCK.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/card-Cx2DBwdG.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/RegisterPetForm-MvXL-jgZ.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/button-BwhTU3xm.js", "/assets/textarea-C0jHllX4.js", "/assets/checkbox-WSwXXcMV.js", "/assets/index-DA7cR2i0.js", "/assets/check-CcO5qCS6.js", "/assets/command-BV_hcrUj.js", "/assets/index-CpYXc7B6.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js", "/assets/popover-BE-t_-9Y.js", "/assets/index-BAY9dnVF.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet": { "id": "routes/report_lost_pet", "parentId": "routes/protected_layout", "path": "/report-lost-pet", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet-D_8X7E4p.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/index-2UufBPTQ.js", "/assets/ReportLostPetAlertDialog-BC7E2wsx.js", "/assets/skeleton-CpORVbC8.js", "/assets/button-BwhTU3xm.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BAY9dnVF.js", "/assets/index-CpYXc7B6.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet_form": { "id": "routes/report_lost_pet_form", "parentId": "routes/protected_layout", "path": "/report-lost-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet_form-CZ_s8x3Z.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/button-BwhTU3xm.js", "/assets/textarea-C0jHllX4.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js", "/assets/popover-BE-t_-9Y.js", "/assets/routes-CTRM3soR.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-CpYXc7B6.js", "/assets/index-BAY9dnVF.js", "/assets/index-DA7cR2i0.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_found_pet": { "id": "routes/report_found_pet", "parentId": "routes/protected_layout", "path": "/report-found-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_found_pet-CWF6esaS.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/separator-BHgjR1J0.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/index-CMz1EfI-.js", "/assets/Loader-CXAdXc2l.js", "/assets/button-BwhTU3xm.js", "/assets/input-Cc9Stvst.js", "/assets/command-BV_hcrUj.js", "/assets/popover-BE-t_-9Y.js", "/assets/check-CcO5qCS6.js", "/assets/circle-alert-CwKWgOV7.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-CpYXc7B6.js", "/assets/loader-circle-4zLNCx83.js", "/assets/index-BAY9dnVF.js", "/assets/index-DA7cR2i0.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_user_profile": { "id": "routes/edit_user_profile", "parentId": "routes/protected_layout", "path": "/edit-user", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_user_profile-B23egpsG.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/card-Cx2DBwdG.js", "/assets/routes-CTRM3soR.js", "/assets/Loader-CXAdXc2l.js", "/assets/button-BwhTU3xm.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js", "/assets/index-DlVqQRiW.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/loader-circle-4zLNCx83.js", "/assets/index-CpYXc7B6.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/lost_pets": { "id": "routes/lost_pets", "parentId": "root", "path": "/lost-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/lost_pets-DX1fsDv0.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/button-BwhTU3xm.js", "/assets/separator-BHgjR1J0.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/routes-CTRM3soR.js", "/assets/index-2UufBPTQ.js", "/assets/circle-alert-CwKWgOV7.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/skeleton-CpORVbC8.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/reset_password": { "id": "routes/reset_password", "parentId": "root", "path": "/reset-password", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/reset_password-kgB6vCe6.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/iconBase-DWGiJmbw.js", "/assets/button-BwhTU3xm.js", "/assets/input-Cc9Stvst.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/index-BPjMvHEu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-eeada563.js", "version": "eeada563", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-XPbGjdW-.js", "imports": ["/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/index-DKhf7Gql.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-Bz1U8VKu.js", "imports": ["/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/index-DKhf7Gql.js", "/assets/with-props-Gl94lAGc.js", "/assets/index-CcIONIKF.js"], "css": ["/assets/root-hud6SGo-.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/landing": { "id": "routes/landing", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/landing-kF6FkwPM.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/index-B_9uTzU_.js", "/assets/routes-Cy3JbV6D.js", "/assets/button-BPpKjRVn.js", "/assets/navbar-Deai8wle.js", "/assets/index-DKhf7Gql.js", "/assets/createLucideIcon-Cf2ervzi.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/auth_layout": { "id": "routes/auth_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/auth_layout-BLmbWDe0.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/Loader-g-nnWHc6.js", "/assets/routes-Cy3JbV6D.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/createLucideIcon-Cf2ervzi.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/login": { "id": "routes/login", "parentId": "routes/auth_layout", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/login-CVa70uit.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/button-BPpKjRVn.js", "/assets/checkbox-CxddfVej.js", "/assets/input-UX4TLTL_.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CyytD7hr.js", "/assets/index-CcIONIKF.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/index-BiNbnncs.js", "/assets/check-o3iAl0tq.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/iconBase-DbdvLURL.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/signup": { "id": "routes/signup", "parentId": "routes/auth_layout", "path": "/sign-up", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/signup-BsgYS2Uy.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/index-CyytD7hr.js", "/assets/button-BPpKjRVn.js", "/assets/input-UX4TLTL_.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/iconBase-DbdvLURL.js", "/assets/index-DKhf7Gql.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/protected_layout": { "id": "routes/protected_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/protected_layout-Es4q8ngp.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/Loader-g-nnWHc6.js", "/assets/routes-Cy3JbV6D.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/createLucideIcon-Cf2ervzi.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/dashboard": { "id": "routes/dashboard", "parentId": "routes/protected_layout", "path": "/dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/dashboard-FWnNzkMe.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/navbar-Deai8wle.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/button-BPpKjRVn.js", "/assets/routes-Cy3JbV6D.js", "/assets/createLucideIcon-Cf2ervzi.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/my_pets": { "id": "routes/my_pets", "parentId": "routes/protected_layout", "path": "/my-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/my_pets-Bi4qpQQs.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/Loader-g-nnWHc6.js", "/assets/navbar-Deai8wle.js", "/assets/button-BPpKjRVn.js", "/assets/separator-BSvWDJIS.js", "/assets/EmptyState-O5eIhZqw.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/routes-Cy3JbV6D.js", "/assets/IconBase-DqEHqXSU.js", "/assets/index-CcIONIKF.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/index-DPG4c9up.js", "/assets/iconBase-DbdvLURL.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/pet": { "id": "routes/pet", "parentId": "routes/protected_layout", "path": "/pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/pet-BZLBCkES.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/Loader-g-nnWHc6.js", "/assets/navbar-Deai8wle.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/button-BPpKjRVn.js", "/assets/circle-alert-Bhe9zhPh.js", "/assets/index-B_9uTzU_.js", "/assets/index-OiF-0JKI.js", "/assets/index-DmGVbic7.js", "/assets/RegisterPetForm-B9lEWr1-.js", "/assets/popover-Dt4eRBEn.js", "/assets/separator-BSvWDJIS.js", "/assets/ReportLostPetAlertDialog-DxxQA_oW.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-DqEHqXSU.js", "/assets/card-Db7gDXWe.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/index-DKhf7Gql.js", "/assets/textarea-DG9R3Q3i.js", "/assets/checkbox-CxddfVej.js", "/assets/index-BiNbnncs.js", "/assets/check-o3iAl0tq.js", "/assets/command-D8wNzdg0.js", "/assets/index-BuuPKC9e.js", "/assets/input-UX4TLTL_.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_pet": { "id": "routes/edit_pet", "parentId": "routes/protected_layout", "path": "/edit-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_pet-C2WiirEo.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/Loader-g-nnWHc6.js", "/assets/navbar-Deai8wle.js", "/assets/card-Db7gDXWe.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/RegisterPetForm-B9lEWr1-.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/button-BPpKjRVn.js", "/assets/textarea-DG9R3Q3i.js", "/assets/checkbox-CxddfVej.js", "/assets/index-BiNbnncs.js", "/assets/check-o3iAl0tq.js", "/assets/command-D8wNzdg0.js", "/assets/index-DmGVbic7.js", "/assets/index-BuuPKC9e.js", "/assets/input-UX4TLTL_.js", "/assets/popover-Dt4eRBEn.js", "/assets/index-OiF-0JKI.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-DqEHqXSU.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet": { "id": "routes/report_lost_pet", "parentId": "routes/protected_layout", "path": "/report-lost-pet", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet-Wuu9RHYd.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/navbar-Deai8wle.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/index-DPG4c9up.js", "/assets/ReportLostPetAlertDialog-DxxQA_oW.js", "/assets/skeleton-2B1EalIj.js", "/assets/button-BPpKjRVn.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/EmptyState-O5eIhZqw.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/iconBase-DbdvLURL.js", "/assets/index-OiF-0JKI.js", "/assets/index-DmGVbic7.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet_form": { "id": "routes/report_lost_pet_form", "parentId": "routes/protected_layout", "path": "/report-lost-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet_form-Bl87YXHI.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/Loader-g-nnWHc6.js", "/assets/navbar-Deai8wle.js", "/assets/button-BPpKjRVn.js", "/assets/textarea-DG9R3Q3i.js", "/assets/index-BuuPKC9e.js", "/assets/input-UX4TLTL_.js", "/assets/popover-Dt4eRBEn.js", "/assets/routes-Cy3JbV6D.js", "/assets/IconBase-DqEHqXSU.js", "/assets/index-CcIONIKF.js", "/assets/EmptyState-O5eIhZqw.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/index-DmGVbic7.js", "/assets/index-OiF-0JKI.js", "/assets/index-BiNbnncs.js", "/assets/index-DPG4c9up.js", "/assets/iconBase-DbdvLURL.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_found_pet": { "id": "routes/report_found_pet", "parentId": "routes/protected_layout", "path": "/report-found-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": true, "hasLoader": false, "hasClientAction": true, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_found_pet-8urtqp1q.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/navbar-Deai8wle.js", "/assets/separator-BSvWDJIS.js", "/assets/EmptyState-O5eIhZqw.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/index-BuuPKC9e.js", "/assets/Loader-g-nnWHc6.js", "/assets/button-BPpKjRVn.js", "/assets/input-UX4TLTL_.js", "/assets/command-D8wNzdg0.js", "/assets/popover-Dt4eRBEn.js", "/assets/check-o3iAl0tq.js", "/assets/circle-alert-Bhe9zhPh.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/index-DPG4c9up.js", "/assets/iconBase-DbdvLURL.js", "/assets/index-DmGVbic7.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/index-OiF-0JKI.js", "/assets/index-BiNbnncs.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_user_profile": { "id": "routes/edit_user_profile", "parentId": "routes/protected_layout", "path": "/edit-user", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_user_profile-C3YDCCOn.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/navbar-Deai8wle.js", "/assets/card-Db7gDXWe.js", "/assets/routes-Cy3JbV6D.js", "/assets/Loader-g-nnWHc6.js", "/assets/button-BPpKjRVn.js", "/assets/index-BuuPKC9e.js", "/assets/input-UX4TLTL_.js", "/assets/index-CcIONIKF.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/loader-circle-Bb9f9Q6V.js", "/assets/index-DmGVbic7.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/update_password": { "id": "routes/update_password", "parentId": "routes/protected_layout", "path": "update-password", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/update_password-DC6kIfV9.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/index-DUcOmFlR.js", "/assets/button-BPpKjRVn.js", "/assets/input-UX4TLTL_.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/iconBase-DbdvLURL.js", "/assets/index-DKhf7Gql.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/verify_email": { "id": "routes/verify_email", "parentId": "routes/protected_layout", "path": "verify-email", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/verify_email--aSDw6AN.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/button-BPpKjRVn.js", "/assets/card-Db7gDXWe.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/index-DKhf7Gql.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/lost_pets": { "id": "routes/lost_pets", "parentId": "root", "path": "/lost-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/lost_pets-BA_rnQQl.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/navbar-Deai8wle.js", "/assets/button-BPpKjRVn.js", "/assets/separator-BSvWDJIS.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-DPG4c9up.js", "/assets/circle-alert-Bhe9zhPh.js", "/assets/createLucideIcon-Cf2ervzi.js", "/assets/skeleton-2B1EalIj.js", "/assets/index-B_9uTzU_.js", "/assets/index-DKhf7Gql.js", "/assets/iconBase-DbdvLURL.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/reset_password": { "id": "routes/reset_password", "parentId": "root", "path": "/reset-password", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/reset_password-CnMJvM4K.js", "imports": ["/assets/with-props-Gl94lAGc.js", "/assets/chunk-LSOULM7L-U2Y-wqv8.js", "/assets/index-DUcOmFlR.js", "/assets/button-BPpKjRVn.js", "/assets/input-UX4TLTL_.js", "/assets/routes-Cy3JbV6D.js", "/assets/index-CcIONIKF.js", "/assets/iconBase-DbdvLURL.js", "/assets/index-DKhf7Gql.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-6769823c.js", "version": "6769823c", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_middleware": false, "unstable_optimizeDeps": false, "unstable_splitRouteModules": false, "unstable_subResourceIntegrity": false, "unstable_viteEnvironmentApi": false };
@@ -4496,13 +4569,29 @@ const routes = {
     caseSensitive: void 0,
     module: route13
   },
+  "routes/update_password": {
+    id: "routes/update_password",
+    parentId: "routes/protected_layout",
+    path: "update-password",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route14
+  },
+  "routes/verify_email": {
+    id: "routes/verify_email",
+    parentId: "routes/protected_layout",
+    path: "verify-email",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route15
+  },
   "routes/lost_pets": {
     id: "routes/lost_pets",
     parentId: "root",
     path: "/lost-pets",
     index: void 0,
     caseSensitive: void 0,
-    module: route14
+    module: route16
   },
   "routes/reset_password": {
     id: "routes/reset_password",
@@ -4510,7 +4599,7 @@ const routes = {
     path: "/reset-password",
     index: void 0,
     caseSensitive: void 0,
-    module: route15
+    module: route17
   }
 };
 export {

@@ -56,6 +56,7 @@ const CompleteProfileForm = ({
   const handleSubmit = async (values: z.infer<typeof userProfileSchema>) => {
     setIsLoading(true)
 
+    console.log(values)
     const uploadedImagePath = values.image_url
       ? await uploadPortrait(values.image_url, 'profiles-pictures')
       : null

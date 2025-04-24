@@ -1,4 +1,4 @@
-import { formatContactNumber } from '@/lib/utils'
+import { formatPhoneNumber } from '@/lib/utils'
 import {
   Body,
   Button,
@@ -17,39 +17,33 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components'
-import * as React from 'react'
-import PetFoundNotificationProps from './props/PetFoundNotificationProps'
+import type { FoundPetReportData } from '../models/FoundPetReportData'
 
 const baseUrl = 'https://www.reactemailtemplate.com/'
 
-
-
-export const PetFoundNotification = ({
-  petName,
-  petSex,
+export const FoundPetEmailTemplate = ({
+  pet,
   finderName,
-  finderLastName,
+  contactNumber,
   city,
   location,
-  contactNumber,
   notes,
-  link,
-}: PetFoundNotificationProps) => {
+}: FoundPetReportData) => {
   const heading =
-    petSex === 'male'
-      ? `¡${petName} ha sido reportado como encontrado!`
-      : `¡${petName} ha sido reportada como encontrada!`
+    pet.sex === 'male'
+      ? `¡${pet.name} ha sido reportado como encontrado!`
+      : `¡${pet.name} ha sido reportada como encontrada!`
 
-  const found = petSex === 'male' ? 'encontrado' : 'encontrada'
+  const found = pet.sex === 'male' ? 'encontrado' : 'encontrada'
 
   return (
     <Html>
       <Head>
         <Font
-          fontFamily="Inter"
+          fontFamily="Manrope"
           fallbackFontFamily="Helvetica"
           webFont={{
-            url: 'https://fonts.googleapis.com/css2?family=Inter&display=swap',
+            url: 'https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap',
             format: 'woff2',
           }}
           fontWeight={400}
@@ -112,17 +106,19 @@ export const PetFoundNotification = ({
             </Section>
             <Section className="rounded-xl bg-blue-500">
               <div className="mx-auto my-auto p-10">
-                <Text className="m-0 text-white">{}</Text>
-                <Heading className="m-0 mt-1 leading-[35px] font-bold text-white" as="h1">
+                <Heading
+                  className="m-0 mt-1 leading-[35px] font-bold text-white"
+                  as="h1"
+                >
                   {heading}
                 </Heading>
-                <Text className="mb-1 text-[16px] italic leading-[20px] mt-3 text-white">
-                  Reporta a {petName} como {found} para que se elimine
-                  de mascotas perdidas. <br />
+                <Text className="mb-1 text-[16px] leading-[20px] mt-3 text-white">
+                  Reporta a {pet.name} como {found} para que se elimine de
+                  mascotas perdidas. <br />
                 </Text>
                 <Button
-                  className="mt-4 rounded-lg bg-white px-10 py-3 font-semibold text-indigo-600 text-center"
-                  href={link}
+                  className="mt-4 rounded-lg bg-white px-10 py-3 font-semibold text-blue-500 text-center"
+                  href={`http://localhost:5173/pet/${pet.id}`}
                   rel="noopener noreferrer"
                 >
                   Reportar como {found}
@@ -133,10 +129,10 @@ export const PetFoundNotification = ({
             <Section>
               <Row className="mt-8">
                 <Text className="m-0 text-xl font-semibold text-gray-900 leading-[24px]">
-                  {petName} ha sido {found} por:
+                  {pet.name} ha sido {found} por:
                 </Text>
                 <Text className="mt-2 text-[16.5px] text-gray-500">
-                  {finderName} {finderLastName}
+                  {finderName}
                 </Text>
               </Row>
               <Row className="mt-8">
@@ -144,7 +140,7 @@ export const PetFoundNotification = ({
                   Número de contacto:
                 </Text>
                 <Text className="mt-2 text-[16.5px] text-gray-500">
-                  {formatContactNumber(contactNumber!)}
+                  {formatPhoneNumber(contactNumber)}
                 </Text>
               </Row>
               <Row className="mt-8">
@@ -152,14 +148,14 @@ export const PetFoundNotification = ({
                   Lugar donde fue {found}:
                 </Text>
                 <Text className="mt-2 text-[16.5px] text-gray-500">
-                  {location}, {city}{' '}
+                  {location}, {city}
                 </Text>
                 <Link
                   href={`https://www.google.com/maps?q=${encodeURIComponent(
                     location!
                   )},${encodeURIComponent(city!)}`}
                   rel="noopener noreferrer"
-                  className="text-indigo-600 underline"
+                  className="text-blue-500 underline"
                 >
                   Ver en Google Maps
                 </Link>
@@ -169,7 +165,9 @@ export const PetFoundNotification = ({
                   Notas
                 </Text>
                 <Text className="mt-2 text-[16.5px] text-gray-500">
-                  {notes ?? `${finderName} no añadió notas adicionales`}
+                  {!notes || notes?.trim().length === 0
+                    ? `${finderName} no añadió notas adicionales`
+                    : notes}
                 </Text>
               </Row>
             </Section>
@@ -244,20 +242,20 @@ export const PetFoundNotification = ({
   )
 }
 
-export default PetFoundNotification
+export default FoundPetEmailTemplate
 
-PetFoundNotification.PreviewProps = {
-  petName: 'Chocobanano',
-  finderName: 'Samuel Marroquin',
-  city: 'Ciudad de Guatemala',
-  location: 'Calle 1-23, Zona 1',
-  contactNumber: '1234-5678',
-  ownerName: 'Andres Tobar',
-  finderImage:
-    'https://static.vecteezy.com/system/resources/previews/003/428/270/non_2x/businessman-explain-pose-character-design-free-vector.jpg',
-  petImage:
-    'https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80',
-} as PetFoundNotificationProps
+// PetFoundNotification.PreviewProps = {
+//   petName: 'Chocobanano',
+//   finderName: 'Samuel Marroquin',
+//   city: 'Ciudad de Guatemala',
+//   location: 'Calle 1-23, Zona 1',
+//   contactNumber: '1234-5678',
+//   ownerName: 'Andres Tobar',
+//   finderImage:
+//     'https://static.vecteezy.com/system/resources/previews/003/428/270/non_2x/businessman-explain-pose-character-design-free-vector.jpg',
+//   petImage:
+//     'https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80',
+// } as PetFoundNotificationProps
 
 // import {
 //   Body,

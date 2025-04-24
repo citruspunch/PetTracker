@@ -14,32 +14,33 @@ import { departmentsGuatemalaForDropdown } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CircleAlert } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useFetcher } from 'react-router'
 import { z } from 'zod'
 import CitiesGuatemalaDropdown from '../components/dropdownMenu'
-import { reportFoundPetSchema } from '../models/formSchemas'
+import foundPetReportFormSchema from '../models/foundPetReportFormSchema'
 
 type Props = {
   petName: string
   submitButtonText?: string
-  onReport: (values: z.infer<typeof reportFoundPetSchema>) => Promise<void>
-  isLoading: boolean
+  onReport: (values: z.infer<typeof foundPetReportFormSchema>) => Promise<void>
 }
 
 const ReportFoundPetForm = ({
   petName,
   submitButtonText = 'Reportar',
   onReport,
-  isLoading,
 }: Props) => {
-  const form = useForm<z.infer<typeof reportFoundPetSchema>>({
-    resolver: zodResolver(reportFoundPetSchema),
+  const form = useForm<z.infer<typeof foundPetReportFormSchema>>({
+    resolver: zodResolver(foundPetReportFormSchema),
     defaultValues: {
       city: undefined,
       location: undefined,
-      contactPhone: undefined,
+      contactNumber: undefined,
       notes: undefined,
     },
   })
+
+  const fetcher = useFetcher({ key: 'found-pet-report' })
 
   return (
     <Form {...form}>
@@ -71,8 +72,8 @@ const ReportFoundPetForm = ({
                 <Input {...field} />
               </FormControl>
               <FormDescription>
-                {`Indica la dirección donde encontraste a ${petName}.`} Ej:
-                Calle 1-23, Zona 1
+                Indica la dirección donde encontraste a {petName}. Ej: Calle
+                1-23, Zona 1
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -80,7 +81,7 @@ const ReportFoundPetForm = ({
         />
         <FormField
           control={form.control}
-          name="contactPhone"
+          name="contactNumber"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Teléfono de contacto</FormLabel>
@@ -106,15 +107,15 @@ const ReportFoundPetForm = ({
                 />
               </FormControl>
               <FormDescription>
-                {`Si tienes alguna información adicional sobre ${petName}, puedes incluirla aquí.`}
+                Si tienes alguna información adicional sobre {petName}, puedes
+                incluirla aquí.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <Button type="submit" className="w-full">
-          {isLoading ? (
+          {fetcher.state !== 'idle' ? (
             <Loader />
           ) : (
             <>

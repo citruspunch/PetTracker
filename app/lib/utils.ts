@@ -80,7 +80,7 @@ export const departmentsGuatemalaForDropdown = departmentsGuatemala.map(
   })
 )
 
-export const formatContactNumber = (contactNumber: string): string => {
+export const formatPhoneNumber = (contactNumber: string): string => {
   const cleanedNumber = contactNumber.replace(/\D/g, '')
   const formattedNumber = cleanedNumber.replace(/(\d{4})(\d{4})/, '$1-$2')
   return formattedNumber
@@ -102,10 +102,9 @@ export const uploadPortrait = async (
     return null
   }
   const file = files.item(0)!
-  const buffer = await file.arrayBuffer()
   const result = await supabase.storage
     .from(storageBucket)
-    .upload(uuid(), buffer, { contentType: file.type })
+    .upload(uuid(), file, { contentType: file.type })
   if (result.error !== null) return null
   return result.data.path
 }
