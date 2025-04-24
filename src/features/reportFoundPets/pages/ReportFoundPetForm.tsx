@@ -34,10 +34,10 @@ const ReportFoundPetForm = ({
   const form = useForm<z.infer<typeof reportFoundPetSchema>>({
     resolver: zodResolver(reportFoundPetSchema),
     defaultValues: {
-      city: undefined,
-      location: undefined,
-      contactPhone: undefined,
-      notes: undefined,
+      city: 'Guatemala',
+      location: '',
+      contactPhone: '',
+      notes: '',
     },
   })
 
