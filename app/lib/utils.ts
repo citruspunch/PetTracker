@@ -1,8 +1,8 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { Tables } from './supabase-types'
-import supabase from './supabase'
 import { v4 as uuid } from 'uuid'
+import supabase from './supabase'
+import type { Tables } from './supabase-types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -110,8 +110,8 @@ export const uploadPortrait = async (
   return result.data.path
 }
 
-export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export const specialCharactersRegex = /[!@#$%^&*(),.?":{}|<>]/;
+export const specialCharactersRegex = /[!@#$%^&*(),.?":{}|<>]/
 
-export const numberRegex = /\d/;
+export const numberRegex = /\d/

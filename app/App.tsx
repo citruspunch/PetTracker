@@ -1,22 +1,22 @@
 import ExploreLostPets from '@/features/exploreLostPets/pages/ExploreLostPetsPage'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import Login from './auth/Login'
-import ResetPassword from './auth/SendResetPassword'
-import Signup from './auth/Signup'
-import Dashboard from './Dashboard'
-import LostPetDetails from './features/exploreLostPets/pages/LostPetDetailsView'
-import EditPetDetailsView from './features/myPets/pages/EditPetDetailsView'
-import MyPetsView from './features/myPets/pages/MyPetsView'
-import PetDetailsView from './features/myPets/pages/PetDetailsView'
-import ReportFoundPetView from './features/reportFoundPets/pages/ReportFoundPetView'
-import ReportLostPetView from './features/reportLostPets/pages/ReportLostPetForm'
-import ReportLostPetPage from './features/reportLostPets/pages/ReportLostPetPage'
-import HomePage from './home'
-import useUser from './hooks/useUser'
-import { routes } from './routes'
-import CompleteProfileView from './features/profile/views/CompleteProfileView'
-import VerifyEmail from './auth/VerifyEmail'
+import HomePage from '../home'
+import Login from '../src/auth/Login'
+import ResetPassword from '../src/auth/ResetPassword'
+import Signup from '../src/auth/Signup'
+import LostPetDetails from '../src/features/exploreLostPets/pages/LostPetDetailsView'
+import EditPetDetailsView from '../src/features/myPets/pages/EditPetDetailsView'
+import MyPetsView from '../src/features/myPets/pages/MyPetsView'
+import PetDetailsView from '../src/features/myPets/pages/PetDetailsView'
+import ReportFoundPetView from '../src/features/reportFoundPets/pages/ReportFoundPetView'
+import ReportLostPetView from '../src/features/reportLostPets/pages/ReportLostPetForm'
+import ReportLostPetPage from '../src/features/reportLostPets/pages/ReportLostPetPage'
+import useUser from '../src/hooks/useUser'
 import UpdatePassword from './auth/UpdatePassword'
+import VerifyEmail from './auth/VerifyEmail'
+import Dashboard from './features/Dashboard'
+import CompleteProfileView from './features/profile/views/CompleteProfileView'
+import { routes } from './routes'
 
 function App() {
   const user = useUser()
@@ -60,9 +60,9 @@ function App() {
         <Route path={routes.signUp} element={<Signup />} />
         <Route path={routes.resetPassword} element={<ResetPassword />} />
         <Route path={routes.myPets} element={<MyPetsView />} />
-        <Route path='/profile' element={<CompleteProfileView />} />
-        <Route path='/verify-email' element={<VerifyEmail />} />
-        <Route path='/update-password' element={<UpdatePassword />} />
+        <Route path="/profile" element={<CompleteProfileView />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/update-password" element={<UpdatePassword />} />
         <Route path={routes.exploreLostPets} element={<ExploreLostPets />} />
         <Route path={routes.LostPetDetails} element={<LostPetDetails />} />
         <Route
