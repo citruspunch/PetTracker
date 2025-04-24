@@ -118,7 +118,7 @@ export const FoundPetEmailTemplate = ({
                 </Text>
                 <Button
                   className="mt-4 rounded-lg bg-white px-10 py-3 font-semibold text-blue-500 text-center"
-                  href={`http://localhost:5173/pet/${pet.id}`}
+                  href={import.meta.env.DEV ? `http://localhost:5173/pet/${pet.id}` : `https://pet-tracker-eosin.vercel.app/pet/${pet.id}`}
                   rel="noopener noreferrer"
                 >
                   Reportar como {found}
