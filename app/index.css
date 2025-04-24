@@ -1,7 +1,12 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  --default-font-family: "Manrope";
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
