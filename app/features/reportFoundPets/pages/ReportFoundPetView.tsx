@@ -4,7 +4,7 @@ import SendPetFoundNotification from '@/features/emails/SendPetFoundNotification
 import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import useUser from '@/hooks/useUser'
 import supabase from '@/lib/supabase'
-import { type Tables } from '@/lib/supabase-types'
+import type { Tables } from '@/lib/supabase/types'
 import { appRoutes } from '@/routes'
 import { Loader, SearchCheck } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -13,10 +13,6 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { reportFoundPetSchema } from '../models/formSchemas'
 import ReportFoundPetForm from './ReportFoundPetForm'
-type Profile = {
-  first_name: string | null
-  last_name: string | null
-}
 
 const ReportFoundPetView = () => {
   const navigate = useNavigate()
@@ -111,7 +107,7 @@ const ReportFoundPetView = () => {
       location: values.location,
       contactNumber: values.contactPhone,
       notes: values.notes,
-      link: `${routes.petDetails}/${pet!.id}`,
+      link: `${appRoutes.petDetails}/${pet!.id}`,
       ownerEmail: ownerEmailAddress!,
     })
     toast.success(`Gracias por reportar a ${pet!.name} como encontrada.`)

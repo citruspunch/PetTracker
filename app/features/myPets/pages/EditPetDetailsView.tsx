@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { AnimalSex } from '@/lib/animalSex'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { cn } from '@/lib/utils'
 import { appRoutes } from '@/routes'
@@ -65,7 +65,9 @@ const EditPetDetailsView = ({
       {!isLoadingPet && (
         <Card className={cn('m-3', className)} {...props}>
           <CardHeader>
-            <CardTitle className="text-3xl sm:text-4xl">Editar Información</CardTitle>
+            <CardTitle className="text-3xl sm:text-4xl">
+              Editar Información
+            </CardTitle>
             <CardDescription>
               Edita la información de tu mascota. Asegúrate de que todos los
               detalles sean correctos.

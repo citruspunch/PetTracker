@@ -10,9 +10,8 @@ import {
 import { Separator } from '@/components/ui/separator'
 import ReportFoundPetAlertDialog from '@/features/reportLostPets/components/ReportFoundPetAlertDialog'
 import ReportLostPetAlertDialog from '@/features/reportLostPets/components/ReportLostPetAlertDialog'
-import useUser from '@/hooks/useUser'
 import { formatAnimalType } from '@/lib/animalTypes'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import type { Tables } from '@/lib/supabase/types'
 import { calculateAge, cn, formatAge, formatAnimalSex } from '@/lib/utils'
 import { appRoutes } from '@/routes'
@@ -53,7 +52,12 @@ type Props = {
   isOwner: boolean
 } & OptionsProps
 
-const FilledPetDataView = ({ pet, wasScannedFromTag, isOwner, ...props }: Props) => {
+const FilledPetDataView = ({
+  pet,
+  wasScannedFromTag,
+  isOwner,
+  ...props
+}: Props) => {
   const tabs: Tab[] = [
     {
       id: 'tab-1',

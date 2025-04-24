@@ -2,12 +2,12 @@ import { TbPasswordUser } from 'react-icons/tb'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Link } from 'react-router-dom'
-import { routes } from '../routes'
-import { toast } from 'sonner'
 import supabase from '@/lib/supabase'
-import { useState } from 'react'
 import { emailRegex } from '@/lib/utils'
+import { appRoutes } from '@/routes'
+import { useState } from 'react'
+import { Link } from 'react-router'
+import { toast } from 'sonner'
 
 interface ResetPasswordProps {
   heading?: string
@@ -23,14 +23,14 @@ const ResetPassword = ({
   subheading = 'Ingresa tu correo electrónico para restablecer tu contraseña',
   resetText = 'Enviar correo de restablecimiento',
   loginText = '¿Recuerdas tu contraseña?',
-  loginUrl = routes.logIn,
-  logoUrl = routes.home,
+  loginUrl = appRoutes.login,
+  logoUrl = appRoutes.landing,
 }: ResetPasswordProps) => {
   const [email, setEmail] = useState('')
   const handleResetPassword = async () => {
     if (!emailRegex.test(email)) {
-      toast.error('Por favor, ingresa un correo electrónico válido.');
-      return;
+      toast.error('Por favor, ingresa un correo electrónico válido.')
+      return
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -59,14 +59,18 @@ const ResetPassword = ({
             </div>
             <div className="grid gap-4">
               <Input
-                name='email'
+                name="email"
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Ingresa tu correo electrónico"
                 required
               />
-              <Button type="submit" className="mt-2 w-full" onClick={handleResetPassword}>
+              <Button
+                type="submit"
+                className="mt-2 w-full"
+                onClick={handleResetPassword}
+              >
                 {resetText}
               </Button>
             </div>

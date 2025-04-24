@@ -23,7 +23,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import useUser from '@/hooks/useUser'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { appRoutes } from '@/routes'
 import { Link, useNavigate } from 'react-router'
 

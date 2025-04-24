@@ -1,6 +1,7 @@
 import Loader from '@/components/Loader'
 import Navbar from '@/components/navbar'
-import supabase from '@/lib/supabase/supabase'
+import useUser from '@/hooks/useUser'
+import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { isPetDataAlreadyFilled } from '@/lib/utils'
 import { useEffect, useState } from 'react'
@@ -9,7 +10,6 @@ import { toast } from 'sonner'
 import ErrorView from './ErrorView'
 import FilledPetDataView from './FilledPetDataView'
 import RegisterPetIntroductionView from './RegisterPetIntroductionView'
-import useUser from '@/hooks/useUser'
 
 const PetDetailsView = () => {
   const { petId } = useParams()

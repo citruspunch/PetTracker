@@ -18,7 +18,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { cn } from '@/lib/utils'
 import { appRoutes } from '@/routes'

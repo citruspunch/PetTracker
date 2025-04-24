@@ -7,7 +7,7 @@ import {
   CarouselContent,
 } from '@/components/ui/carousel'
 import useUser from '@/hooks/useUser'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { appRoutes } from '@/routes'
 import { useEffect, useState } from 'react'

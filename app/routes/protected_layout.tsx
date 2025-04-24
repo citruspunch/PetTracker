@@ -1,5 +1,5 @@
 import Loader from '@/components/Loader'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { appRoutes } from '@/routes'
 import { Outlet, redirect } from 'react-router'
 import type { Route } from './+types/protected_layout'

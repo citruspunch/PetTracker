@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { format } from '@formkit/tempo'
 import type { fetchedLostPetType } from '../models/fetchedLostPetType'
 import type { LostPetType } from '../models/lostPetType'

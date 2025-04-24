@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { appRoutes } from '@/routes'
 import { Loader2 } from 'lucide-react'
 import { useState } from 'react'

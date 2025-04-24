@@ -6,24 +6,25 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import * as React from "react";
 import React__default, { createElement, useState, useEffect } from "react";
+import { Toaster, toast } from "sonner";
 import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { createClient } from "@supabase/supabase-js";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { v4 } from "uuid";
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import { index, layout, route } from "@react-router/dev/routes";
-import { ChevronDownIcon, XIcon, Menu, Loader2, CheckIcon, AlertCircle, ChevronRight, ChevronLeft, SearchIcon, CircleIcon, CalendarIcon, ChevronsUpDown, Check, CircleAlert, MapPinned, ArrowRight as ArrowRight$1 } from "lucide-react";
+import { ChevronDownIcon, XIcon, Menu, Loader2, CheckIcon, AlertCircle, ChevronRight, ChevronLeft, SearchIcon, CircleIcon, CalendarIcon, ChevronsUpDown, Check, ArrowRight as ArrowRight$1, ArrowLeft, CircleAlert, Loader as Loader$1, SearchCheck, MapPinned } from "lucide-react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { createClient } from "@supabase/supabase-js";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { FcGoogle } from "react-icons/fc";
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import { MdPets } from "react-icons/md";
-import { ArrowRight, Paw, ClipboardHeart, MenuDotsCircle, Pen, TrashBinTrash, Flag, DangerCircle, PenNewRound } from "@solar-icons/react";
-import { toast } from "sonner";
+import { ArrowRight, Paw, ClipboardHeart, MenuDotsCircle, Pen, TrashBinTrash, Flag, DangerCircle, PenNewRound, Calendar as Calendar$1 } from "@solar-icons/react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@radix-ui/react-tabs";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
@@ -36,8 +37,10 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { v4 } from "uuid";
 import { z } from "zod";
+import useEmblaCarousel from "embla-carousel-react";
+import { Resend } from "resend";
+import { Html, Head, Font, Preview, Tailwind, Body, Container, Section, Row, Column, Link as Link$1, Img, Text, Heading, Button as Button$1, Hr } from "@react-email/components";
 import { format as format$1 } from "@formkit/tempo";
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
@@ -80,7 +83,7 @@ const entryServer = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineP
   default: handleRequest,
   streamTimeout
 }, Symbol.toStringTag, { value: "Module" }));
-function withComponentProps(Component) {
+function withComponentProps(Component2) {
   return function Wrapped() {
     const props = {
       params: useParams(),
@@ -88,7 +91,7 @@ function withComponentProps(Component) {
       actionData: useActionData(),
       matches: useMatches()
     };
-    return createElement(Component, props);
+    return createElement(Component2, props);
   };
 }
 function withHydrateFallbackProps(HydrateFallback2) {
@@ -125,7 +128,9 @@ function Layout({
         content: "width=device-width, initial-scale=1"
       }), /* @__PURE__ */ jsx(Meta, {}), /* @__PURE__ */ jsx(Links, {})]
     }), /* @__PURE__ */ jsxs("body", {
-      children: [children, /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
+      children: [children, /* @__PURE__ */ jsx(Toaster, {
+        richColors: true
+      }), /* @__PURE__ */ jsx(ScrollRestoration, {}), /* @__PURE__ */ jsx(Scripts, {})]
     })]
   });
 }
@@ -162,6 +167,9 @@ function AspectRatio({
 }) {
   return /* @__PURE__ */ jsx(AspectRatioPrimitive.Root, { "data-slot": "aspect-ratio", ...props });
 }
+const supabaseUrl = "https://syroswcbkupydkbnuixs.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5cm9zd2Nia3VweWRrYm51aXhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5MTUyOTksImV4cCI6MjA2MDQ5MTI5OX0.X8m5FmUn-A7FNvqdTDTU4yiEYH0Q2be2Z8n70Ypnk9E";
+const supabase = createClient(supabaseUrl, supabaseKey);
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -197,6 +205,58 @@ const formatAnimalSex = (sex) => {
     default:
       throw new Error("Unexpected sex value");
   }
+};
+const departmentsGuatemala = [
+  "Alta Verapaz",
+  "Baja Verapaz",
+  "Chimaltenango",
+  "Chiquimula",
+  "El Progreso",
+  "Escuintla",
+  "Guatemala",
+  "Huehuetenango",
+  "Izabal",
+  "Jalapa",
+  "Jutiapa",
+  "Petén",
+  "Quetzaltenango",
+  "Quiché",
+  "Retalhuleu",
+  "Sacatepéquez",
+  "San Marcos",
+  "Santa Rosa",
+  "Sololá",
+  "Suchitepéquez",
+  "Totonicapán",
+  "Zacapa"
+];
+const departmentsGuatemalaForDropdown = departmentsGuatemala.map(
+  (city) => ({
+    value: city,
+    label: city
+  })
+);
+const formatContactNumber = (contactNumber) => {
+  const cleanedNumber = contactNumber.replace(/\D/g, "");
+  const formattedNumber = cleanedNumber.replace(/(\d{4})(\d{4})/, "$1-$2");
+  return formattedNumber;
+};
+const MAX_FILE_SIZE = 5e6;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp"
+];
+const uploadPortrait = async (files, storageBucket) => {
+  if (!files || files.length === 0) {
+    return null;
+  }
+  const file = files.item(0);
+  const buffer = await file.arrayBuffer();
+  const result = await supabase.storage.from(storageBucket).upload(v4(), buffer, { contentType: file.type });
+  if (result.error !== null) return null;
+  return result.data.path;
 };
 function Avatar({
   className,
@@ -306,7 +366,14 @@ const appRoutes = {
   layout("routes/protected_layout.tsx", [
     route(appRoutes.dashboard, "routes/dashboard.tsx"),
     route(appRoutes.myPets, "routes/my_pets.tsx"),
-    route(`${appRoutes.petDetails}/:petId`, "routes/pet.tsx")
+    route(`${appRoutes.petDetails}/:petId`, "routes/pet.tsx"),
+    route(`${appRoutes.editPet}/:petId`, "routes/edit_pet.tsx"),
+    route(appRoutes.reportLostPet, "routes/report_lost_pet.tsx"),
+    route(
+      `${appRoutes.reportLostPet}/:petId`,
+      "routes/report_lost_pet_form.tsx"
+    ),
+    route(`${appRoutes.reportFoundPet}/:petId`, "routes/report_found_pet.tsx")
   ]),
   route(appRoutes.exploreLostPets, "routes/lost_pets.tsx")
 ];
@@ -586,9 +653,6 @@ function SheetTitle({
   );
 }
 const useUser = () => useOutletContext();
-const supabaseUrl = "https://syroswcbkupydkbnuixs.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5cm9zd2Nia3VweWRrYm51aXhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5MTUyOTksImV4cCI6MjA2MDQ5MTI5OX0.X8m5FmUn-A7FNvqdTDTU4yiEYH0Q2be2Z8n70Ypnk9E";
-const supabase = createClient(supabaseUrl, supabaseKey);
 const Navbar = ({
   logo = {
     url: appRoutes.dashboard,
@@ -817,7 +881,7 @@ const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   meta: meta$2
 }, Symbol.toStringTag, { value: "Module" }));
 const Loader = ({ className, ...props }) => /* @__PURE__ */ jsx(Loader2, { className: cn("animate-spin", className), ...props });
-const clientLoader$2 = async () => {
+const clientLoader$1 = async () => {
   const userResult = await supabase.auth.getUser();
   if (userResult.data.user) {
     return redirect(appRoutes.dashboard);
@@ -836,7 +900,7 @@ const auth_layout = withComponentProps(LoginRegisterLayout);
 const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   HydrateFallback: HydrateFallback$1,
-  clientLoader: clientLoader$2,
+  clientLoader: clientLoader$1,
   default: auth_layout
 }, Symbol.toStringTag, { value: "Module" }));
 function Checkbox({
@@ -905,6 +969,9 @@ const Login = ({
       password
     });
     if (error === null) navigate(redirectRoute);
+    else {
+      toast.error("Error al iniciar sesión. Verifica tus credenciales.");
+    }
     setLoading(false);
   };
   const handleGoogleSignIn = async () => {
@@ -1007,14 +1074,12 @@ const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   __proto__: null,
   default: login
 }, Symbol.toStringTag, { value: "Module" }));
-const clientLoader$1 = async ({
+const clientLoader = async ({
   request
 }) => {
   const userResult = await supabase.auth.getUser();
   if (request.url.includes(appRoutes.petDetails)) return userResult.data.user;
-  if (userResult.error) {
-    return redirect(appRoutes.login);
-  }
+  if (userResult.error) return redirect(appRoutes.login);
   return userResult.data.user;
 };
 const HydrateFallback = withHydrateFallbackProps(() => {
@@ -1032,7 +1097,7 @@ const protected_layout = withComponentProps(ProtectedLayoutRoute);
 const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   HydrateFallback,
-  clientLoader: clientLoader$1,
+  clientLoader,
   default: protected_layout
 }, Symbol.toStringTag, { value: "Module" }));
 const Dashboard = ({
@@ -1645,7 +1710,7 @@ function CardFooter({ className, ...props }) {
 const LostPetAlert = ({ pet: pet2, ...props }) => {
   const navigate = useNavigate();
   return /* @__PURE__ */ jsxs(Card, { ...props, children: [
-    /* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { children: "Esta mascota se encuentra perdida" }) }),
+    /* @__PURE__ */ jsx(CardHeader, { children: /* @__PURE__ */ jsx(CardTitle, { className: "text-3xl sm:text-4xl", children: "Esta mascota se encuentra perdida" }) }),
     /* @__PURE__ */ jsxs(CardContent, { children: [
       "Por favor repórtala como encontrada y ayuda a ",
       pet2.name,
@@ -1661,7 +1726,12 @@ const LostPetAlert = ({ pet: pet2, ...props }) => {
     ) })
   ] });
 };
-const FilledPetDataView = ({ pet: pet2, wasScannedFromTag, ...props }) => {
+const FilledPetDataView = ({
+  pet: pet2,
+  wasScannedFromTag,
+  isOwner,
+  ...props
+}) => {
   const tabs = [
     {
       id: "tab-1",
@@ -1701,11 +1771,9 @@ const FilledPetDataView = ({ pet: pet2, wasScannedFromTag, ...props }) => {
     }
   ];
   const petImageUrl = pet2.image ? supabase.storage.from("pets-portraits").getPublicUrl(pet2.image).data.publicUrl : null;
-  const user = useUser();
-  const isOwner = (user == null ? void 0 : user.id) === pet2.owner;
   return /* @__PURE__ */ jsx("section", { className: "py-12", children: /* @__PURE__ */ jsxs("div", { className: "container mx-auto", children: [
     /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-4 text-center", children: [
-      wasScannedFromTag && props.activeLostReport !== null && /* @__PURE__ */ jsx(LostPetAlert, { pet: pet2, className: "mb-5" }),
+      wasScannedFromTag && props.activeLostReport !== null && /* @__PURE__ */ jsx(LostPetAlert, { pet: pet2, className: "mb-5 mx-7" }),
       /* @__PURE__ */ jsxs("div", { className: "flex flow-row items-baseline justify-center mx-2", children: [
         isOwner && /* @__PURE__ */ jsx(Options, { pet: pet2, ...props, className: "mr-1" }),
         /* @__PURE__ */ jsx(
@@ -2198,13 +2266,6 @@ var AnimalSex = /* @__PURE__ */ ((AnimalSex2) => {
   AnimalSex2["Female"] = "female";
   return AnimalSex2;
 })(AnimalSex || {});
-const MAX_FILE_SIZE$1 = 5e6;
-const ACCEPTED_IMAGE_TYPES$1 = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp"
-];
 const formSchemaForRegister = z.object({
   name: z.string({ required_error: "El nombre de tu mascota es requerido." }).trim().min(2, "El nombre debe contener al menos 2 caracteres."),
   birthDate: z.date({
@@ -2218,31 +2279,24 @@ const formSchemaForRegister = z.object({
   }),
   breed: z.string().optional(),
   spayedOrNeutered: z.boolean(),
-  portrait: z.instanceof(FileList).refine(
+  portrait: (typeof window === "undefined" ? z.any() : z.instanceof(FileList)).refine(
     (files) => (files == null ? void 0 : files.length) === 1,
     "La imagen de tu mascota es requerida."
   ).refine(
     (files) => {
       var _a;
-      return ACCEPTED_IMAGE_TYPES$1.includes(((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.type) ?? "");
+      return ACCEPTED_IMAGE_TYPES.includes(((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.type) ?? "");
     },
     "Solo archivos en formato .jpg, .jpeg, .png y .webp son aceptados."
   ).refine(
     (files) => {
       var _a;
-      return (((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.size) ?? MAX_FILE_SIZE$1 + 1) <= MAX_FILE_SIZE$1;
+      return (((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.size) ?? MAX_FILE_SIZE + 1) <= MAX_FILE_SIZE;
     },
     "El tamaño máximo de la foto es 5MB."
   ),
   notes: z.string().optional()
 });
-const MAX_FILE_SIZE = 5e6;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp"
-];
 const formSchemaForUpdate = z.object({
   name: z.string({ required_error: "El nombre de tu mascota es requerido." }).trim().min(2, "El nombre debe contener al menos 2 caracteres."),
   birthDate: z.date({
@@ -2256,7 +2310,7 @@ const formSchemaForUpdate = z.object({
   }),
   breed: z.string().optional(),
   spayedOrNeutered: z.boolean(),
-  portrait: z.instanceof(FileList).optional().refine(
+  portrait: (typeof window === "undefined" ? z.any() : z.instanceof(FileList)).optional().refine(
     (files) => (files == null ? void 0 : files.length) === 0 || (files == null ? void 0 : files.length) === 1,
     "La imagen de tu mascota es requerida."
   ).refine(
@@ -2281,7 +2335,7 @@ const RegisterPetForm = ({
   previousValues,
   isUpdate = false
 }) => {
-  const formSchema = isUpdate ? formSchemaForUpdate : formSchemaForRegister;
+  const formSchema2 = isUpdate ? formSchemaForUpdate : formSchemaForRegister;
   const [isLoading, setIsLoading] = useState(false);
   const petImageUrl = (previousValues == null ? void 0 : previousValues.image) ? supabase.storage.from("pets-portraits").getPublicUrl(previousValues.image).data.publicUrl : void 0;
   const [imagePreview, setImagePreview] = useState(
@@ -2289,7 +2343,7 @@ const RegisterPetForm = ({
   );
   const user = useUser();
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema2),
     defaultValues: {
       name: (previousValues == null ? void 0 : previousValues.name) || "",
       birthDate: (previousValues == null ? void 0 : previousValues.birthDate) || void 0,
@@ -2312,17 +2366,10 @@ const RegisterPetForm = ({
       reader.readAsDataURL(file);
     }
   };
-  const uploadPortrait = async (files) => {
-    const file = files.item(0);
-    const buffer = await file.arrayBuffer();
-    const result = await supabase.storage.from("pets-portraits").upload(v4(), buffer, { contentType: file.type });
-    if (result.error !== null) return null;
-    return result.data.path;
-  };
   const handleSubmit = async (values) => {
     var _a;
     setIsLoading(true);
-    const uploadedImagePath = ((_a = values.portrait) == null ? void 0 : _a.length) ? await uploadPortrait(values.portrait) : previousValues == null ? void 0 : previousValues.image;
+    let uploadedImagePath = ((_a = values.portrait) == null ? void 0 : _a.length) ? await uploadPortrait(values.portrait, "pets-portraits") : previousValues == null ? void 0 : previousValues.image;
     if (uploadedImagePath === null) {
       toast.error(
         "Ocurrió un error al editar la información de tu mascota. Inténtalo de nuevo."
@@ -2589,7 +2636,7 @@ const RegisterPetIntroductionView = ({
 }) => {
   return /* @__PURE__ */ jsxs(Card, { className: cn("m-3", className), ...props, children: [
     /* @__PURE__ */ jsxs(CardHeader, { children: [
-      /* @__PURE__ */ jsx(CardTitle, { children: "Registra a tu mascota" }),
+      /* @__PURE__ */ jsx(CardTitle, { className: "text-3xl sm:text-4xl", children: "Registra a tu mascota" }),
       /* @__PURE__ */ jsx(CardDescription, { children: "Notamos que tu mascota aún no tiene un perfil creado. Llena la siguiente información para que cualquier persona que encuentre a tu mascota y escanee su collar pueda acceder a la información más esencial." })
     ] }),
     /* @__PURE__ */ jsx(CardContent, { className: "grid gap-4", children: /* @__PURE__ */ jsx(
@@ -2603,7 +2650,7 @@ const RegisterPetIntroductionView = ({
   ] });
 };
 const PetDetailsView = () => {
-  const { petId } = { petId: "hola" };
+  const { petId } = useParams();
   const [queryParameters] = useSearchParams();
   const [isLoadingPet, setIsLoadingPet] = useState(true);
   const [error, setError] = useState(null);
@@ -2611,6 +2658,8 @@ const PetDetailsView = () => {
   const [activeLostReport, setActiveLostReport] = useState(null);
   const encryptedPetId = queryParameters.get("pet");
   const wasScannedFromTag = encryptedPetId !== null && encryptedPetId === petId;
+  const user = useUser();
+  const isOwner = (user == null ? void 0 : user.id) === (pet2 == null ? void 0 : pet2.owner);
   const onRegisteredPet = (pet22) => {
     setPet(pet22);
     toast.success("Tu mascota ha sido registrada");
@@ -2622,6 +2671,10 @@ const PetDetailsView = () => {
   useEffect(() => {
     const loadPet = async () => {
       setIsLoadingPet(true);
+      if (!petId) {
+        setIsLoadingPet(false);
+        return;
+      }
       const { data, error: error2 } = await supabase.from("pet").select("*").eq("id", petId).single();
       if (error2 !== null) {
         setError("Mascota no encontrada");
@@ -2658,7 +2711,8 @@ const PetDetailsView = () => {
         pet: pet2,
         activeLostReport,
         onMarkPetAsFound,
-        wasScannedFromTag
+        wasScannedFromTag,
+        isOwner
       }
     ),
     !isLoadingPet && pet2 && !isPetDataAlreadyFilled(pet2) && /* @__PURE__ */ jsx(
@@ -2670,17 +2724,1099 @@ const PetDetailsView = () => {
     )
   ] });
 };
-const clientLoader = ({
-  params
-}) => {
-  console.log(params);
-};
 const PetRoute = () => /* @__PURE__ */ jsx(PetDetailsView, {});
 const pet = withComponentProps(PetRoute);
 const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  clientLoader,
   default: pet
+}, Symbol.toStringTag, { value: "Module" }));
+const EditPetDetailsView = ({
+  className,
+  ...props
+}) => {
+  const { petId } = useParams();
+  const navigate = useNavigate();
+  const [isLoadingPet, setIsLoadingPet] = useState(true);
+  const [pet2, setPet] = useState(null);
+  const onPetRegistered = () => {
+    toast.success("Tu mascota ha sido registrada");
+    navigate(appRoutes.myPets);
+  };
+  useEffect(() => {
+    const loadPet = async () => {
+      setIsLoadingPet(true);
+      if (!petId) {
+        setIsLoadingPet(false);
+        return;
+      }
+      const { data, error } = await supabase.from("pet").select("*").eq("id", petId).single();
+      if (error !== null) {
+        return;
+      }
+      setPet(data);
+      setIsLoadingPet(false);
+    };
+    loadPet();
+  }, [petId]);
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Navbar, {}),
+    isLoadingPet && /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center mt-10", children: [
+      /* @__PURE__ */ jsx(Loader, { className: "mb-3" }),
+      /* @__PURE__ */ jsx("p", { children: "Cargando..." })
+    ] }),
+    !isLoadingPet && /* @__PURE__ */ jsxs(Card, { className: cn("m-3", className), ...props, children: [
+      /* @__PURE__ */ jsxs(CardHeader, { children: [
+        /* @__PURE__ */ jsx(CardTitle, { className: "text-3xl sm:text-4xl", children: "Editar Información" }),
+        /* @__PURE__ */ jsx(CardDescription, { children: "Edita la información de tu mascota. Asegúrate de que todos los detalles sean correctos." })
+      ] }),
+      /* @__PURE__ */ jsx(CardContent, { className: "grid gap-4", children: /* @__PURE__ */ jsx(
+        RegisterPetForm,
+        {
+          petId,
+          onRegisterUpdated: onPetRegistered,
+          previousValues: {
+            name: (pet2 == null ? void 0 : pet2.name) || "",
+            birthDate: (pet2 == null ? void 0 : pet2.birth_date) ? new Date(pet2.birth_date) : void 0,
+            sex: pet2 == null ? void 0 : pet2.sex,
+            animalType: (pet2 == null ? void 0 : pet2.animal_type) ?? void 0,
+            breed: (pet2 == null ? void 0 : pet2.breed) ?? void 0,
+            spayedOrNeutered: (pet2 == null ? void 0 : pet2.spayed_or_neutered) ?? void 0,
+            image: (pet2 == null ? void 0 : pet2.image) ?? void 0,
+            notes: pet2 == null ? void 0 : pet2.notes
+          },
+          isUpdate: true
+        }
+      ) })
+    ] })
+  ] });
+};
+const Component$3 = () => /* @__PURE__ */ jsx(EditPetDetailsView, {});
+const edit_pet = withComponentProps(Component$3);
+const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: edit_pet
+}, Symbol.toStringTag, { value: "Module" }));
+const CarouselContext = React.createContext(null);
+function useCarousel() {
+  const context = React.useContext(CarouselContext);
+  if (!context) {
+    throw new Error("useCarousel must be used within a <Carousel />");
+  }
+  return context;
+}
+function Carousel({
+  orientation = "horizontal",
+  opts,
+  setApi,
+  plugins,
+  className,
+  children,
+  ...props
+}) {
+  const [carouselRef, api] = useEmblaCarousel(
+    {
+      ...opts,
+      axis: orientation === "horizontal" ? "x" : "y"
+    },
+    plugins
+  );
+  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
+  const [canScrollNext, setCanScrollNext] = React.useState(false);
+  const onSelect = React.useCallback((api2) => {
+    if (!api2) return;
+    setCanScrollPrev(api2.canScrollPrev());
+    setCanScrollNext(api2.canScrollNext());
+  }, []);
+  const scrollPrev = React.useCallback(() => {
+    api == null ? void 0 : api.scrollPrev();
+  }, [api]);
+  const scrollNext = React.useCallback(() => {
+    api == null ? void 0 : api.scrollNext();
+  }, [api]);
+  const handleKeyDown = React.useCallback(
+    (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        scrollPrev();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        scrollNext();
+      }
+    },
+    [scrollPrev, scrollNext]
+  );
+  React.useEffect(() => {
+    if (!api || !setApi) return;
+    setApi(api);
+  }, [api, setApi]);
+  React.useEffect(() => {
+    if (!api) return;
+    onSelect(api);
+    api.on("reInit", onSelect);
+    api.on("select", onSelect);
+    return () => {
+      api == null ? void 0 : api.off("select", onSelect);
+    };
+  }, [api, onSelect]);
+  return /* @__PURE__ */ jsx(
+    CarouselContext.Provider,
+    {
+      value: {
+        carouselRef,
+        api,
+        opts,
+        orientation: orientation || ((opts == null ? void 0 : opts.axis) === "y" ? "vertical" : "horizontal"),
+        scrollPrev,
+        scrollNext,
+        canScrollPrev,
+        canScrollNext
+      },
+      children: /* @__PURE__ */ jsx(
+        "div",
+        {
+          onKeyDownCapture: handleKeyDown,
+          className: cn("relative", className),
+          role: "region",
+          "aria-roledescription": "carousel",
+          "data-slot": "carousel",
+          ...props,
+          children
+        }
+      )
+    }
+  );
+}
+function CarouselContent({ className, ...props }) {
+  const { carouselRef, orientation } = useCarousel();
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      ref: carouselRef,
+      className: "overflow-hidden",
+      "data-slot": "carousel-content",
+      children: /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: cn(
+            "flex",
+            orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+            className
+          ),
+          ...props
+        }
+      )
+    }
+  );
+}
+function CarouselItem({ className, ...props }) {
+  const { orientation } = useCarousel();
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      role: "group",
+      "aria-roledescription": "slide",
+      "data-slot": "carousel-item",
+      className: cn(
+        "min-w-0 shrink-0 grow-0 basis-full",
+        orientation === "horizontal" ? "pl-4" : "pt-4",
+        className
+      ),
+      ...props
+    }
+  );
+}
+const CarouselItemCard = ({ userPet }) => {
+  const imageUrl = supabase.storage.from("pets-portraits").getPublicUrl(userPet.image).data.publicUrl;
+  return /* @__PURE__ */ jsx(CarouselItem, { className: "pl-4 md:max-w-[452px]", children: /* @__PURE__ */ jsx(ReportLostPetAlertDialog, { pet: userPet, children: /* @__PURE__ */ jsxs("div", { className: "group flex flex-col justify-between", children: [
+    /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx("div", { className: "flex aspect-[3/2] overflow-clip rounded-xl", children: /* @__PURE__ */ jsx("div", { className: "relative h-full w-full origin-bottom transition duration-300 group-hover:scale-105", children: userPet.image ? /* @__PURE__ */ jsx(
+      "img",
+      {
+        src: imageUrl,
+        alt: userPet.name,
+        loading: "lazy",
+        className: "h-full w-full object-cover object-center"
+      }
+    ) : /* @__PURE__ */ jsx(MdPets, { className: "h-full w-full p-10 text-muted-foreground" }) }) }) }),
+    /* @__PURE__ */ jsx("div", { className: "mb-2 line-clamp-3 pt-4 text-lg font-medium break-words md:mb-3 md:pt-4 md:text-xl lg:pt-4 lg:text-2xl", children: userPet.name }),
+    /* @__PURE__ */ jsxs("div", { className: "mb-8 line-clamp-2 text-sm text-muted-foreground md:mb-12 md:text-base lg:mb-9", children: [
+      userPet.breed ? `${formatAnimalType(userPet.animal_type)} - ${userPet.breed}` : formatAnimalType(userPet.animal_type),
+      /* @__PURE__ */ jsx("br", {}),
+      formatAnimalSex(userPet.sex)
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "flex items-center text-sm", children: [
+      "Reportar como perdida",
+      " ",
+      /* @__PURE__ */ jsx(ArrowRight$1, { className: "ml-2 size-5 transition-transform group-hover:translate-x-1" })
+    ] })
+  ] }) }) }, userPet.id);
+};
+const CarouselControls = ({
+  carouselApi,
+  canScrollPrev,
+  canScrollNext
+}) => /* @__PURE__ */ jsxs("div", { className: "mt-8 flex shrink-0 items-center justify-start gap-2", children: [
+  /* @__PURE__ */ jsx(
+    Button,
+    {
+      size: "icon",
+      variant: "outline",
+      onClick: () => {
+        carouselApi == null ? void 0 : carouselApi.scrollPrev();
+      },
+      disabled: !canScrollPrev,
+      className: "disabled:pointer-events-auto",
+      children: /* @__PURE__ */ jsx(ArrowLeft, { className: "size-5" })
+    }
+  ),
+  /* @__PURE__ */ jsx(
+    Button,
+    {
+      size: "icon",
+      variant: "outline",
+      onClick: () => {
+        carouselApi == null ? void 0 : carouselApi.scrollNext();
+      },
+      disabled: !canScrollNext,
+      className: "disabled:pointer-events-auto",
+      children: /* @__PURE__ */ jsx(ArrowRight$1, { className: "size-5" })
+    }
+  )
+] });
+function Skeleton({ className, ...props }) {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      "data-slot": "skeleton",
+      className: cn("bg-accent animate-pulse rounded-md", className),
+      ...props
+    }
+  );
+}
+const SkeletonLoader = () => /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4 py-15 mx-10 lg:mx-15", children: [
+  /* @__PURE__ */ jsx(Skeleton, { className: "w-[200px] h-[35px] mb-2" }),
+  /* @__PURE__ */ jsx(Skeleton, { className: "w-[300px] h-[25px]" }),
+  /* @__PURE__ */ jsxs("div", { className: "grid gap-4 mt-4", children: [
+    /* @__PURE__ */ jsx("div", { className: "sm:block md:hidden", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-2 w-15/16 h-[300px] bg-gray-300 rounded-md animate-pulse", children: [
+      /* @__PURE__ */ jsx(Skeleton, { className: "h-[210px] w-full bg-gray-200 rounded-md" }),
+      /* @__PURE__ */ jsx(Skeleton, { className: "h-4 w-3/4 rounded-md mx-auto mt-3" }),
+      /* @__PURE__ */ jsx(Skeleton, { className: "h-4 w-1/2 rounded-md mx-auto" })
+    ] }) }),
+    /* @__PURE__ */ jsx("div", { className: "hidden md:grid md:grid-cols-2 gap-4 lg:hidden", children: Array(2).fill(null).map((_, index2) => /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "flex flex-col gap-2 w-full h-[300px] bg-gray-300 rounded-md animate-pulse",
+        children: [
+          /* @__PURE__ */ jsx(Skeleton, { className: "h-[210px] w-full bg-gray-200 rounded-md" }),
+          /* @__PURE__ */ jsx(Skeleton, { className: "h-4 w-3/4 rounded-md mx-auto mt-3" }),
+          /* @__PURE__ */ jsx(Skeleton, { className: "h-4 w-1/2 rounded-md mx-auto" })
+        ]
+      },
+      index2
+    )) }),
+    /* @__PURE__ */ jsx("div", { className: "hidden lg:grid lg:grid-cols-3 gap-4", children: Array(3).fill(null).map((_, index2) => /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "flex flex-col gap-2 w-full h-[300px] bg-gray-300 rounded-md animate-pulse",
+        children: [
+          /* @__PURE__ */ jsx(Skeleton, { className: "h-[210px] w-full bg-gray-200 rounded-md" }),
+          /* @__PURE__ */ jsx(Skeleton, { className: "h-4 w-3/4 rounded-md mx-auto mt-3" }),
+          /* @__PURE__ */ jsx(Skeleton, { className: "h-4 w-1/2 rounded-md mx-auto" })
+        ]
+      },
+      index2
+    )) })
+  ] })
+] });
+const ReportLostPetPage = ({ heading = "Reportar Mascota" }) => {
+  const user = useUser();
+  const [petsWithNotActiveLostReports, setPetsWithNotActiveLostReports] = useState([]);
+  const [carouselApi, setCarouselApi] = useState();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const allUserPetsResult = await supabase.from("pet").select("*").eq("owner", user.id);
+      if (allUserPetsResult.error !== null) {
+        toast.error(
+          "Ocurrió un error al obtener tus mascotas. Inténtalo de nuevo."
+        );
+        setLoading(false);
+        return;
+      }
+      for (const pet2 of allUserPetsResult.data) {
+        const reportsResult = await supabase.from("lost_pet_report").select("*").eq("pet", pet2.id);
+        if (reportsResult.error !== null) {
+          toast.error(
+            "Ocurrió un error al obtener tus mascotas. Inténtalo de nuevo."
+          );
+          setLoading(false);
+          setPetsWithNotActiveLostReports([]);
+          break;
+        }
+        const reports = reportsResult.data;
+        if (reports.length === 0 || reports.every((report) => report.found_date !== null)) {
+          setPetsWithNotActiveLostReports((currentPets) => [
+            ...currentPets,
+            pet2
+          ]);
+        }
+      }
+      setLoading(false);
+    };
+    if (!user) return;
+    fetchData();
+  }, [user]);
+  useEffect(() => {
+    if (!carouselApi) return;
+    const updateSelection = () => {
+      setCanScrollPrev(carouselApi.canScrollPrev());
+      setCanScrollNext(carouselApi.canScrollNext());
+    };
+    updateSelection();
+    carouselApi.on("select", updateSelection);
+    return () => {
+      carouselApi.off("select", updateSelection);
+    };
+  }, [carouselApi]);
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Navbar, {}),
+    loading && /* @__PURE__ */ jsx(SkeletonLoader, {}),
+    !loading && petsWithNotActiveLostReports.length > 0 && /* @__PURE__ */ jsxs("section", { className: "py-12", children: [
+      /* @__PURE__ */ jsx("div", { className: "container mx-auto", children: /* @__PURE__ */ jsxs("div", { className: "mb-8 ml-7 lg:ml-15 flex flex-col justify-between md:mb-14 md:flex-row md:items-end lg:mb-16", children: [
+        /* @__PURE__ */ jsxs("div", { children: [
+          /* @__PURE__ */ jsx("h2", { className: "mb-3 text-3xl font-semibold md:mb-4 md:text-4xl", children: heading }),
+          /* @__PURE__ */ jsx("div", { className: "group flex items-center gap-1 text-sm font-medium md:text-base lg:text-lg", children: "Mascotas que puedes reportar como perdidas" })
+        ] }),
+        /* @__PURE__ */ jsx(
+          CarouselControls,
+          {
+            carouselApi,
+            canScrollPrev,
+            canScrollNext
+          }
+        )
+      ] }) }),
+      /* @__PURE__ */ jsx("div", { className: "w-full", children: /* @__PURE__ */ jsx(
+        Carousel,
+        {
+          setApi: setCarouselApi,
+          opts: {
+            breakpoints: {
+              "(max-width: 768px)": {
+                dragFree: true
+              }
+            }
+          },
+          className: "relative left-[-1rem]",
+          children: /* @__PURE__ */ jsx(CarouselContent, { className: "-mr-4 ml-8 2xl:mr-[max(0rem,calc(50vw-700px-1rem))] 2xl:ml-[max(8rem,calc(50vw-700px+1rem))]", children: petsWithNotActiveLostReports.map((userPet) => /* @__PURE__ */ jsx(CarouselItemCard, { userPet }, userPet.id)) })
+        }
+      ) })
+    ] }),
+    !loading && petsWithNotActiveLostReports.length === 0 && /* @__PURE__ */ jsx(
+      EmptyState,
+      {
+        heading: "No tienes mascotas mascotas para reportar",
+        description: "Adquiere tu tag NFC en nuestros puntos de venta y registra a tu mascota!",
+        url: appRoutes.myPets
+      }
+    )
+  ] });
+};
+const Component$2 = () => /* @__PURE__ */ jsx(ReportLostPetPage, {});
+const report_lost_pet = withComponentProps(Component$2);
+const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: report_lost_pet
+}, Symbol.toStringTag, { value: "Module" }));
+const formSchema = z.object({
+  lastSeenDate: z.date({
+    required_error: "Es importante que indiques la fecha en la que viste por última vez a tu mascota"
+  }),
+  lastSeenAddress: z.string({
+    required_error: "Es importante que indiques la dirección en la que viste por última vez a tu mascota"
+  }).trim().min(2),
+  contactNumber: z.string({
+    required_error: "El teléfono de contacto es requerido"
+  }).regex(/^\d{8}$/, "Ingresa un número de teléfono válido"),
+  notes: z.string().optional()
+});
+const ReportLostPetView = () => {
+  const navigate = useNavigate();
+  const { petId } = useParams();
+  const [isReporting, setIsReporting] = useState(false);
+  const [isLoadingPet, setIsLoadingPet] = useState(true);
+  const [pet2, setPet] = useState(null);
+  useEffect(() => {
+    const fetchPet = async () => {
+      setIsLoadingPet(true);
+      const result = await supabase.from("pet").select("*").eq("id", petId);
+      setIsLoadingPet(false);
+      if (result.error !== null) {
+        toast.error("Ocurrió un error. Inténtalo de nuevo.");
+        return;
+      }
+      if (result.data.length === 0) {
+        toast.error("La mascota que intentas reportar como perdida no existe.");
+        return;
+      }
+      setPet(result.data.at(0));
+    };
+    if (petId === null) return;
+    fetchPet();
+  }, [petId]);
+  const handleSubmit = async (values) => {
+    setIsReporting(true);
+    const result = await supabase.from("lost_pet_report").insert({
+      pet: pet2.id,
+      last_seen_address: values.lastSeenAddress,
+      last_seen_date: values.lastSeenDate.toISOString(),
+      contact_number: values.contactNumber,
+      notes: values.notes
+    });
+    setIsReporting(false);
+    if (result.error !== null) {
+      toast.error(
+        "Ocurrió un error al reportar tu mascota como perdida. Inténtalo de nuevo."
+      );
+      console.error(result.error);
+      return;
+    }
+    toast.info("Tu mascota ha sido reportada como perdida.");
+    navigate(`${appRoutes.petDetails}/${pet2.id}`, { replace: true });
+  };
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Navbar, {}),
+    isLoadingPet && /* @__PURE__ */ jsx(Loader, { className: "mx-auto mt-5" }),
+    !isLoadingPet && !pet2 && /* @__PURE__ */ jsx(EmptyState, { url: appRoutes.landing, buttonText: "Entendido" }),
+    !isLoadingPet && pet2 && /* @__PURE__ */ jsxs("div", { className: "p-5", children: [
+      /* @__PURE__ */ jsxs("h2", { className: "font-bold text-3xl mb-8", children: [
+        "Reportar a ",
+        pet2.name,
+        " como",
+        " ",
+        pet2.sex === "male" ? "perdido" : "perdida"
+      ] }),
+      /* @__PURE__ */ jsx(
+        ReportLostPetForm,
+        {
+          onReport: handleSubmit,
+          isReporting
+        }
+      )
+    ] })
+  ] });
+};
+const ReportLostPetForm = ({
+  onReport,
+  isReporting
+}) => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      lastSeenDate: void 0,
+      lastSeenAddress: void 0,
+      contactNumber: void 0
+    }
+  });
+  return /* @__PURE__ */ jsx(Form, { ...form, children: /* @__PURE__ */ jsxs("form", { onSubmit: form.handleSubmit(onReport), className: "space-y-6", children: [
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "lastSeenDate",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { className: "flex flex-col", children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Última fecha en la que fue vista tu mascota" }),
+          /* @__PURE__ */ jsxs(Popover, { children: [
+            /* @__PURE__ */ jsx(PopoverTrigger, { asChild: true, children: /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsxs(
+              Button,
+              {
+                variant: "outline",
+                className: cn(
+                  "pl-3 text-left font-normal",
+                  !field.value && "text-muted-foreground"
+                ),
+                children: [
+                  field.value ? format(field.value, "PPP", { locale: es }) : /* @__PURE__ */ jsx("span", { children: "Selecciona una fecha" }),
+                  /* @__PURE__ */ jsx(Calendar$1, { className: "ml-auto h-4 w-4" })
+                ]
+              }
+            ) }) }),
+            /* @__PURE__ */ jsx(PopoverContent, { className: "w-auto p-0", align: "start", children: /* @__PURE__ */ jsx(
+              Calendar,
+              {
+                mode: "single",
+                selected: field.value,
+                onSelect: field.onChange,
+                disabled: (date) => date > /* @__PURE__ */ new Date() || date < /* @__PURE__ */ new Date("1900-01-01"),
+                initialFocus: true
+              }
+            ) })
+          ] }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "lastSeenAddress",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Dirección donde fue vista tu mascota por última vez" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { ...field, placeholder: "Ej.: Zona 10, Ciudad Capital" }) }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "contactNumber",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Teléfono de contacto" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { ...field, placeholder: "Ej.: 12345678" }) }),
+          /* @__PURE__ */ jsx(FormDescription, { children: "Indica un número de teléfono en donde la persona que encuentre a tu mascota pueda contactarte. Este número solo será visible si la persona escanea el tag físico de tu mascota. Ingrésalo sin guiones ni espacios." }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "notes",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Notas" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Textarea, { ...field }) }),
+          /* @__PURE__ */ jsx(FormDescription, { children: "Puedes mencionar datos como cuidados especiales, medicamentos que está tomando actualmente u otra información para que la persona que encuentre a tu mascota la tome en cuenta." }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", disabled: isReporting, children: isReporting ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsx("span", { children: "Reportar" }) })
+  ] }) });
+};
+const Component$1 = () => /* @__PURE__ */ jsx(ReportLostPetView, {});
+const report_lost_pet_form = withComponentProps(Component$1);
+const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: report_lost_pet_form
+}, Symbol.toStringTag, { value: "Module" }));
+const baseUrl = "https://www.reactemailtemplate.com/";
+const PetFoundNotification = ({
+  petName,
+  petSex,
+  finderName,
+  finderLastName,
+  city,
+  location,
+  contactNumber,
+  notes,
+  link
+}) => {
+  const heading = petSex === "male" ? `¡${petName} ha sido reportado como encontrado!` : `¡${petName} ha sido reportada como encontrada!`;
+  const found = petSex === "male" ? "encontrado" : "encontrada";
+  return /* @__PURE__ */ jsxs(Html, { children: [
+    /* @__PURE__ */ jsx(Head, { children: /* @__PURE__ */ jsx(
+      Font,
+      {
+        fontFamily: "Inter",
+        fallbackFontFamily: "Helvetica",
+        webFont: {
+          url: "https://fonts.googleapis.com/css2?family=Inter&display=swap",
+          format: "woff2"
+        },
+        fontWeight: 400,
+        fontStyle: "normal"
+      }
+    ) }),
+    /* @__PURE__ */ jsx(Preview, { children: heading }),
+    /* @__PURE__ */ jsx(Tailwind, { children: /* @__PURE__ */ jsx(Body, { className: "mx-auto my-auto bg-white font-sans antialiased", children: /* @__PURE__ */ jsxs(Container, { className: "mx-auto my-[40px] rounded border border-solid border-gray-200 bg-white px-8", children: [
+      /* @__PURE__ */ jsx(Section, { className: "py-10", children: /* @__PURE__ */ jsxs(Row, { children: [
+        /* @__PURE__ */ jsx(Column, { className: "w-[80%]", children: /* @__PURE__ */ jsx(Link$1, { href: "https://pet-tracker-eosin.vercel.app/", children: /* @__PURE__ */ jsx(
+          Img,
+          {
+            src: "https://pet-tracker-eosin.vercel.app/PetTrackerLogo.png",
+            width: "62",
+            height: "60",
+            alt: "PetTracker Logo"
+          }
+        ) }) }),
+        /* @__PURE__ */ jsx(Column, { align: "right", children: /* @__PURE__ */ jsxs(Row, { align: "right", children: [
+          /* @__PURE__ */ jsx(Column, { children: /* @__PURE__ */ jsx(Link$1, { href: "#", children: /* @__PURE__ */ jsx(
+            Img,
+            {
+              src: `${baseUrl}/facebook-logo.png`,
+              width: "36",
+              height: "36",
+              className: "mx-1"
+            }
+          ) }) }),
+          /* @__PURE__ */ jsx(Column, { children: /* @__PURE__ */ jsx(Link$1, { href: "#", children: /* @__PURE__ */ jsx(
+            Img,
+            {
+              src: `${baseUrl}/twitter-logo.png`,
+              width: "36",
+              height: "36",
+              className: "mx-1"
+            }
+          ) }) }),
+          /* @__PURE__ */ jsx(Column, { children: /* @__PURE__ */ jsx(Link$1, { href: "#", children: /* @__PURE__ */ jsx(
+            Img,
+            {
+              src: `${baseUrl}/instagram-logo.png`,
+              width: "36",
+              height: "36",
+              className: "ml-1"
+            }
+          ) }) })
+        ] }) })
+      ] }) }),
+      /* @__PURE__ */ jsx(Section, { className: "rounded-xl bg-blue-500", children: /* @__PURE__ */ jsxs("div", { className: "mx-auto my-auto p-10", children: [
+        /* @__PURE__ */ jsx(Text, { className: "m-0 text-white" }),
+        /* @__PURE__ */ jsx(Heading, { className: "m-0 mt-1 leading-[35px] font-bold text-white", as: "h1", children: heading }),
+        /* @__PURE__ */ jsxs(Text, { className: "mb-1 text-[16px] italic leading-[20px] mt-3 text-white", children: [
+          "Reporta a ",
+          petName,
+          " como ",
+          found,
+          " para que se elimine de mascotas perdidas. ",
+          /* @__PURE__ */ jsx("br", {})
+        ] }),
+        /* @__PURE__ */ jsxs(
+          Button$1,
+          {
+            className: "mt-4 rounded-lg bg-white px-10 py-3 font-semibold text-indigo-600 text-center",
+            href: link,
+            rel: "noopener noreferrer",
+            children: [
+              "Reportar como ",
+              found
+            ]
+          }
+        )
+      ] }) }),
+      /* @__PURE__ */ jsx(Hr, { className: "mx-0 my-10 w-full border border-solid border-gray-200" }),
+      /* @__PURE__ */ jsxs(Section, { children: [
+        /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
+          /* @__PURE__ */ jsxs(Text, { className: "m-0 text-xl font-semibold text-gray-900 leading-[24px]", children: [
+            petName,
+            " ha sido ",
+            found,
+            " por:"
+          ] }),
+          /* @__PURE__ */ jsxs(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: [
+            finderName,
+            " ",
+            finderLastName
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
+          /* @__PURE__ */ jsx(Text, { className: "m-0 text-xl font-semibold text-gray-900", children: "Número de contacto:" }),
+          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: formatContactNumber(contactNumber) })
+        ] }),
+        /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
+          /* @__PURE__ */ jsxs(Text, { className: "m-0 text-xl font-semibold text-gray-900", children: [
+            "Lugar donde fue ",
+            found,
+            ":"
+          ] }),
+          /* @__PURE__ */ jsxs(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: [
+            location,
+            ", ",
+            city,
+            " "
+          ] }),
+          /* @__PURE__ */ jsx(
+            Link$1,
+            {
+              href: `https://www.google.com/maps?q=${encodeURIComponent(
+                location
+              )},${encodeURIComponent(city)}`,
+              rel: "noopener noreferrer",
+              className: "text-indigo-600 underline",
+              children: "Ver en Google Maps"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxs(Row, { className: "mt-8", children: [
+          /* @__PURE__ */ jsx(Text, { className: "m-0 text-xl font-semibold text-gray-900", children: "Notas" }),
+          /* @__PURE__ */ jsx(Text, { className: "mt-2 text-[16.5px] text-gray-500", children: notes ?? `${finderName} no añadió notas adicionales` })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx(Hr, { className: "mx-0 mb-8 w-full border border-solid border-gray-200" }),
+      /* @__PURE__ */ jsx(Section, { className: "pb-10", children: /* @__PURE__ */ jsxs(Row, { children: [
+        /* @__PURE__ */ jsxs(Column, { className: "w-[45%]", children: [
+          /* @__PURE__ */ jsx(
+            Img,
+            {
+              src: "https://pet-tracker-eosin.vercel.app/PetTrackerLogo.png",
+              width: "60",
+              height: "60",
+              alt: "PetTracker Logo"
+            }
+          ),
+          /* @__PURE__ */ jsx(Text, { className: "my-2 text-[18px] font-semibold text-gray-900", children: "Pet Tracker" }),
+          /* @__PURE__ */ jsxs(Text, { className: "mt-1 italic text-[16px] leading-[20px] text-gray-500", children: [
+            "Encuentra. Conecta. ",
+            /* @__PURE__ */ jsx("br", {}),
+            "Protege."
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxs(Column, { align: "left", className: "table-cell align-bottom", children: [
+          /* @__PURE__ */ jsxs(Row, { className: "table-cell h-[42px] w-[56px] align-bottom", children: [
+            /* @__PURE__ */ jsx(Column, { children: /* @__PURE__ */ jsx(Link$1, { href: "#", children: /* @__PURE__ */ jsx(
+              Img,
+              {
+                src: `${baseUrl}/facebook-logo.png`,
+                className: "-ml-1 mr-1",
+                width: "36",
+                height: "36"
+              }
+            ) }) }),
+            /* @__PURE__ */ jsx(Column, { children: /* @__PURE__ */ jsx(Link$1, { href: "#", children: /* @__PURE__ */ jsx(
+              Img,
+              {
+                src: `${baseUrl}/twitter-logo.png`,
+                className: "mx-1",
+                width: "36",
+                height: "36"
+              }
+            ) }) }),
+            /* @__PURE__ */ jsx(Column, { children: /* @__PURE__ */ jsx(Link$1, { href: "#", children: /* @__PURE__ */ jsx(
+              Img,
+              {
+                src: `${baseUrl}/instagram-logo.png`,
+                className: "mx-1",
+                width: "36",
+                height: "36"
+              }
+            ) }) })
+          ] }),
+          /* @__PURE__ */ jsxs(Row, { children: [
+            /* @__PURE__ */ jsx(Text, { className: "my-2 text-[16px] text-gray-500", children: "Universidad Galileo" }),
+            /* @__PURE__ */ jsx(Text, { className: "mt-1 text-[16px] text-gray-500", children: "Ciudad de Guatemala, Guatemala" })
+          ] })
+        ] })
+      ] }) })
+    ] }) }) })
+  ] });
+};
+PetFoundNotification.PreviewProps = {
+  petName: "Chocobanano",
+  finderName: "Samuel Marroquin",
+  city: "Ciudad de Guatemala",
+  location: "Calle 1-23, Zona 1",
+  contactNumber: "1234-5678",
+  ownerName: "Andres Tobar",
+  finderImage: "https://static.vecteezy.com/system/resources/previews/003/428/270/non_2x/businessman-explain-pose-character-design-free-vector.jpg",
+  petImage: "https://cdn.sanity.io/images/5vm5yn1d/pro/5cb1f9400891d9da5a4926d7814bd1b89127ecba-1300x867.jpg?fm=webp&q=80"
+};
+const resend = new Resend("re_THFJVak7_Mjmiarjs4BH1i8YvSd5PFpx8");
+const SendPetFoundNotification = async ({
+  petName,
+  petSex,
+  finderName,
+  finderLastName,
+  city,
+  location,
+  contactNumber,
+  notes,
+  link,
+  ownerEmail
+}) => {
+  const subject = `¡Tu mascota ${petName} ha sido encontrada!`;
+  const { data, error } = await resend.emails.send({
+    from: "Acme <onboarding@resend.dev>",
+    to: ownerEmail,
+    subject,
+    react: PetFoundNotification({
+      petName,
+      petSex,
+      finderName,
+      finderLastName,
+      city,
+      location,
+      contactNumber,
+      notes,
+      link
+    })
+  });
+  if (error) {
+    toast.error("Hubo un error al notificar al dueño. Inténtalo de nuevo.");
+    return console.error({ error });
+  }
+  console.log({ data });
+};
+const reportFoundPetSchema = z.object({
+  city: z.enum(departmentsGuatemala, {
+    required_error: "La ciudad es requerida"
+  }),
+  location: z.string({ required_error: "La ubicación es requerida" }).trim().min(5, "La ubicación debe contener al menos 5 caracteres."),
+  contactPhone: z.string({
+    required_error: "El teléfono de contacto es requerido",
+    invalid_type_error: "Ingresa únicamente números"
+  }).regex(/^\d{8}$/, "Ingresa un número de teléfono válido"),
+  notes: z.string().optional()
+});
+function CitiesGuatemalaDropdown({
+  departments,
+  value,
+  onChange
+}) {
+  var _a;
+  const [open, setOpen] = React.useState(false);
+  return /* @__PURE__ */ jsxs(Popover, { open, onOpenChange: setOpen, children: [
+    /* @__PURE__ */ jsx(PopoverTrigger, { asChild: true, children: /* @__PURE__ */ jsxs(
+      Button,
+      {
+        variant: "outline",
+        role: "combobox",
+        "aria-expanded": open,
+        className: "w-full sm:w-1/2 lg:w-1/5 justify-between",
+        children: [
+          value ? (_a = departments.find((city) => city.value === value)) == null ? void 0 : _a.label : "Seleccionar...",
+          /* @__PURE__ */ jsx(ChevronsUpDown, { className: "opacity-50" })
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsx(PopoverContent, { className: "w-[200px] p-0", children: /* @__PURE__ */ jsxs(Command, { children: [
+      /* @__PURE__ */ jsx(CommandInput, { placeholder: "Search city...", className: "h-9" }),
+      /* @__PURE__ */ jsxs(CommandList, { children: [
+        /* @__PURE__ */ jsx(CommandEmpty, { children: "Sin resultados." }),
+        /* @__PURE__ */ jsx(CommandGroup, { children: departments.map((city) => /* @__PURE__ */ jsxs(
+          CommandItem,
+          {
+            value: city.value,
+            onSelect: (currentValue) => {
+              onChange(currentValue);
+              setOpen(false);
+            },
+            children: [
+              city.label,
+              /* @__PURE__ */ jsx(
+                Check,
+                {
+                  className: cn(
+                    "ml-auto",
+                    value === city.value ? "opacity-100" : "opacity-0"
+                  )
+                }
+              )
+            ]
+          },
+          city.value
+        )) })
+      ] })
+    ] }) })
+  ] });
+}
+const ReportFoundPetForm = ({
+  petName,
+  submitButtonText = "Reportar",
+  onReport,
+  isLoading
+}) => {
+  const form = useForm({
+    resolver: zodResolver(reportFoundPetSchema),
+    defaultValues: {
+      city: void 0,
+      location: void 0,
+      contactPhone: void 0,
+      notes: void 0
+    }
+  });
+  return /* @__PURE__ */ jsx(Form, { ...form, children: /* @__PURE__ */ jsxs("form", { onSubmit: form.handleSubmit(onReport), className: "space-y-6", children: [
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "city",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Departamento" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(
+            CitiesGuatemalaDropdown,
+            {
+              departments: departmentsGuatemalaForDropdown,
+              value: field.value,
+              onChange: field.onChange
+            }
+          ) }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "location",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Ubicación" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { ...field }) }),
+          /* @__PURE__ */ jsxs(FormDescription, { children: [
+            `Indica la dirección donde encontraste a ${petName}.`,
+            " Ej: Calle 1-23, Zona 1"
+          ] }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "contactPhone",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Teléfono de contacto" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { type: "tel", ...field }) }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "notes",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Notas adicionales" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(
+            "textarea",
+            {
+              ...field,
+              rows: 3,
+              className: "w-full rounded-md border border-gray-200 p-2"
+            }
+          ) }),
+          /* @__PURE__ */ jsx(FormDescription, { children: `Si tienes alguna información adicional sobre ${petName}, puedes incluirla aquí.` }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", children: isLoading ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(CircleAlert, {}),
+      " ",
+      submitButtonText
+    ] }) })
+  ] }) });
+};
+const ReportFoundPetView = () => {
+  const navigate = useNavigate();
+  const { petId } = useParams();
+  const user = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPet, setIsLoadingPet] = useState(true);
+  const [pet2, setPet] = useState(null);
+  useEffect(() => {
+    const fetchPet = async () => {
+      setIsLoadingPet(true);
+      const result = await supabase.from("pet").select("*").eq("id", petId);
+      setIsLoadingPet(false);
+      if (result.error !== null) {
+        toast.error("Ocurrió un error. Inténtalo de nuevo.");
+        return;
+      }
+      if (result.data.length === 0) {
+        toast.error(
+          "La mascota que intentas reportar como encontrada no existe."
+        );
+        return;
+      }
+      setPet(result.data.at(0));
+    };
+    if (petId === null) return;
+    fetchPet();
+  }, [petId]);
+  const handleSubmit = async (values) => {
+    setIsLoading(true);
+    const { error } = await supabase.from("found_pet_report").insert({
+      pet: pet2.id,
+      found_by: user.id,
+      location: values.location,
+      contact_number: values.contactPhone,
+      notes: values.notes,
+      city: values.city.trim()
+    });
+    const ownerEmail = await supabase.from("profiles").select("email").eq("id", pet2.owner).single();
+    const existingProfile = await supabase.from("profiles").select("first_name, last_name").eq("id", user.id).single();
+    if (existingProfile.error) {
+      console.error("Error fetching profile:", existingProfile.error.message);
+      toast.error(
+        "Ocurrió un error al obtener tu información de perfil. Inténtalo de nuevo."
+      );
+      setIsLoading(false);
+      return;
+    }
+    if (ownerEmail.error) {
+      console.error("Error fetching owner email:", ownerEmail.error.message);
+      toast.error(
+        "Ocurrió un error al obtener la información del propietario de la mascota. Inténtalo de nuevo."
+      );
+      setIsLoading(false);
+      return;
+    }
+    const ownerEmailAddress = ownerEmail.data.email;
+    const first_name = existingProfile.data.first_name;
+    const last_name = existingProfile.data.last_name;
+    setIsLoading(false);
+    if (error) {
+      toast.error(
+        "Ocurrió un error al reportar tu mascota como perdida. Inténtalo de nuevo."
+      );
+      console.error(error);
+      return;
+    }
+    await SendPetFoundNotification({
+      petName: pet2.name,
+      petSex: pet2.sex,
+      finderName: first_name,
+      finderLastName: last_name ? last_name : " ",
+      city: values.city,
+      location: values.location,
+      contactNumber: values.contactPhone,
+      notes: values.notes,
+      link: `${appRoutes.petDetails}/${pet2.id}`,
+      ownerEmail: ownerEmailAddress
+    });
+    toast.success(`Gracias por reportar a ${pet2.name} como encontrada.`);
+    navigate(`${appRoutes.petDetails}/${pet2.id}`, { replace: true });
+  };
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Navbar, {}),
+    isLoadingPet && /* @__PURE__ */ jsx(Loader$1, { className: "mx-auto mt-5" }),
+    !isLoadingPet && !pet2 && /* @__PURE__ */ jsx(EmptyState, { url: appRoutes.landing }),
+    !isLoadingPet && pet2 && /* @__PURE__ */ jsxs("div", { className: "p-5 mt-5 w-6/7 sm:w-3/4 md:w-2/3 mx-auto", children: [
+      /* @__PURE__ */ jsxs("div", { className: "flex items-center mb-5", children: [
+        /* @__PURE__ */ jsx(SearchCheck, { className: "mr-3 h-10 w-10 hidden sm:block" }),
+        /* @__PURE__ */ jsxs("h2", { className: "font-bold text-3xl mb-1", children: [
+          "Reportar a ",
+          pet2.name,
+          " como",
+          " ",
+          pet2.sex === "male" ? "encontrado" : "encontrada"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsx(Separator, { className: "mb-8" }),
+      /* @__PURE__ */ jsx(
+        ReportFoundPetForm,
+        {
+          petName: pet2.name,
+          onReport: handleSubmit,
+          isLoading
+        }
+      )
+    ] })
+  ] });
+};
+const Component = () => /* @__PURE__ */ jsx(ReportFoundPetView, {});
+const report_found_pet = withComponentProps(Component);
+const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: report_found_pet
 }, Symbol.toStringTag, { value: "Module" }));
 const LostPetsList = ({ heading, lostPets }) => {
   const navigate = useNavigate();
@@ -2759,16 +3895,6 @@ const NoLostPets = () => {
     )
   ] });
 };
-function Skeleton({ className, ...props }) {
-  return /* @__PURE__ */ jsx(
-    "div",
-    {
-      "data-slot": "skeleton",
-      className: cn("bg-accent animate-pulse rounded-md", className),
-      ...props
-    }
-  );
-}
 const SkeletonExploreLostPets = () => {
   return /* @__PURE__ */ jsxs("div", { className: "flex flex-col", children: [
     /* @__PURE__ */ jsx(Separator, {}),
@@ -2885,17 +4011,17 @@ const ExploreLostPets = ({ heading = "Mascotas Perdidas" }) => {
     !loading && lostPets.length > 0 && /* @__PURE__ */ jsx(LostPetsList, { heading, lostPets })
   ] });
 };
-const meta = {
+const meta = () => [{
   title: "Mascotas perdidas"
-};
+}];
 const LostPetsRoute = () => /* @__PURE__ */ jsx(ExploreLostPets, {});
 const lost_pets = withComponentProps(LostPetsRoute);
-const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: lost_pets,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-Cpbedrct.js", "imports": ["/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/index-DtIwZQYK.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-D0ogFwvb.js", "imports": ["/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/index-DtIwZQYK.js", "/assets/with-props-CT5oTX1a.js"], "css": ["/assets/root-vbWjqP07.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/landing": { "id": "routes/landing", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/landing-DGklHtxV.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/index-BBWdFQt1.js", "/assets/supabase-BKc26Het.js", "/assets/navbar-Bv3E8Diz.js", "/assets/index-DtIwZQYK.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/auth_layout": { "id": "routes/auth_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/auth_layout-PANBeaOE.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/Loader-DAZ1LpND.js", "/assets/supabase-BKc26Het.js", "/assets/loader-circle-BEFSAAKo.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/login": { "id": "routes/login", "parentId": "routes/auth_layout", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/login-D2j0y7IG.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/index-BBWdFQt1.js", "/assets/input-C_28nzyi.js", "/assets/supabase-BKc26Het.js", "/assets/iconBase-ENrf6fsT.js", "/assets/loader-circle-BEFSAAKo.js", "/assets/index-DtIwZQYK.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/protected_layout": { "id": "routes/protected_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/protected_layout-CzhTHC-K.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/Loader-DAZ1LpND.js", "/assets/supabase-BKc26Het.js", "/assets/loader-circle-BEFSAAKo.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/dashboard": { "id": "routes/dashboard", "parentId": "routes/protected_layout", "path": "/dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/dashboard-BXFhbdAI.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/navbar-Bv3E8Diz.js", "/assets/index-BBWdFQt1.js", "/assets/index-DtIwZQYK.js", "/assets/supabase-BKc26Het.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/my_pets": { "id": "routes/my_pets", "parentId": "routes/protected_layout", "path": "/my-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/my_pets-D6YahtQ7.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/Loader-DAZ1LpND.js", "/assets/navbar-Bv3E8Diz.js", "/assets/index-BBWdFQt1.js", "/assets/animalTypes-BUt9dPzb.js", "/assets/index-DReurGeo.js", "/assets/supabase-BKc26Het.js", "/assets/index-CEmh4eZt.js", "/assets/loader-circle-BEFSAAKo.js", "/assets/index-DtIwZQYK.js", "/assets/iconBase-ENrf6fsT.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/pet": { "id": "routes/pet", "parentId": "routes/protected_layout", "path": "/pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/pet-D52FFOh5.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/Loader-DAZ1LpND.js", "/assets/navbar-Bv3E8Diz.js", "/assets/supabase-BKc26Het.js", "/assets/index-CEmh4eZt.js", "/assets/index-BBWdFQt1.js", "/assets/circle-alert-Bzd_eruk.js", "/assets/index-DtIwZQYK.js", "/assets/input-C_28nzyi.js", "/assets/animalTypes-BUt9dPzb.js", "/assets/loader-circle-BEFSAAKo.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/lost_pets": { "id": "routes/lost_pets", "parentId": "root", "path": "/lost-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/lost_pets-D-0yhsM2.js", "imports": ["/assets/with-props-CT5oTX1a.js", "/assets/chunk-LSOULM7L-D3xIczIm.js", "/assets/navbar-Bv3E8Diz.js", "/assets/index-BBWdFQt1.js", "/assets/animalTypes-BUt9dPzb.js", "/assets/supabase-BKc26Het.js", "/assets/index-DReurGeo.js", "/assets/circle-alert-Bzd_eruk.js", "/assets/index-DtIwZQYK.js", "/assets/iconBase-ENrf6fsT.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-ee394b2a.js", "version": "ee394b2a", "sri": void 0 };
+const serverManifest = { "entry": { "module": "/assets/entry.client-BHNHhhw4.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BP7SQNJh.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js", "/assets/with-props-C_P4RWeF.js", "/assets/index-DlVqQRiW.js"], "css": ["/assets/root-B12xiaMz.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/landing": { "id": "routes/landing", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/landing-BYyWL7aP.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-KK9O1wv8.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-BPjMvHEu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/auth_layout": { "id": "routes/auth_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/auth_layout-BM3QEvwN.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/loader-circle-Dtw2UbxQ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/login": { "id": "routes/login", "parentId": "routes/auth_layout", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/login-BTT-SIQg.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-KK9O1wv8.js", "/assets/checkbox-wubUU82e.js", "/assets/input-BMp6xtz3.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/check-DtsZv3Tn.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/protected_layout": { "id": "routes/protected_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/protected_layout-DB9iQSrQ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/loader-circle-Dtw2UbxQ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/dashboard": { "id": "routes/dashboard", "parentId": "routes/protected_layout", "path": "/dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/dashboard-DXQ6uhdQ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/index-BPjMvHEu.js", "/assets/createLucideIcon-CLtTwt0x.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/my_pets": { "id": "routes/my_pets", "parentId": "routes/protected_layout", "path": "/my-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/my_pets-VLtJDjlw.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/separator-DM-ecwEm.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/pet": { "id": "routes/pet", "parentId": "routes/protected_layout", "path": "/pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/pet-BYQDwjDM.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/index-KK9O1wv8.js", "/assets/circle-alert-D1336QaI.js", "/assets/index-BaeFmNgZ.js", "/assets/RegisterPetForm-Dx_WHBln.js", "/assets/index-K-pNMs4F.js", "/assets/separator-DM-ecwEm.js", "/assets/ReportLostPetAlertDialog-_JiY1WFX.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/textarea-BLlpFkxC.js", "/assets/checkbox-wubUU82e.js", "/assets/input-BMp6xtz3.js", "/assets/check-DtsZv3Tn.js", "/assets/command-m-qbOHV3.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_pet": { "id": "routes/edit_pet", "parentId": "routes/protected_layout", "path": "/edit-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_pet-CtsZmvcV.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/RegisterPetForm-Dx_WHBln.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-KK9O1wv8.js", "/assets/index-BPjMvHEu.js", "/assets/textarea-BLlpFkxC.js", "/assets/checkbox-wubUU82e.js", "/assets/input-BMp6xtz3.js", "/assets/check-DtsZv3Tn.js", "/assets/command-m-qbOHV3.js", "/assets/index-BaeFmNgZ.js", "/assets/index-K-pNMs4F.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet": { "id": "routes/report_lost_pet", "parentId": "routes/protected_layout", "path": "/report-lost-pet", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet-C6sXWnRy.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/index-2UufBPTQ.js", "/assets/ReportLostPetAlertDialog-_JiY1WFX.js", "/assets/skeleton-BwW214vb.js", "/assets/index-KK9O1wv8.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BaeFmNgZ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet_form": { "id": "routes/report_lost_pet_form", "parentId": "routes/protected_layout", "path": "/report-lost-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet_form-DbQ6cYpy.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/textarea-BLlpFkxC.js", "/assets/index-K-pNMs4F.js", "/assets/input-BMp6xtz3.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/index-BaeFmNgZ.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_found_pet": { "id": "routes/report_found_pet", "parentId": "routes/protected_layout", "path": "/report-found-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_found_pet-DwPLhySE.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/separator-DM-ecwEm.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/index-K-pNMs4F.js", "/assets/Loader-Co2d-Jsj.js", "/assets/index-KK9O1wv8.js", "/assets/input-BMp6xtz3.js", "/assets/command-m-qbOHV3.js", "/assets/check-DtsZv3Tn.js", "/assets/circle-alert-D1336QaI.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BaeFmNgZ.js", "/assets/loader-circle-Dtw2UbxQ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/lost_pets": { "id": "routes/lost_pets", "parentId": "root", "path": "/lost-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/lost_pets-ChV4h3Mm.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/separator-DM-ecwEm.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-2UufBPTQ.js", "/assets/circle-alert-D1336QaI.js", "/assets/skeleton-BwW214vb.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-a8f6418a.js", "version": "a8f6418a", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_middleware": false, "unstable_optimizeDeps": false, "unstable_splitRouteModules": false, "unstable_subResourceIntegrity": false, "unstable_viteEnvironmentApi": false };
@@ -2969,13 +4095,45 @@ const routes = {
     caseSensitive: void 0,
     module: route7
   },
+  "routes/edit_pet": {
+    id: "routes/edit_pet",
+    parentId: "routes/protected_layout",
+    path: "/edit-pet/:petId",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route8
+  },
+  "routes/report_lost_pet": {
+    id: "routes/report_lost_pet",
+    parentId: "routes/protected_layout",
+    path: "/report-lost-pet",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route9
+  },
+  "routes/report_lost_pet_form": {
+    id: "routes/report_lost_pet_form",
+    parentId: "routes/protected_layout",
+    path: "/report-lost-pet/:petId",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route10
+  },
+  "routes/report_found_pet": {
+    id: "routes/report_found_pet",
+    parentId: "routes/protected_layout",
+    path: "/report-found-pet/:petId",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route11
+  },
   "routes/lost_pets": {
     id: "routes/lost_pets",
     parentId: "root",
     path: "/lost-pets",
     index: void 0,
     caseSensitive: void 0,
-    module: route8
+    module: route12
   }
 };
 export {

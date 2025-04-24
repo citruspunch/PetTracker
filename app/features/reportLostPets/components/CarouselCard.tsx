@@ -1,6 +1,6 @@
 import { CarouselItem } from '@/components/ui/carousel'
 import { formatAnimalType } from '@/lib/animalTypes'
-import supabase from '@/lib/supabase/supabase'
+import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { formatAnimalSex } from '@/lib/utils'
 import { ArrowRight } from 'lucide-react'
