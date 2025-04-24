@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { v4 as uuid } from 'uuid'
 import supabase from './supabase'
-import type { Tables } from './supabase-types'
+import type { Tables } from './supabase/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

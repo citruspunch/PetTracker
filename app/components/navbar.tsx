@@ -22,9 +22,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import supabase from '@/lib/supabase'
+import supabase from '@/lib/supabase/supabase'
 import { appRoutes } from '@/routes'
-import { useUser } from '@/routes/authored_layout'
+import { useUser } from '@/routes/authorized_layout'
 import { Link, useNavigate } from 'react-router'
 
 interface MenuItem {

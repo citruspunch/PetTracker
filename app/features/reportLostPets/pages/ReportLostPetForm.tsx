@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
-import supabase from '@/lib/supabase'
-import { Tables } from '@/lib/supabase-types'
+import supabase from '@/lib/supabase/supabase'
+import { Tables } from '@/lib/supabase/supabase-types'
 import { cn } from '@/lib/utils'
 import { routes } from '@/routes'
 import { zodResolver } from '@hookform/resolvers/zod'

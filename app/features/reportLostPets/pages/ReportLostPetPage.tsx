@@ -9,14 +9,14 @@ import {
   CarouselContent,
 } from '@/components/ui/carousel'
 import useUser from '@/hooks/useUser'
-import supabase from '@/lib/supabase'
-import { Tables } from '@/lib/supabase-types'
+import supabase from '@/lib/supabase/supabase'
+import { Tables } from '@/lib/supabase/supabase-types'
+import { routes } from '@/routes'
 import { toast } from 'sonner'
 import CarouselCard from '../components/CarouselCard'
 import CarouselControls from '../components/CarouselControls'
 import EmptyState from '../components/EmptyState'
 import SkeletonLoader from '../components/SkeletonLoaderLostPets'
-import { routes } from '@/routes'
 
 const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
   const user = useUser()
@@ -29,7 +29,6 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-
       setLoading(true)
 
       const allUserPetsResult = await supabase
@@ -134,7 +133,13 @@ const ReportLostPetPage = ({ heading = 'Reportar Mascota' }) => {
           </div>
         </section>
       )}
-      {!loading && petsWithNotActiveLostReports.length === 0 && <EmptyState heading="No tienes mascotas mascotas para reportar" description="Adquiere tu tag NFC en nuestros puntos de venta y registra a tu mascota!" url={routes.myPets} />}
+      {!loading && petsWithNotActiveLostReports.length === 0 && (
+        <EmptyState
+          heading="No tienes mascotas mascotas para reportar"
+          description="Adquiere tu tag NFC en nuestros puntos de venta y registra a tu mascota!"
+          url={routes.myPets}
+        />
+      )}
     </>
   )
 }

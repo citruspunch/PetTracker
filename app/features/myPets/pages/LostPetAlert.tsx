@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tables } from '@/lib/supabase-types'
+import { Tables } from '@/lib/supabase/supabase-types'
 import { routes } from '@/routes'
 import { ComponentProps } from 'react'
 import { useNavigate } from 'react-router-dom'
