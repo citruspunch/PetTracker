@@ -7,8 +7,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import supabase from '@/lib/supabase'
-import { routes } from '@/routes'
-import { Link, useLocation } from 'react-router-dom'
+import { appRoutes } from '@/routes'
+import { Link, useLocation } from 'react-router'
 import { toast } from 'sonner'
 
 const VerifyEmail = () => {
@@ -41,7 +41,7 @@ const VerifyEmail = () => {
               Reenviar correo de verificación
             </Button>
             <Link
-              to={routes.logIn}
+              to={appRoutes.login}
               className="w-full text-center font-medium text-primary hover:underline"
             >
               Volver a iniciar sesión

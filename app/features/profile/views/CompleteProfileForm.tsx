@@ -9,16 +9,16 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import supabase from '@/lib/supabase'
 import { uploadPortrait } from '@/lib/utils'
+import { appRoutes } from '@/routes'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { userProfileSchema } from '../models/UserProfileSchema'
-import { toast } from 'sonner'
-import { useState } from 'react'
-import supabase from '@/lib/supabase'
-import { routes } from '@/routes'
-import { useNavigate } from 'react-router-dom'
 
 type Props = {
   userId: string
@@ -72,7 +72,7 @@ const CompleteProfileForm = ({
     setIsLoading(false)
     if (updateResult.error === null) {
       toast.success('Tu perfil ha sido actualizado')
-      navigate(`${routes.dashboard}`)
+      navigate(`${appRoutes.dashboard}`)
       return
     }
     toast.error(

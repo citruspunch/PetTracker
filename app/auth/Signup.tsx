@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import supabase from '@/lib/supabase'
 import { emailRegex, numberRegex, specialCharactersRegex } from '@/lib/utils'
-import { routes } from '@/routes'
-import { Link, useNavigate } from 'react-router-dom'
+import { appRoutes } from '@/routes'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 interface SignupProps {
@@ -29,7 +29,7 @@ const Signup = ({
   heading = 'Registrarse',
   subheading = 'Crea una cuenta para comenzar',
   logo = {
-    url: routes.home,
+    url: appRoutes.landing,
     src: '/PetTrackerLogo.png',
     alt: 'PetTrackerLogo',
     title: 'Pet Tracker',
@@ -37,7 +37,7 @@ const Signup = ({
   googleText = 'Registrarse con Google',
   signupText = 'Crear cuenta',
   loginText = '¿Ya tienes una cuenta?',
-  loginUrl = routes.logIn,
+  loginUrl = appRoutes.login,
 }: SignupProps) => {
   const handleGoogleSignUp = async () => {
     supabase.auth.signInWithOAuth({

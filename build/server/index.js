@@ -42,6 +42,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { Resend } from "resend";
 import { Html, Head, Font, Preview, Tailwind, Body, Container, Section, Row, Column, Link as Link$1, Img, Text, Heading, Button as Button$1, Hr } from "@react-email/components";
 import { format as format$1 } from "@formkit/tempo";
+import { TbPasswordUser } from "react-icons/tb";
 const streamTimeout = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, routerContext, loadContext) {
   return new Promise((resolve, reject) => {
@@ -258,6 +259,9 @@ const uploadPortrait = async (files, storageBucket) => {
   if (result.error !== null) return null;
   return result.data.path;
 };
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const specialCharactersRegex = /[!@#$%^&*(),.?":{}|<>]/;
+const numberRegex = /\d/;
 function Avatar({
   className,
   ...props
@@ -354,6 +358,7 @@ const appRoutes = {
   reportFoundPet: "/report-found-pet",
   petDetails: "/pet",
   editPet: "/edit-pet",
+  editUserProfile: "/edit-user",
   resetPassword: "/reset-password",
   login: "/login",
   signUp: "/sign-up"
@@ -361,7 +366,8 @@ const appRoutes = {
 [
   index("routes/landing.tsx"),
   layout("routes/auth_layout.tsx", [
-    route(appRoutes.login, "routes/login.tsx")
+    route(appRoutes.login, "routes/login.tsx"),
+    route(appRoutes.signUp, "routes/signup.tsx")
   ]),
   layout("routes/protected_layout.tsx", [
     route(appRoutes.dashboard, "routes/dashboard.tsx"),
@@ -373,9 +379,11 @@ const appRoutes = {
       `${appRoutes.reportLostPet}/:petId`,
       "routes/report_lost_pet_form.tsx"
     ),
-    route(`${appRoutes.reportFoundPet}/:petId`, "routes/report_found_pet.tsx")
+    route(`${appRoutes.reportFoundPet}/:petId`, "routes/report_found_pet.tsx"),
+    route(appRoutes.editUserProfile, "routes/edit_user_profile.tsx")
   ]),
-  route(appRoutes.exploreLostPets, "routes/lost_pets.tsx")
+  route(appRoutes.exploreLostPets, "routes/lost_pets.tsx"),
+  route(appRoutes.resetPassword, "routes/reset_password.tsx")
 ];
 function Accordion({
   ...props
@@ -1074,6 +1082,130 @@ const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   __proto__: null,
   default: login
 }, Symbol.toStringTag, { value: "Module" }));
+const Signup = ({
+  heading = "Registrarse",
+  subheading = "Crea una cuenta para comenzar",
+  logo = {
+    url: appRoutes.landing,
+    src: "/PetTrackerLogo.png",
+    alt: "PetTrackerLogo",
+    title: "Pet Tracker"
+  },
+  googleText = "Registrarse con Google",
+  signupText = "Crear cuenta",
+  loginText = "¿Ya tienes una cuenta?",
+  loginUrl = appRoutes.login
+}) => {
+  const handleGoogleSignUp = async () => {
+    supabase.auth.signInWithOAuth({
+      provider: "google"
+    });
+  };
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    if (!emailRegex.test(email)) {
+      toast.error("Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+    if (password.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+    if (!numberRegex.test(password)) {
+      toast.error("La contraseña debe incluir al menos un número.");
+      return;
+    }
+    if (!specialCharactersRegex.test(password)) {
+      toast.error("La contraseña debe incluir al menos un carácter especial.");
+      return;
+    }
+    const { error } = await supabase.auth.signUp({
+      email,
+      password
+    });
+    if (error) {
+      toast.error("Error al registrarse, por favor intenta de nuevo.");
+      return;
+    }
+    toast.success(
+      "Registro exitoso, verifica tu correo electrónico para confirmar tu cuenta."
+    );
+    navigate("/verify-email", { state: { userEmail: email } });
+  };
+  return /* @__PURE__ */ jsx("section", { className: "h-screen bg-muted", children: /* @__PURE__ */ jsx("div", { className: "flex h-full items-center justify-center mx-auto", children: /* @__PURE__ */ jsxs("div", { className: "flex w-full max-w-sm flex-col items-center gap-y-6 rounded-md border border-muted bg-white px-6 py-8 shadow-md mx-5", children: [
+    /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-y-3", children: [
+      /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 lg:justify-start", children: /* @__PURE__ */ jsx(Link, { to: logo.url, children: /* @__PURE__ */ jsx(
+        "img",
+        {
+          src: logo.src,
+          alt: logo.alt,
+          title: logo.title,
+          className: "h-12"
+        }
+      ) }) }),
+      /* @__PURE__ */ jsx("h1", { className: "mb-1 text-3xl sm:text-4xl font-bold", children: heading }),
+      subheading && /* @__PURE__ */ jsx("p", { className: "text-muted-foreground", children: subheading })
+    ] }),
+    /* @__PURE__ */ jsx("form", { onSubmit: handleSubmit, className: "flex w-full flex-col gap-8", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-4", children: [
+      /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: /* @__PURE__ */ jsx(
+        Input,
+        {
+          name: "email",
+          type: "email",
+          placeholder: "Correo Electrónico",
+          required: true,
+          className: "bg-white"
+        }
+      ) }),
+      /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: /* @__PURE__ */ jsx(
+        Input,
+        {
+          name: "password",
+          type: "password",
+          placeholder: "Contraseña",
+          required: true,
+          className: "bg-white"
+        }
+      ) }),
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
+        /* @__PURE__ */ jsx(Button, { type: "submit", className: "mt-2 w-full", children: signupText }),
+        /* @__PURE__ */ jsxs(
+          Button,
+          {
+            variant: "outline",
+            className: "w-full",
+            onClick: handleGoogleSignUp,
+            children: [
+              /* @__PURE__ */ jsx(FcGoogle, { className: "mr-2 size-5" }),
+              googleText
+            ]
+          }
+        )
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxs("div", { className: "flex justify-center gap-1 text-sm text-muted-foreground", children: [
+      /* @__PURE__ */ jsx("p", { children: loginText }),
+      /* @__PURE__ */ jsx(
+        Link,
+        {
+          to: loginUrl,
+          className: "font-medium text-primary hover:underline",
+          children: "Iniciar sesión"
+        }
+      )
+    ] })
+  ] }) }) });
+};
+const Component$6 = () => /* @__PURE__ */ jsx(Signup, {});
+const signup = withComponentProps(Component$6);
+const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: signup
+}, Symbol.toStringTag, { value: "Module" }));
 const clientLoader = async ({
   request
 }) => {
@@ -1094,7 +1226,7 @@ const ProtectedLayoutRoute = ({
   context: user
 });
 const protected_layout = withComponentProps(ProtectedLayoutRoute);
-const route4 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   HydrateFallback,
   clientLoader,
@@ -1186,7 +1318,7 @@ const feature4 = {
   description: "Conoce historias de reencuentros, ayuda a otros usuarios reportando mascotas encontradas en tu zona y forma parte de una red que protege a los que no pueden hablar.",
   image: "/Comunidad.png"
 };
-const route5 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: dashboard
 }, Symbol.toStringTag, { value: "Module" }));
@@ -1308,7 +1440,7 @@ function meta$1() {
 const my_pets = withComponentProps(function MyPetsRoute() {
   return /* @__PURE__ */ jsx(MyPetsView, {});
 });
-const route6 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: my_pets,
   meta: meta$1
@@ -2726,7 +2858,7 @@ const PetDetailsView = () => {
 };
 const PetRoute = () => /* @__PURE__ */ jsx(PetDetailsView, {});
 const pet = withComponentProps(PetRoute);
-const route7 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: pet
 }, Symbol.toStringTag, { value: "Module" }));
@@ -2790,9 +2922,9 @@ const EditPetDetailsView = ({
     ] })
   ] });
 };
-const Component$3 = () => /* @__PURE__ */ jsx(EditPetDetailsView, {});
-const edit_pet = withComponentProps(Component$3);
-const route8 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Component$5 = () => /* @__PURE__ */ jsx(EditPetDetailsView, {});
+const edit_pet = withComponentProps(Component$5);
+const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: edit_pet
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3124,9 +3256,9 @@ const ReportLostPetPage = ({ heading = "Reportar Mascota" }) => {
     )
   ] });
 };
-const Component$2 = () => /* @__PURE__ */ jsx(ReportLostPetPage, {});
-const report_lost_pet = withComponentProps(Component$2);
-const route9 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Component$4 = () => /* @__PURE__ */ jsx(ReportLostPetPage, {});
+const report_lost_pet = withComponentProps(Component$4);
+const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: report_lost_pet
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3299,9 +3431,9 @@ const ReportLostPetForm = ({
     /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", disabled: isReporting, children: isReporting ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsx("span", { children: "Reportar" }) })
   ] }) });
 };
-const Component$1 = () => /* @__PURE__ */ jsx(ReportLostPetView, {});
-const report_lost_pet_form = withComponentProps(Component$1);
-const route10 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Component$3 = () => /* @__PURE__ */ jsx(ReportLostPetView, {});
+const report_lost_pet_form = withComponentProps(Component$3);
+const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: report_lost_pet_form
 }, Symbol.toStringTag, { value: "Module" }));
@@ -3812,11 +3944,162 @@ const ReportFoundPetView = () => {
     ] })
   ] });
 };
-const Component = () => /* @__PURE__ */ jsx(ReportFoundPetView, {});
-const report_found_pet = withComponentProps(Component);
-const route11 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Component$2 = () => /* @__PURE__ */ jsx(ReportFoundPetView, {});
+const report_found_pet = withComponentProps(Component$2);
+const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: report_found_pet
+}, Symbol.toStringTag, { value: "Module" }));
+const userProfileSchema = z.object({
+  first_name: z.string({ required_error: "El nombre es requerido" }).trim().nonempty("El nombre no puede estar vacío"),
+  last_name: z.string().trim().optional(),
+  image_url: z.instanceof(FileList).optional().refine(
+    (files) => {
+      var _a;
+      return (files == null ? void 0 : files.length) === 0 || ACCEPTED_IMAGE_TYPES.includes(((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.type) ?? "");
+    },
+    "Solo archivos en formato .jpg, .jpeg, .png y .webp son aceptados."
+  ).refine(
+    (files) => {
+      var _a;
+      return (files == null ? void 0 : files.length) === 0 || (((_a = files == null ? void 0 : files.item(0)) == null ? void 0 : _a.size) ?? MAX_FILE_SIZE + 1) <= MAX_FILE_SIZE;
+    },
+    "El tamaño máximo permitido de la foto es 5MB."
+  )
+});
+const CompleteProfileForm = ({
+  userId,
+  submitButtonText = "Continuar"
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const [imagePreview, setImagePreview] = useState(
+    void 0
+  );
+  const form = useForm({
+    resolver: zodResolver(userProfileSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: ""
+    }
+  });
+  const handleImageChange = (event) => {
+    var _a;
+    const file = (_a = event.target.files) == null ? void 0 : _a[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleSubmit = async (values) => {
+    setIsLoading(true);
+    const uploadedImagePath = values.image_url ? await uploadPortrait(values.image_url, "profiles-pictures") : null;
+    const updateResult = await supabase.from("profiles").update({
+      first_name: values.first_name,
+      last_name: values.last_name,
+      image_url: uploadedImagePath
+    }).eq("id", userId);
+    setIsLoading(false);
+    if (updateResult.error === null) {
+      toast.success("Tu perfil ha sido actualizado");
+      navigate(`${appRoutes.dashboard}`);
+      return;
+    }
+    toast.error(
+      "Ocurrió un error al editar la información de tu perfil. Inténtalo de nuevo."
+    );
+    console.error(updateResult.error);
+  };
+  const profilePictureReference = form.register("image_url");
+  return /* @__PURE__ */ jsx(Form, { ...form, children: /* @__PURE__ */ jsxs("form", { onSubmit: form.handleSubmit(handleSubmit), className: "space-y-6", children: [
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "first_name",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Nombre" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { ...field }) }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "last_name",
+        render: ({ field }) => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Apellido" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx(Input, { ...field }) }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      FormField,
+      {
+        control: form.control,
+        name: "image_url",
+        render: () => /* @__PURE__ */ jsxs(FormItem, { children: [
+          /* @__PURE__ */ jsx(FormLabel, { children: "Foto" }),
+          /* @__PURE__ */ jsx(FormControl, { children: /* @__PURE__ */ jsx("div", { className: "flex flex-col items-center space-y-4", children: /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center space-y-4", children: [
+            imagePreview && /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: imagePreview,
+                alt: "Vista previa",
+                className: "h-32 w-32 rounded-full object-cover"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              Input,
+              {
+                type: "file",
+                ...profilePictureReference,
+                onChange: (event) => {
+                  handleImageChange(event);
+                }
+              }
+            )
+          ] }) }) }),
+          /* @__PURE__ */ jsx(FormMessage, {})
+        ] })
+      }
+    ),
+    /* @__PURE__ */ jsx(Button, { type: "submit", className: "w-full", children: isLoading ? /* @__PURE__ */ jsx(Loader, {}) : /* @__PURE__ */ jsx(Fragment, { children: submitButtonText }) })
+  ] }) });
+};
+const CompleteProfileCard = ({ className, userId, ...props }) => {
+  return /* @__PURE__ */ jsxs(Card, { className: cn("m-5", className), ...props, children: [
+    /* @__PURE__ */ jsxs(CardHeader, { children: [
+      /* @__PURE__ */ jsx(CardTitle, { className: "text-3xl sm:text-4xl", children: "Completa tu perfil" }),
+      /* @__PURE__ */ jsx(CardDescription, { children: "Llena la siguiente información para que podamos brindarte una mejor experiencia." })
+    ] }),
+    /* @__PURE__ */ jsx(CardContent, { className: "grid gap-4", children: /* @__PURE__ */ jsx(CompleteProfileForm, { userId, submitButtonText: "Listo" }) })
+  ] });
+};
+const CompleteProfileView = () => {
+  const user = useUser();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+  }, [user]);
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Navbar, {}),
+    !loading && /* @__PURE__ */ jsx(CompleteProfileCard, { userId: user.id })
+  ] });
+};
+const Component$1 = () => /* @__PURE__ */ jsx(CompleteProfileView, {});
+const edit_user_profile = withComponentProps(Component$1);
+const route13 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: edit_user_profile
 }, Symbol.toStringTag, { value: "Module" }));
 const LostPetsList = ({ heading, lostPets }) => {
   const navigate = useNavigate();
@@ -4016,12 +4299,82 @@ const meta = () => [{
 }];
 const LostPetsRoute = () => /* @__PURE__ */ jsx(ExploreLostPets, {});
 const lost_pets = withComponentProps(LostPetsRoute);
-const route12 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route14 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: lost_pets,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-BHNHhhw4.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BP7SQNJh.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js", "/assets/with-props-C_P4RWeF.js", "/assets/index-DlVqQRiW.js"], "css": ["/assets/root-B12xiaMz.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/landing": { "id": "routes/landing", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/landing-BYyWL7aP.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-KK9O1wv8.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-BPjMvHEu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/auth_layout": { "id": "routes/auth_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/auth_layout-BM3QEvwN.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/loader-circle-Dtw2UbxQ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/login": { "id": "routes/login", "parentId": "routes/auth_layout", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/login-BTT-SIQg.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-KK9O1wv8.js", "/assets/checkbox-wubUU82e.js", "/assets/input-BMp6xtz3.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/check-DtsZv3Tn.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/protected_layout": { "id": "routes/protected_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/protected_layout-DB9iQSrQ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/loader-circle-Dtw2UbxQ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/dashboard": { "id": "routes/dashboard", "parentId": "routes/protected_layout", "path": "/dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/dashboard-DXQ6uhdQ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/index-BPjMvHEu.js", "/assets/createLucideIcon-CLtTwt0x.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/my_pets": { "id": "routes/my_pets", "parentId": "routes/protected_layout", "path": "/my-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/my_pets-VLtJDjlw.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/separator-DM-ecwEm.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/pet": { "id": "routes/pet", "parentId": "routes/protected_layout", "path": "/pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/pet-BYQDwjDM.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/index-KK9O1wv8.js", "/assets/circle-alert-D1336QaI.js", "/assets/index-BaeFmNgZ.js", "/assets/RegisterPetForm-Dx_WHBln.js", "/assets/index-K-pNMs4F.js", "/assets/separator-DM-ecwEm.js", "/assets/ReportLostPetAlertDialog-_JiY1WFX.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/textarea-BLlpFkxC.js", "/assets/checkbox-wubUU82e.js", "/assets/input-BMp6xtz3.js", "/assets/check-DtsZv3Tn.js", "/assets/command-m-qbOHV3.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_pet": { "id": "routes/edit_pet", "parentId": "routes/protected_layout", "path": "/edit-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_pet-CtsZmvcV.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/RegisterPetForm-Dx_WHBln.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-KK9O1wv8.js", "/assets/index-BPjMvHEu.js", "/assets/textarea-BLlpFkxC.js", "/assets/checkbox-wubUU82e.js", "/assets/input-BMp6xtz3.js", "/assets/check-DtsZv3Tn.js", "/assets/command-m-qbOHV3.js", "/assets/index-BaeFmNgZ.js", "/assets/index-K-pNMs4F.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet": { "id": "routes/report_lost_pet", "parentId": "routes/protected_layout", "path": "/report-lost-pet", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet-C6sXWnRy.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/index-2UufBPTQ.js", "/assets/ReportLostPetAlertDialog-_JiY1WFX.js", "/assets/skeleton-BwW214vb.js", "/assets/index-KK9O1wv8.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BaeFmNgZ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet_form": { "id": "routes/report_lost_pet_form", "parentId": "routes/protected_layout", "path": "/report-lost-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet_form-DbQ6cYpy.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-Co2d-Jsj.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/textarea-BLlpFkxC.js", "/assets/index-K-pNMs4F.js", "/assets/input-BMp6xtz3.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/loader-circle-Dtw2UbxQ.js", "/assets/index-BPjMvHEu.js", "/assets/index-BaeFmNgZ.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_found_pet": { "id": "routes/report_found_pet", "parentId": "routes/protected_layout", "path": "/report-found-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_found_pet-DwPLhySE.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/separator-DM-ecwEm.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-cUA8gEqw.js", "/assets/index-K-pNMs4F.js", "/assets/Loader-Co2d-Jsj.js", "/assets/index-KK9O1wv8.js", "/assets/input-BMp6xtz3.js", "/assets/command-m-qbOHV3.js", "/assets/check-DtsZv3Tn.js", "/assets/circle-alert-D1336QaI.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BaeFmNgZ.js", "/assets/loader-circle-Dtw2UbxQ.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/lost_pets": { "id": "routes/lost_pets", "parentId": "root", "path": "/lost-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/lost_pets-ChV4h3Mm.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-BNK_UxnV.js", "/assets/index-KK9O1wv8.js", "/assets/separator-DM-ecwEm.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/createLucideIcon-CLtTwt0x.js", "/assets/index-2UufBPTQ.js", "/assets/circle-alert-D1336QaI.js", "/assets/skeleton-BwW214vb.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-a8f6418a.js", "version": "a8f6418a", "sri": void 0 };
+const ResetPassword = ({
+  heading = "Restablecer contraseña",
+  subheading = "Ingresa tu correo electrónico para restablecer tu contraseña",
+  resetText = "Enviar correo de restablecimiento",
+  loginText = "¿Recuerdas tu contraseña?",
+  loginUrl = appRoutes.login,
+  logoUrl = appRoutes.landing
+}) => {
+  const [email, setEmail] = useState("");
+  const handleResetPassword = async () => {
+    if (!emailRegex.test(email)) {
+      toast.error("Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://pet-tracker-eosin.vercel.app/update-password"
+    });
+    if (error) {
+      toast.error("Error al enviar el correo de restablecimiento.");
+    } else {
+      toast.success("Correo de restablecimiento enviado.");
+    }
+  };
+  return /* @__PURE__ */ jsx("section", { className: "h-screen flex items-center justify-center bg-muted", children: /* @__PURE__ */ jsx("div", { className: "container mx-auto", children: /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-4 mx-5", children: /* @__PURE__ */ jsxs("div", { className: "mx-auto w-full max-w-sm rounded-md p-6 shadow bg-white", children: [
+    /* @__PURE__ */ jsxs("div", { className: "mb-6 flex flex-col items-center", children: [
+      /* @__PURE__ */ jsx(Link, { to: logoUrl, children: /* @__PURE__ */ jsx(TbPasswordUser, { className: "size-10" }) }),
+      /* @__PURE__ */ jsx("h1", { className: "mb-5 mt-3 text-4xl font-bold text-center leading-9", children: heading }),
+      /* @__PURE__ */ jsx("p", { className: "text-muted-foreground text-center", children: subheading })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "grid gap-4", children: [
+      /* @__PURE__ */ jsx(
+        Input,
+        {
+          name: "email",
+          type: "email",
+          value: email,
+          onChange: (event) => setEmail(event.target.value),
+          placeholder: "Ingresa tu correo electrónico",
+          required: true
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        Button,
+        {
+          type: "submit",
+          className: "mt-2 w-full",
+          onClick: handleResetPassword,
+          children: resetText
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: "mx-auto mt-6 mb-2 flex justify-center gap-1 text-sm text-muted-foreground", children: [
+      /* @__PURE__ */ jsx("p", { children: loginText }),
+      /* @__PURE__ */ jsx(
+        Link,
+        {
+          to: loginUrl,
+          className: "font-medium text-primary hover:underline",
+          children: "Iniciar Sesión"
+        }
+      )
+    ] })
+  ] }) }) }) });
+};
+const Component = () => /* @__PURE__ */ jsx(ResetPassword, {});
+const reset_password = withComponentProps(Component);
+const route15 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: reset_password
+}, Symbol.toStringTag, { value: "Module" }));
+const serverManifest = { "entry": { "module": "/assets/entry.client-BHNHhhw4.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": true, "module": "/assets/root-BP7SQNJh.js", "imports": ["/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-BPjMvHEu.js", "/assets/with-props-C_P4RWeF.js", "/assets/index-DlVqQRiW.js"], "css": ["/assets/root-B12xiaMz.css"], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/landing": { "id": "routes/landing", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/landing-CjkBzrwJ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-CGXivZb0.js", "/assets/routes-CTRM3soR.js", "/assets/button-BwhTU3xm.js", "/assets/navbar-mFlRC7PZ.js", "/assets/index-BPjMvHEu.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/auth_layout": { "id": "routes/auth_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/auth_layout-CSMW1ok1.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/routes-CTRM3soR.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/login": { "id": "routes/login", "parentId": "routes/auth_layout", "path": "/login", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/login-tDm7B8gD.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/button-BwhTU3xm.js", "/assets/checkbox-WSwXXcMV.js", "/assets/input-Cc9Stvst.js", "/assets/routes-CTRM3soR.js", "/assets/index-DYjHuzbX.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-4zLNCx83.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-DA7cR2i0.js", "/assets/check-CcO5qCS6.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/signup": { "id": "routes/signup", "parentId": "routes/auth_layout", "path": "/sign-up", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/signup-DVbbs47l.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/index-DYjHuzbX.js", "/assets/button-BwhTU3xm.js", "/assets/input-Cc9Stvst.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BPjMvHEu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/protected_layout": { "id": "routes/protected_layout", "parentId": "root", "path": void 0, "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": true, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/protected_layout-BOkZN9hO.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/routes-CTRM3soR.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/dashboard": { "id": "routes/dashboard", "parentId": "routes/protected_layout", "path": "/dashboard", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/dashboard-3pwtPx6Y.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/button-BwhTU3xm.js", "/assets/routes-CTRM3soR.js", "/assets/createLucideIcon-BXJY-pLu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/my_pets": { "id": "routes/my_pets", "parentId": "routes/protected_layout", "path": "/my-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/my_pets-Dt0L_4as.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/button-BwhTU3xm.js", "/assets/separator-BHgjR1J0.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/routes-CTRM3soR.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/pet": { "id": "routes/pet", "parentId": "routes/protected_layout", "path": "/pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/pet-DoV-i6CQ.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/button-BwhTU3xm.js", "/assets/circle-alert-CwKWgOV7.js", "/assets/index-CGXivZb0.js", "/assets/index-BAY9dnVF.js", "/assets/index-CpYXc7B6.js", "/assets/RegisterPetForm-MvXL-jgZ.js", "/assets/popover-BE-t_-9Y.js", "/assets/separator-BHgjR1J0.js", "/assets/ReportLostPetAlertDialog-BC7E2wsx.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js", "/assets/card-Cx2DBwdG.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-BPjMvHEu.js", "/assets/textarea-C0jHllX4.js", "/assets/checkbox-WSwXXcMV.js", "/assets/index-DA7cR2i0.js", "/assets/check-CcO5qCS6.js", "/assets/command-BV_hcrUj.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_pet": { "id": "routes/edit_pet", "parentId": "routes/protected_layout", "path": "/edit-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_pet-z0t0faCK.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/card-Cx2DBwdG.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/RegisterPetForm-MvXL-jgZ.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/button-BwhTU3xm.js", "/assets/textarea-C0jHllX4.js", "/assets/checkbox-WSwXXcMV.js", "/assets/index-DA7cR2i0.js", "/assets/check-CcO5qCS6.js", "/assets/command-BV_hcrUj.js", "/assets/index-CpYXc7B6.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js", "/assets/popover-BE-t_-9Y.js", "/assets/index-BAY9dnVF.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/IconBase-2_1jK8r0.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet": { "id": "routes/report_lost_pet", "parentId": "routes/protected_layout", "path": "/report-lost-pet", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet-D_8X7E4p.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/index-2UufBPTQ.js", "/assets/ReportLostPetAlertDialog-BC7E2wsx.js", "/assets/skeleton-CpORVbC8.js", "/assets/button-BwhTU3xm.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-BAY9dnVF.js", "/assets/index-CpYXc7B6.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_lost_pet_form": { "id": "routes/report_lost_pet_form", "parentId": "routes/protected_layout", "path": "/report-lost-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_lost_pet_form-CZ_s8x3Z.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/Loader-CXAdXc2l.js", "/assets/navbar-mFlRC7PZ.js", "/assets/button-BwhTU3xm.js", "/assets/textarea-C0jHllX4.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js", "/assets/popover-BE-t_-9Y.js", "/assets/routes-CTRM3soR.js", "/assets/IconBase-2_1jK8r0.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/loader-circle-4zLNCx83.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-CpYXc7B6.js", "/assets/index-BAY9dnVF.js", "/assets/index-DA7cR2i0.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/report_found_pet": { "id": "routes/report_found_pet", "parentId": "routes/protected_layout", "path": "/report-found-pet/:petId", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/report_found_pet-CWF6esaS.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/separator-BHgjR1J0.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/EmptyState-CNQYyuMY.js", "/assets/index-CMz1EfI-.js", "/assets/Loader-CXAdXc2l.js", "/assets/button-BwhTU3xm.js", "/assets/input-Cc9Stvst.js", "/assets/command-BV_hcrUj.js", "/assets/popover-BE-t_-9Y.js", "/assets/check-CcO5qCS6.js", "/assets/circle-alert-CwKWgOV7.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/index-2UufBPTQ.js", "/assets/iconBase-DWGiJmbw.js", "/assets/index-CpYXc7B6.js", "/assets/loader-circle-4zLNCx83.js", "/assets/index-BAY9dnVF.js", "/assets/index-DA7cR2i0.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/edit_user_profile": { "id": "routes/edit_user_profile", "parentId": "routes/protected_layout", "path": "/edit-user", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/edit_user_profile-B23egpsG.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/card-Cx2DBwdG.js", "/assets/routes-CTRM3soR.js", "/assets/Loader-CXAdXc2l.js", "/assets/button-BwhTU3xm.js", "/assets/index-CMz1EfI-.js", "/assets/input-Cc9Stvst.js", "/assets/index-DlVqQRiW.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/loader-circle-4zLNCx83.js", "/assets/index-CpYXc7B6.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/lost_pets": { "id": "routes/lost_pets", "parentId": "root", "path": "/lost-pets", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/lost_pets-DX1fsDv0.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/navbar-mFlRC7PZ.js", "/assets/button-BwhTU3xm.js", "/assets/separator-BHgjR1J0.js", "/assets/animalTypes-zlv_8E1P.js", "/assets/routes-CTRM3soR.js", "/assets/index-2UufBPTQ.js", "/assets/circle-alert-CwKWgOV7.js", "/assets/createLucideIcon-BXJY-pLu.js", "/assets/skeleton-CpORVbC8.js", "/assets/index-CGXivZb0.js", "/assets/index-BPjMvHEu.js", "/assets/iconBase-DWGiJmbw.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 }, "routes/reset_password": { "id": "routes/reset_password", "parentId": "root", "path": "/reset-password", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasClientMiddleware": false, "hasErrorBoundary": false, "module": "/assets/reset_password-kgB6vCe6.js", "imports": ["/assets/with-props-C_P4RWeF.js", "/assets/chunk-LSOULM7L-DOIZURii.js", "/assets/iconBase-DWGiJmbw.js", "/assets/button-BwhTU3xm.js", "/assets/input-Cc9Stvst.js", "/assets/routes-CTRM3soR.js", "/assets/index-DlVqQRiW.js", "/assets/index-BPjMvHEu.js"], "css": [], "clientActionModule": void 0, "clientLoaderModule": void 0, "clientMiddlewareModule": void 0, "hydrateFallbackModule": void 0 } }, "url": "/assets/manifest-eeada563.js", "version": "eeada563", "sri": void 0 };
 const assetsBuildDirectory = "build/client";
 const basename = "/";
 const future = { "unstable_middleware": false, "unstable_optimizeDeps": false, "unstable_splitRouteModules": false, "unstable_subResourceIntegrity": false, "unstable_viteEnvironmentApi": false };
@@ -4063,13 +4416,21 @@ const routes = {
     caseSensitive: void 0,
     module: route3
   },
+  "routes/signup": {
+    id: "routes/signup",
+    parentId: "routes/auth_layout",
+    path: "/sign-up",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route4
+  },
   "routes/protected_layout": {
     id: "routes/protected_layout",
     parentId: "root",
     path: void 0,
     index: void 0,
     caseSensitive: void 0,
-    module: route4
+    module: route5
   },
   "routes/dashboard": {
     id: "routes/dashboard",
@@ -4077,7 +4438,7 @@ const routes = {
     path: "/dashboard",
     index: void 0,
     caseSensitive: void 0,
-    module: route5
+    module: route6
   },
   "routes/my_pets": {
     id: "routes/my_pets",
@@ -4085,7 +4446,7 @@ const routes = {
     path: "/my-pets",
     index: void 0,
     caseSensitive: void 0,
-    module: route6
+    module: route7
   },
   "routes/pet": {
     id: "routes/pet",
@@ -4093,7 +4454,7 @@ const routes = {
     path: "/pet/:petId",
     index: void 0,
     caseSensitive: void 0,
-    module: route7
+    module: route8
   },
   "routes/edit_pet": {
     id: "routes/edit_pet",
@@ -4101,7 +4462,7 @@ const routes = {
     path: "/edit-pet/:petId",
     index: void 0,
     caseSensitive: void 0,
-    module: route8
+    module: route9
   },
   "routes/report_lost_pet": {
     id: "routes/report_lost_pet",
@@ -4109,7 +4470,7 @@ const routes = {
     path: "/report-lost-pet",
     index: void 0,
     caseSensitive: void 0,
-    module: route9
+    module: route10
   },
   "routes/report_lost_pet_form": {
     id: "routes/report_lost_pet_form",
@@ -4117,7 +4478,7 @@ const routes = {
     path: "/report-lost-pet/:petId",
     index: void 0,
     caseSensitive: void 0,
-    module: route10
+    module: route11
   },
   "routes/report_found_pet": {
     id: "routes/report_found_pet",
@@ -4125,7 +4486,15 @@ const routes = {
     path: "/report-found-pet/:petId",
     index: void 0,
     caseSensitive: void 0,
-    module: route11
+    module: route12
+  },
+  "routes/edit_user_profile": {
+    id: "routes/edit_user_profile",
+    parentId: "routes/protected_layout",
+    path: "/edit-user",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route13
   },
   "routes/lost_pets": {
     id: "routes/lost_pets",
@@ -4133,7 +4502,15 @@ const routes = {
     path: "/lost-pets",
     index: void 0,
     caseSensitive: void 0,
-    module: route12
+    module: route14
+  },
+  "routes/reset_password": {
+    id: "routes/reset_password",
+    parentId: "root",
+    path: "/reset-password",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route15
   }
 };
 export {

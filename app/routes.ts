@@ -14,17 +14,20 @@ export const appRoutes = {
   reportFoundPet: '/report-found-pet',
   petDetails: '/pet',
   editPet: '/edit-pet',
-  editUser: '/edit-user',
+  editUserProfile: '/edit-user',
   resetPassword: '/reset-password',
   login: '/login',
   signUp: '/sign-up',
   logout: '/logout',
+  updatePassword: 'update-password',
+  verifyEmail: 'verify-email',
 }
 
 export default [
   index('routes/landing.tsx'),
   layout('routes/auth_layout.tsx', [
     route(appRoutes.login, 'routes/login.tsx'),
+    route(appRoutes.signUp, 'routes/signup.tsx'),
   ]),
   layout('routes/protected_layout.tsx', [
     route(appRoutes.dashboard, 'routes/dashboard.tsx'),
@@ -37,6 +40,10 @@ export default [
       'routes/report_lost_pet_form.tsx'
     ),
     route(`${appRoutes.reportFoundPet}/:petId`, 'routes/report_found_pet.tsx'),
+    route(appRoutes.editUserProfile, 'routes/edit_user_profile.tsx'),
+    route(appRoutes.updatePassword, 'routes/update_password.tsx'),
+    route(appRoutes.verifyEmail, 'routes/verify_email.tsx'),
   ]),
   route(appRoutes.exploreLostPets, 'routes/lost_pets.tsx'),
+  route(appRoutes.resetPassword, 'routes/reset_password.tsx'),
 ] satisfies RouteConfig

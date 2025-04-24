@@ -2,11 +2,11 @@ import { TbPasswordUser } from 'react-icons/tb'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Link } from 'react-router-dom'
-import { routes } from '../routes'
-import { toast } from 'sonner'
 import supabase from '@/lib/supabase'
+import { appRoutes } from '@/routes'
 import { useState } from 'react'
+import { Link } from 'react-router'
+import { toast } from 'sonner'
 
 interface UpdatePasswordProps {
   heading?: string
@@ -22,8 +22,8 @@ const UpdatePassword = ({
   subheading = 'Ingresa tu nueva contraseña',
   updateText = 'Actualizar contraseña',
   loginText = '¿Recuerdas tu contraseña?',
-  loginUrl = routes.logIn,
-  logoUrl = routes.home,
+  loginUrl = appRoutes.login,
+  logoUrl = appRoutes.landing,
 }: UpdatePasswordProps) => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')

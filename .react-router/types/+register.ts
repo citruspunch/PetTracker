@@ -9,6 +9,7 @@ declare module "react-router" {
 type Params = {
   "/": {};
   "/login": {};
+  "/sign-up": {};
   "/dashboard": {};
   "/my-pets": {};
   "/pet/:petId": {
@@ -24,5 +25,9 @@ type Params = {
   "/report-found-pet/:petId": {
     "petId": string;
   };
+  "/edit-user": {};
+  "/update-password": {};
+  "/verify-email": {};
   "/lost-pets": {};
+  "/reset-password": {};
 };
