@@ -10,10 +10,10 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import supabase from '@/lib/supabase/supabase'
-import { Tables } from '@/lib/supabase/types'
-import { routes } from '@/routes'
-import { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { type Tables } from '@/lib/supabase/types'
+import { appRoutes } from '@/routes'
+import { type ReactNode } from 'react'
+import { Link } from 'react-router'
 import { toast } from 'sonner'
 
 type Props = {
@@ -46,7 +46,7 @@ const ConfirmDeleteDialog = ({ children, pet }: Props) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction onClick={deletePet} asChild>
-            <Link to={routes.myPets}>Eliminar</Link>
+            <Link to={appRoutes.myPets}>Eliminar</Link>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

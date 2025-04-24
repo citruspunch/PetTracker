@@ -9,11 +9,11 @@ import {
 } from '@/components/ui/card'
 import { AnimalSex } from '@/lib/animalSex'
 import supabase from '@/lib/supabase/supabase'
-import { Tables } from '@/lib/supabase/types'
+import { type Tables } from '@/lib/supabase/types'
 import { cn } from '@/lib/utils'
-import { routes } from '@/routes'
+import { appRoutes } from '@/routes'
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 import RegisterPetForm from './RegisterPetForm'
 
@@ -28,7 +28,7 @@ const EditPetDetailsView = ({
 
   const onPetRegistered = () => {
     toast.success('Tu mascota ha sido registrada')
-    navigate(routes.myPets)
+    navigate(appRoutes.myPets)
   }
 
   useEffect(() => {

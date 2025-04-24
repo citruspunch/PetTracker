@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { MdPets } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 
 interface EmptyStateProps {
   heading?: string

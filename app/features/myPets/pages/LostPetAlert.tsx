@@ -6,10 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tables } from '@/lib/supabase/supabase-types'
-import { routes } from '@/routes'
-import { ComponentProps } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { type Tables } from '@/lib/supabase/types'
+import { appRoutes } from '@/routes'
+import { type ComponentProps } from 'react'
+import { useNavigate } from 'react-router'
 
 type Props = {
   pet: Tables<'pet'>
@@ -28,7 +28,7 @@ const LostPetAlert = ({ pet, ...props }: Props) => {
       </CardContent>
       <CardFooter className="flex justify-stretch">
         <Button
-          onClick={() => navigate(`${routes.reportFoundPet}/${pet.id}`)}
+          onClick={() => navigate(`${appRoutes.reportFoundPet}/${pet.id}`)}
           className="w-full"
         >
           Reportar

@@ -9,10 +9,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Tables } from '@/lib/supabase/supabase-types'
-import { routes } from '@/routes'
-import { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { type Tables } from '@/lib/supabase/types'
+import { appRoutes } from '@/routes'
+import { type ReactNode } from 'react'
+import { Link } from 'react-router'
 
 type Props = {
   children: ReactNode
@@ -37,7 +37,7 @@ const ReportLostPetAlertDialog = ({ children, pet }: Props) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Link to={`${routes.reportLostPet}/${pet.id}`}>Continuar</Link>
+            <Link to={`${appRoutes.reportLostPet}/${pet.id}`}>Continuar</Link>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
