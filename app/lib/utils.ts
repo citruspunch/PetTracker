@@ -114,3 +114,22 @@ export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export const specialCharactersRegex = /[!@#$%^&*(),.?":{}|<>]/
 
 export const numberRegex = /\d/
+
+export const isProfileComplete = (profile: Tables<'profiles'>): boolean => {
+  if (!profile) return false
+  if (!profile.first_name || !profile.last_name) return false
+  return true
+}
+
+export const fetchUserProfile = async (userId: string) => {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single()
+  if (error) {
+    console.error('Error fetching user profile:', error)
+    return null
+  }
+  return data
+}

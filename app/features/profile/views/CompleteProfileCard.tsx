@@ -14,12 +14,12 @@ type Props = React.ComponentProps<typeof Card> & {
 
 const CompleteProfileCard = ({ className, userId, ...props }: Props) => {
   return (
-    <Card className={cn('m-5', className)} {...props}>
+    <Card className={cn('m-5', 'w-9/10 sm:max-w-3/4 md:max-w-3/5 lg:max-w-1/3', 'mx-auto', className)} {...props}>
       <CardHeader>
-        <CardTitle className="text-3xl sm:text-4xl">
+        <CardTitle className="text-3xl sm:text-4xl leading-8 tracking-tight text-center font-bold">
           Completa tu perfil
         </CardTitle>
-        <CardDescription>
+        <CardDescription className='text-center leading-5 mt-2'>
           Llena la siguiente información para que podamos brindarte una mejor
           experiencia.
         </CardDescription>
