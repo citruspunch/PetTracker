@@ -23,22 +23,30 @@ import { userProfileSchema } from '../models/UserProfileSchema'
 type Props = {
   userId: string
   submitButtonText?: string
+  profileValues?: z.infer<typeof userProfileSchema>
 }
 
 const CompleteProfileForm = ({
   userId,
   submitButtonText = 'Continuar',
+  profileValues,
 }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const petImageUrl = profileValues?.image_url
+    ? supabase.storage
+        .from('profiles-pictures')
+        .getPublicUrl(profileValues.image_url).data.publicUrl
+    : undefined
   const [imagePreview, setImagePreview] = useState<string | undefined>(
-    undefined
+    petImageUrl
   )
+  console.log('Profile values:', profileValues)
   const form = useForm<z.infer<typeof userProfileSchema>>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
-      first_name: '',
-      last_name: '',
+      first_name: profileValues?.first_name || '',
+      last_name: profileValues?.last_name || '',
     },
   })
 
@@ -56,18 +64,23 @@ const CompleteProfileForm = ({
   const handleSubmit = async (values: z.infer<typeof userProfileSchema>) => {
     setIsLoading(true)
 
-    console.log(values)
     const uploadedImagePath = values.image_url
       ? await uploadPortrait(values.image_url, 'profiles-pictures')
       : null
+    const queryParameters = uploadedImagePath
+      ? {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          image_url: uploadedImagePath,
+        }
+      : {
+          first_name: values.first_name,
+          last_name: values.last_name,
+        }
 
     const updateResult = await supabase
       .from('profiles')
-      .update({
-        first_name: values.first_name,
-        last_name: values.last_name,
-        image_url: uploadedImagePath,
-      })
+      .update(queryParameters)
       .eq('id', userId)
 
     setIsLoading(false)
