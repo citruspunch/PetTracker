@@ -10,7 +10,7 @@ export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
   console.log('Obtained user')
   console.log(userResult)
 
-  if (request.url.includes(appRoutes.petDetails)) {
+  if (new URL(request.url).pathname.includes(appRoutes.petDetails)) {
     console.log('Route matches exception')
     console.log(request.url)
     return userResult.data.user
