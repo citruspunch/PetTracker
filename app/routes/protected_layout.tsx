@@ -7,20 +7,9 @@ import type { Route } from './+types/protected_layout'
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
   const userResult = await supabase.auth.getUser()
-  console.log('Obtained user')
-  console.log(userResult)
-
-  if (new URL(request.url).pathname.includes(appRoutes.petDetails)) {
-    console.log('Route matches exception')
-    console.log(request.url)
+  if (new URL(request.url).pathname.includes(appRoutes.petDetails))
     return userResult.data.user
-  }
-  if (userResult.error) {
-    console.log('Redirecting to login')
-    return redirect(appRoutes.login)
-  }
-
-  console.log('Navigation allowed')
+  if (userResult.error) return redirect(appRoutes.login)
   return userResult.data.user
 }
 
