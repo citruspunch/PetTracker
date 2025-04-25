@@ -7,7 +7,8 @@ import type { Route } from './+types/protected_layout'
 // eslint-disable-next-line react-refresh/only-export-components
 export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
   const userResult = await supabase.auth.getUser()
-  if (request.url.includes(appRoutes.petDetails)) return userResult.data.user
+  if (new URL(request.url).pathname.includes(appRoutes.petDetails))
+    return userResult.data.user
   if (userResult.error) return redirect(appRoutes.login)
   return userResult.data.user
 }
