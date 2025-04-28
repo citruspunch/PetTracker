@@ -8,9 +8,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const isPetDataAlreadyFilled = (pet: Tables<'pet'>) => {
-  return pet.name && pet.owner && pet.sex && pet.animal_type
-}
+export const isPetDataAlreadyFilled = (pet: Tables<'pet'>) =>
+  pet.name &&
+  pet.birth_date &&
+  pet.sex &&
+  pet.animal_type &&
+  pet.spayed_or_neutered !== null &&
+  pet.image &&
+  pet.owner
 
 type Age = { years: number; months: number; days: number }
 

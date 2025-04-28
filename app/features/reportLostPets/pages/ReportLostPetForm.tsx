@@ -22,11 +22,11 @@ import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { cn } from '@/lib/utils'
 import { appRoutes } from '@/routes'
+import { format } from '@formkit/tempo'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Calendar as CalendarIcon } from '@solar-icons/react'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
+import { es } from 'react-day-picker/locale'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
@@ -160,7 +160,7 @@ const ReportLostPetForm = ({
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP', { locale: es })
+                        format(field.value, 'long', 'es')
                       ) : (
                         <span>Selecciona una fecha</span>
                       )}
@@ -176,7 +176,8 @@ const ReportLostPetForm = ({
                     disabled={(date) =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
-                    initialFocus
+                    autoFocus
+                    locale={es}
                   />
                 </PopoverContent>
               </Popover>

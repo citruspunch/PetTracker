@@ -1,4 +1,5 @@
 import Loader from '@/components/Loader'
+
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -33,12 +34,12 @@ import { animalTypes, formatAnimalType } from '@/lib/animalTypes'
 import supabase from '@/lib/supabase'
 import { type Tables } from '@/lib/supabase/types'
 import { cn, uploadPortrait } from '@/lib/utils'
+import { format } from '@formkit/tempo'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PenNewRound } from '@solar-icons/react'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
 import { useState } from 'react'
+import { es } from 'react-day-picker/locale'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -110,7 +111,7 @@ const RegisterPetForm = ({
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
-    let uploadedImagePath = values.portrait?.length
+    const uploadedImagePath = values.portrait?.length
       ? await uploadPortrait(values.portrait, 'pets-portraits')
       : previousValues?.image
     if (uploadedImagePath === null) {
@@ -179,7 +180,7 @@ const RegisterPetForm = ({
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PPP', { locale: es })
+                        format(field.value, 'long', 'es')
                       ) : (
                         <span>Selecciona una fecha</span>
                       )}
@@ -195,7 +196,8 @@ const RegisterPetForm = ({
                     disabled={(date) =>
                       date > new Date() || date < new Date('1900-01-01')
                     }
-                    initialFocus
+                    autoFocus
+                    locale={es}
                   />
                 </PopoverContent>
               </Popover>
