@@ -28,6 +28,9 @@ type Params = {
   "/edit-user": {};
   "/update-password": {};
   "/verify-email": {};
+  "/register-pet/:petId": {
+    "petId": string;
+  };
   "/lost-pets": {};
   "/reset-password": {};
 };
