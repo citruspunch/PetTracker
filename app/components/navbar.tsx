@@ -91,13 +91,12 @@ export function Navbar({ hideMenu = false }: { hideMenu?: boolean }) {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             />
           </MobileNavHeader>
-
-          {!hideMenu && (
-            <MobileNavMenu
-              isOpen={isMobileMenuOpen}
-              onClose={() => setIsMobileMenuOpen(false)}
-            >
-              {navItems.map((item, idx) => (
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {!hideMenu &&
+              navItems.map((item, idx) => (
                 <a
                   key={`mobile-link-${idx}`}
                   href={item.link}
@@ -107,44 +106,43 @@ export function Navbar({ hideMenu = false }: { hideMenu?: boolean }) {
                   <span className="block">{item.name}</span>
                 </a>
               ))}
-              <div className="flex w-full flex-col gap-4">
-                {!user ? (
-                  <>
-                    <Button asChild variant="outline" size="default">
-                      <Link to={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild size="default">
-                      <Link to={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <NavbarButton
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                        navigate(appRoutes.editUserProfile)
-                      }}
-                      variant="primary"
-                      className="w-full"
-                    >
-                      Editar Perfil
-                    </NavbarButton>
-                    <NavbarButton
-                      onClick={async () => {
-                        setIsMobileMenuOpen(false)
-                        await supabase.auth.signOut()
-                        navigate(appRoutes.landing)
-                      }}
-                      variant="primary"
-                      className="w-full"
-                    >
-                      Cerrar Sesión
-                    </NavbarButton>
-                  </>
-                )}
-              </div>
-            </MobileNavMenu>
-          )}
+            <div className="flex w-full flex-col gap-4">
+              {!user ? (
+                <>
+                  <Button asChild variant="outline" size="default">
+                    <Link to={auth.login.url}>{auth.login.title}</Link>
+                  </Button>
+                  <Button asChild size="default">
+                    <Link to={auth.signup.url}>{auth.signup.title}</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <NavbarButton
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      navigate(appRoutes.editUserProfile)
+                    }}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Editar Perfil
+                  </NavbarButton>
+                  <NavbarButton
+                    onClick={async () => {
+                      setIsMobileMenuOpen(false)
+                      await supabase.auth.signOut()
+                      navigate(appRoutes.landing)
+                    }}
+                    variant="primary"
+                    className="w-full"
+                  >
+                    Cerrar Sesión
+                  </NavbarButton>
+                </>
+              )}
+            </div>
+          </MobileNavMenu>
         </MobileNav>
       </NavbarUI>
       {/* Navbar */}

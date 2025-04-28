@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import CompleteProfileForm from './CompleteProfileForm'
-import { BorderBeam } from 'components/magicui/border-beam'
 import { useEffect, useState } from 'react'
 import supabase from '@/lib/supabase'
 import type { Tables } from '@/lib/supabase/types'
@@ -50,8 +49,7 @@ const CompleteProfileCard = ({ className, userId, ...props }: Props) => {
       {!isLoading && (
         <Card
           className={cn(
-            'm-5',
-            'mb-40 w-9/10 sm:max-w-3/4 md:max-w-3/5 lg:max-w-1/3',
+            'mt-8 w-9/10 sm:max-w-3/4 md:max-w-3/5 lg:max-w-1/3',
             'mx-auto',
             className
           )}
@@ -68,7 +66,7 @@ const CompleteProfileCard = ({ className, userId, ...props }: Props) => {
           </CardHeader>
           <CardContent className="grid gap-4">
             <CompleteProfileForm
-              key = {userProfile?.id}
+              key={userProfile?.id}
               userId={userId}
               submitButtonText="Listo"
               profileValues={{
@@ -78,7 +76,7 @@ const CompleteProfileCard = ({ className, userId, ...props }: Props) => {
               }}
             />
           </CardContent>
-          <BorderBeam duration={8} size={100} />
+          
         </Card>
       )}
     </>

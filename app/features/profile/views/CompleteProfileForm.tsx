@@ -41,7 +41,6 @@ const CompleteProfileForm = ({
   const [imagePreview, setImagePreview] = useState<string | undefined>(
     petImageUrl
   )
-  console.log('Profile values:', profileValues)
   const form = useForm<z.infer<typeof userProfileSchema>>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
