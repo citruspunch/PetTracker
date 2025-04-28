@@ -16,14 +16,13 @@ import ReportFoundPetForm from './ReportFoundPetForm'
 
 const ReportFoundPetView = () => {
   const petId = useParams().petId!
-  const user = useUser()!
   const fetcher = useFetcher({ key: 'found-pet-report' })
   const [isLoadingPet, setIsLoadingPet] = useState(true)
   const [pet, setPet] = useState<Tables<'pet'> | null>(null)
 
   useEffect(() => {
     // Fetch pet with active lost report
-    ;(async () => {
+    (async () => {
       setIsLoadingPet(true)
       const result = await supabase
         .from('lost_pet_report')

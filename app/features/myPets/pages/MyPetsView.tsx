@@ -1,6 +1,5 @@
 import Loader from '@/components/Loader'
 import Navbar from '@/components/navbar'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import EmptyState from '@/features/reportLostPets/components/EmptyState'
 import useUser from '@/hooks/useUser'
@@ -9,14 +8,16 @@ import supabase from '@/lib/supabase'
 import type { Tables } from '@/lib/supabase/types'
 import { appRoutes } from '@/routes'
 import { ArrowRight } from '@solar-icons/react'
+import { HoverBorderGradient } from 'components/ui/hover-border-gradient'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router'
+import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
 
 const MyPetsView = () => {
   const [isLoadingPets, setIsLoadingPets] = useState(true)
   const [pets, setPets] = useState<Tables<'pet'>[]>([])
   const user = useUser()!
+  const navigate = useNavigate()
 
   useEffect(() => {
     const loadPets = async () => {
@@ -35,15 +36,16 @@ const MyPetsView = () => {
   return (
     <>
       <Navbar />
-      <section className="py-15">
+      <section className="py-8">
         <div className="container mx-auto">
           <div className="mx-auto max-w-5/6 md:max-w-screen-lg">
             <div className="text-center lg:text-left">
-              <h1 className="text-left text-3xl font-medium md:text-4xl">
+              <h1 className="text-left text-3xl font-semibold font-medium md:text-4xl">
                 Mis mascotas
               </h1>
             </div>
-            <div className="mx-auto mt-6 flex flex-col md:mt-14">
+            <Separator className="mt-7 sm:mt-10" />
+            <div className="mx-auto mt-5 flex flex-col">
               {isLoadingPets && <Loader />}
               {!isLoadingPets && pets.length === 0 && (
                 <EmptyState
@@ -64,15 +66,17 @@ const MyPetsView = () => {
                           {formatAnimalType(pet.animal_type!)}
                         </span>
                       </div>
-                      <Button variant="outline">
-                        <Link
-                          to={`${appRoutes.petDetails}/${pet.id}`}
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-xs">Ver</span>
-                          <ArrowRight />
-                        </Link>
-                      </Button>
+                      <HoverBorderGradient
+                        containerClassName="flex ml-auto w-fit gap-2"
+                        as="button"
+                        className="dark:bg-black text-xs bg-white text-black dark:text-white flex items-center space-x-2"
+                        onClick={() =>
+                          navigate(`${appRoutes.petDetails}/${pet.id}`)
+                        }
+                      >
+                        <span>Ver más</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </HoverBorderGradient>
                     </div>
                     <Separator className="my-5" />
                   </div>

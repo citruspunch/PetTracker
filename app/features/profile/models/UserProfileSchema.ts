@@ -6,7 +6,10 @@ export const userProfileSchema = z.object({
     .string({ required_error: 'El nombre es requerido' })
     .trim()
     .nonempty('El nombre no puede estar vacío'),
-  last_name: z.string().trim().optional(),
+  last_name: z
+    .string({ required_error: 'El apellido es requerido' })
+    .trim()
+    .nonempty('El apellido no puede estar vacío'),
   image_url: (typeof window === 'undefined' ? z.any() : z.instanceof(FileList))
     .optional()
     .refine(

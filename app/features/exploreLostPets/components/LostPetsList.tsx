@@ -8,6 +8,7 @@ import React from 'react'
 import { MdPets } from 'react-icons/md'
 import { useNavigate } from 'react-router'
 import { type LostPetType } from '../models/lostPetType'
+import { HoverBorderGradient } from 'components/ui/hover-border-gradient'
 
 interface LostPetsListProps {
   heading: string
@@ -23,7 +24,7 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
           <h2 className="text-3xl mb-5 font-semibold md:text-4xl text-center">
             {heading}
           </h2>
-          <div className="fixed bottom-7 right-6 sm:static">
+          <div className="fixed bottom-7 left-6 sm:static">
             <Button
               variant="destructive"
               onClick={() => navigate(appRoutes.reportLostPet)}
@@ -74,7 +75,7 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
                     {lostPet.last_seen_address}
                   </p>
                 </div>
-                <Button
+                {/* <Button
                   variant="outline"
                   onClick={() =>
                     navigate(`${appRoutes.petDetails}/${lostPet.petId}`)
@@ -83,7 +84,18 @@ const LostPetsList: React.FC<LostPetsListProps> = ({ heading, lostPets }) => {
                 >
                   <span>Ver más</span>
                   <ArrowRight className="h-4 w-4" />
-                </Button>
+                </Button> */}
+                <HoverBorderGradient
+                  containerClassName="rounded-full order-3 ml-auto w-fit gap-2 md:order-none"
+                  as="button"
+                  className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+                  onClick={() =>
+                    navigate(`${appRoutes.petDetails}/${lostPet.petId}`)
+                  }
+                >
+                  <span>Ver más</span>
+                  <ArrowRight className="h-4 w-4" />
+                </HoverBorderGradient>
               </div>
               <Separator />
             </React.Fragment>

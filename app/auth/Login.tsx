@@ -53,7 +53,10 @@ const Login = ({
       email: email,
       password: password,
     })
-    if (error === null) navigate(redirectRoute)
+    if (error === null) {
+      navigate(redirectRoute)
+      toast.success('Inicio de sesión exitoso.')
+    }
     else {
       toast.error('Error al iniciar sesión. Verifica tus credenciales.')
     }
@@ -61,9 +64,14 @@ const Login = ({
   }
 
   const handleGoogleSignIn = async () => {
-    supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     })
+    if (error) {
+      toast.error('Error al iniciar sesión con Google.')
+    } else {
+      toast.success('Inicio de sesion exitoso.')
+    }
   }
 
   return (

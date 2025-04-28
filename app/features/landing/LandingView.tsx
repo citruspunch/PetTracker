@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { appRoutes } from '@/routes'
 import { Link } from 'react-router'
 import Navbar from '../../components/navbar'
+import WordReveal from '@/components/ui/word-reveal'
+import { TextAnimate } from 'components/ui/text-animate'
 
 interface Testimonial {
   quote: string
@@ -67,17 +69,20 @@ const LandingView = ({
   return (
     <>
       <Navbar hideMenu />
-      <section className="py-8">
+      <section className="py-4">
         <div className="container mx-auto px-6 lg:px-0">
           <div className="flex flex-col items-center gap-8 md:flex-row">
             <div className="flex-1">
               <div className="flex flex-col gap-4 lg:gap-8">
-                <h1 className="max-w-[80%] text-5xl leading-none font-bold text-foreground lg:text-5xl xl:text-7xl">
-                  {heading}
-                </h1>
-                <p className="text-lg leading-snug text-muted-foreground xl:text-2xl">
-                  {description}
-                </p>
+                <WordReveal
+                  text={heading}
+                  delay={0.5}
+                  className="max-w-[80%] text-5xl text-left leading-none font-bold text-foreground lg:text-5xl xl:text-7xl"
+                />
+              {/* <p className="text-lg leading-snug text-muted-foreground xl:text-2xl">
+                {description}
+              </p> */}
+                <TextAnimate text={description} type="rollIn" />
               </div>
               <div className="my-6 lg:my-10">
                 <Button

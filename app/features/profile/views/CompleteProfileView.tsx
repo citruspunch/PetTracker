@@ -1,4 +1,3 @@
-import Navbar from '@/components/navbar'
 import useUser from '@/hooks/useUser'
 import CompleteProfileCard from './CompleteProfileCard'
 import { useEffect, useState } from 'react'
@@ -13,7 +12,6 @@ const CompleteProfileView = () => {
   }, [user])
   return (
     <>
-      <Navbar />
       {!loading && <CompleteProfileCard userId={user.id} />}
     </>
   )

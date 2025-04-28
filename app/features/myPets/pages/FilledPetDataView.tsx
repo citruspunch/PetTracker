@@ -196,6 +196,8 @@ const Options = ({
   className,
   ...props
 }: OptionsProps & ComponentProps<typeof Button>) => {
+  const lost = pet.sex === 'male' ? 'perdido' : 'perdida'
+  const found = pet.sex === 'male' ? 'encontrado' : 'encontrada'
   const fetcher = useFetcher()
 
   const handleAction = (operation: Pick<PetOperation, 'operation'>) =>
@@ -209,7 +211,6 @@ const Options = ({
         encType: 'application/json',
       }
     )
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -257,7 +258,7 @@ const Options = ({
               onSelect={(event) => event.preventDefault()}
             >
               <DangerCircle weight="Linear" />
-              Reportar como perdido
+              Reportar como {lost}
             </DropdownMenuItem>
           </ReportLostPetAlertDialog>
         ) : (
@@ -267,7 +268,7 @@ const Options = ({
           >
             <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
               <Flag weight="Linear" />
-              Reportar como encontrada
+              Reportar como {found}
             </DropdownMenuItem>
           </ReportFoundPetAlertDialog>
         )}
