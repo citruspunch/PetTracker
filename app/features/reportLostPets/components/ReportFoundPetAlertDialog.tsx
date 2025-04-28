@@ -9,22 +9,37 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import type { PetOperation } from '@/features/myPets/models/petOperation'
+import type { Tables } from '@/lib/supabase/types'
+import { appRoutes } from '@/routes'
 import { type ReactNode } from 'react'
+import { useFetcher } from 'react-router'
 
 type Props = {
   children: ReactNode
-  petName: string
-  onConfirm: () => void
+  pet: Tables<'pet'>
 }
 
-const ReportFoundPetAlertDialog = ({ children, petName, onConfirm }: Props) => {
+const ReportFoundPetAlertDialog = ({ children, pet }: Props) => {
+  const fetcher = useFetcher()
+
+  const handleConfirm = () =>
+    fetcher.submit(
+      { operation: 'markAsFound', pet: pet } satisfies PetOperation,
+      {
+        method: 'post',
+        action: `${appRoutes.petDetails}/${pet.id}`,
+        encType: 'application/json',
+      }
+    )
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="leading-6">
-            ¿Estás seguro de marcar a {petName} como encontrado?
+            ¿Estás seguro de marcar a {pet.name} como encontrado?
           </AlertDialogTitle>
           <AlertDialogDescription className="leading-5">
             El reporte de desaparición de tu mascota ya no será visible en la
@@ -34,7 +49,9 @@ const ReportFoundPetAlertDialog = ({ children, petName, onConfirm }: Props) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Continuar</AlertDialogAction>
+          <AlertDialogAction onClick={handleConfirm}>
+            Continuar
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

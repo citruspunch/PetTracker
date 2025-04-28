@@ -276,7 +276,7 @@ const RegisterPetForm = ({
                       <CommandGroup>
                         {animalTypes.map((type) => (
                           <CommandItem
-                            value={type}
+                            value={formatAnimalType(type)}
                             key={type}
                             onSelect={() => {
                               form.setValue('animalType', type)

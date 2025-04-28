@@ -1,5 +1,5 @@
 import Loader from '@/components/Loader'
-import type { PetOperation } from '@/features/myPets/models/petOperations'
+import type { PetOperation } from '@/features/myPets/models/petOperation'
 import PetDetailsView, {
   type PetDetailsViewProps,
 } from '@/features/myPets/pages/PetDetailsView'
@@ -75,7 +75,7 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
     case 'edit':
       return redirect(`${appRoutes.editPet}/${pet.id}`)
 
-    case 'markAsLost':
+    case 'reportAsLost':
       return redirect(`${appRoutes.reportLostPet}/${pet.id}`)
 
     case 'markAsFound': {
@@ -104,13 +104,13 @@ export const clientAction = async ({ request }: Route.ClientActionArgs) => {
     }
 
     case 'delete': {
-      const result = await supabase.from('pet').delete().eq('id', pet.id)
-      if (result.error !== null) {
+      const { error } = await supabase.from('pet').delete().eq('id', pet.id)
+      if (error !== null) {
         toast.error('Ocurrió un error. Inténtalo de nuevo.')
         return
       }
       toast.success(`La mascota ${pet.name} ha sido eliminada.`)
-      break
+      return redirect(appRoutes.myPets)
     }
   }
 }
@@ -119,7 +119,7 @@ const PetRoute = ({ loaderData, actionData }: Route.ComponentProps) => (
   <PetDetailsView
     {...loaderData}
     activeLostReport={
-      actionData ? actionData.activeLostReport : loaderData.activeLostReport
+      actionData?.activeLostReport ?? loaderData.activeLostReport
     }
   />
 )
