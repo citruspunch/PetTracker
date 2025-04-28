@@ -101,7 +101,7 @@ const FilledPetDataView = ({
         .publicUrl
     : null
   return (
-    <section className="py-12">
+    <section className="py-5">
       <div className="container mx-auto">
         <div className="flex flex-col items-center gap-4 text-center">
           {wasScannedFromTag && props.activeLostReport !== null && (
@@ -207,6 +207,8 @@ const Options = ({
   className,
   ...props
 }: OptionsProps & ComponentProps<typeof Button>) => {
+  const lost = pet.sex === 'male' ? 'perdido' : 'perdida'
+  const found = pet.sex === 'male' ? 'encontrado' : 'encontrada'
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -244,7 +246,7 @@ const Options = ({
           >
             <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
               <Flag weight="Linear" />
-              Reportar como encontrada
+              Reportar como {found}
             </DropdownMenuItem>
           </ReportFoundPetAlertDialog>
         )}
@@ -255,7 +257,7 @@ const Options = ({
               onSelect={(event) => event.preventDefault()}
             >
               <DangerCircle weight="Linear" />
-              Reportar como perdido
+              Reportar como {lost}
             </DropdownMenuItem>
           </ReportLostPetAlertDialog>
         )}
