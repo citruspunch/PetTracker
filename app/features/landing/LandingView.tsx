@@ -5,6 +5,7 @@ import { appRoutes } from '@/routes'
 import { Link } from 'react-router'
 import Navbar from '../../components/navbar'
 import WordReveal from '@/components/ui/word-reveal'
+import { TextAnimate } from 'components/ui/text-animate'
 
 interface Testimonial {
   quote: string
@@ -75,12 +76,13 @@ const LandingView = ({
               <div className="flex flex-col gap-4 lg:gap-8">
                 <WordReveal
                   text={heading}
-                  delay={0.4}
+                  delay={0.5}
                   className="max-w-[80%] text-5xl text-left leading-none font-bold text-foreground lg:text-5xl xl:text-7xl"
                 />
-                <p className="text-lg leading-snug text-muted-foreground xl:text-2xl">
-                  {description}
-                </p>
+              {/* <p className="text-lg leading-snug text-muted-foreground xl:text-2xl">
+                {description}
+              </p> */}
+                <TextAnimate text={description} type="rollIn" />
               </div>
               <div className="my-6 lg:my-10">
                 <Button
