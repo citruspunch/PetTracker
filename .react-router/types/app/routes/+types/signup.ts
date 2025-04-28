@@ -4,12 +4,13 @@
 import type * as T from "react-router/route-module"
 
 import type { Info as Parent0 } from "../../+types/root.js"
-import type { Info as Parent1 } from "./auth_layout.js"
+import type { Info as Parent1 } from "./layout.js"
+import type { Info as Parent2 } from "./auth_layout.js"
 
 type Module = typeof import("../signup.js")
 
 export type Info = {
-  parents: [Parent0, Parent1],
+  parents: [Parent0, Parent1, Parent2],
   id: "routes/signup"
   file: "routes/signup.tsx"
   path: "/sign-up"
