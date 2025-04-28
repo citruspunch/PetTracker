@@ -13,12 +13,14 @@ import { z } from 'zod'
 import { type FoundPetReportData } from '../models/FoundPetReportData'
 import foundPetReportFormSchema from '../models/foundPetReportFormSchema'
 import ReportFoundPetForm from './ReportFoundPetForm'
+import { fetchUserProfile } from '@/lib/utils'
 
 const ReportFoundPetView = () => {
   const petId = useParams().petId!
   const fetcher = useFetcher({ key: 'found-pet-report' })
   const [isLoadingPet, setIsLoadingPet] = useState(true)
   const [pet, setPet] = useState<Tables<'pet'> | null>(null)
+  const user = useUser()
 
   useEffect(() => {
     // Fetch pet with active lost report
@@ -46,16 +48,23 @@ const ReportFoundPetView = () => {
 
   const handleSubmit = async (
     values: z.infer<typeof foundPetReportFormSchema>
-  ) =>
+  ) => {
+    const userProfile = await fetchUserProfile(user!.id)
+    if (userProfile === null) {
+      toast.error('Ocurrió un error. Inténtalo de nuevo.')
+      return
+    }
+    const finderName = `${userProfile.first_name} ${userProfile.last_name}`
     fetcher.submit(
       {
         ...values,
         pet: pet!,
-        finderName: 'Samuel',
+        finderName: finderName,
         ownerEmail: 'pettracker.gt@gmail.com',
       } satisfies FoundPetReportData,
       { method: 'post', encType: 'application/json' }
     )
+  }
 
   return (
     <>
