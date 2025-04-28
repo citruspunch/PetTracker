@@ -9,43 +9,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import supabase from '@/lib/supabase'
-import { type Tables } from '@/lib/supabase/types'
 import { type ReactNode } from 'react'
-import { toast } from 'sonner'
 
 type Props = {
   children: ReactNode
-  pet: Tables<'pet'>
-  report: Tables<'lost_pet_report'>
-  onMarked: () => void
+  petName: string
+  onConfirm: () => void
 }
 
-const ReportFoundPetAlertDialog = ({
-  children,
-  pet,
-  report,
-  onMarked,
-}: Props) => {
-  const markPetAsFound = async () => {
-    const result = await supabase
-      .from('lost_pet_report')
-      .update({ found_date: new Date().toISOString() })
-      .eq('id', report.id)
-    if (result.error !== null) {
-      toast.error('Ocurrió un error. Inténtalo de nuevo.')
-      return
-    }
-    onMarked()
-  }
-
+const ReportFoundPetAlertDialog = ({ children, petName, onConfirm }: Props) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="leading-6">
-            ¿Estás seguro de marcar a {pet.name} como encontrado?
+            ¿Estás seguro de marcar a {petName} como encontrado?
           </AlertDialogTitle>
           <AlertDialogDescription className="leading-5">
             El reporte de desaparición de tu mascota ya no será visible en la
@@ -55,9 +34,7 @@ const ReportFoundPetAlertDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={markPetAsFound}>
-            Continuar
-          </AlertDialogAction>
+          <AlertDialogAction onClick={onConfirm}>Continuar</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
