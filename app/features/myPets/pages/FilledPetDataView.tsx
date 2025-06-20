@@ -27,7 +27,7 @@ import {
 import React, { type ComponentProps } from 'react'
 import { useFetcher } from 'react-router'
 import ConfirmDeleteDialog from '../components/ConfirmDeleteDialog'
-import type { PetOperation } from '../models/petOperations'
+import type { PetOperation } from '../models/petOperation'
 
 type Attribute = {
   label: string
@@ -211,6 +211,7 @@ const Options = ({
         encType: 'application/json',
       }
     )
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -238,10 +239,7 @@ const Options = ({
           Editar
         </DropdownMenuItem>
 
-        <ConfirmDeleteDialog
-          onConfirm={() => handleAction({ operation: 'delete' })}
-          petName={pet.name!}
-        >
+        <ConfirmDeleteDialog pet={pet}>
           <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
             <TrashBinTrash />
             Eliminar
@@ -249,10 +247,7 @@ const Options = ({
         </ConfirmDeleteDialog>
 
         {activeLostReport === null ? (
-          <ReportLostPetAlertDialog
-            petName={pet.name!}
-            onConfirm={() => handleAction({ operation: 'markAsLost' })}
-          >
+          <ReportLostPetAlertDialog pet={pet}>
             <DropdownMenuItem
               variant="destructive"
               onSelect={(event) => event.preventDefault()}
@@ -262,10 +257,7 @@ const Options = ({
             </DropdownMenuItem>
           </ReportLostPetAlertDialog>
         ) : (
-          <ReportFoundPetAlertDialog
-            petName={pet.name!}
-            onConfirm={() => handleAction({ operation: 'markAsFound' })}
-          >
+          <ReportFoundPetAlertDialog pet={pet}>
             <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
               <Flag weight="Linear" />
               Reportar como {found}
